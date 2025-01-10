@@ -1,0 +1,600 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.subsystems.Swerve;
+
+//JAVA Imports
+import java.util.function.Supplier;
+
+//NavX imports
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
+
+
+//WPI Imports
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+
+//LOCAL Imports
+import frc.robot.Constants;
+import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.Limelight.LimelightHelpers;
+
+
+
+public class SwerveSubsystem extends SubsystemBase 
+
+{
+  /**************************
+   * Create 4 Swerve Modules*
+   **************************/
+  public final SwerveModule frontLeftModule = 
+  new SwerveModule
+                  (
+                    DriveConstants.kFrontLeftDriveMotorPort,
+                    DriveConstants.kFrontLeftTurningMotorPort,
+                    DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
+                    DriveConstants.angleOffsetFLTurning,
+                    DriveConstants.kFrontLeftChassisAngularOffset
+                  );
+
+  private final SwerveModule frontRightModule = 
+  new SwerveModule(
+                    DriveConstants.kFrontRightDriveMotorPort,
+                    DriveConstants.kFrontRightTurningMotorPort,
+                    DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
+                    DriveConstants.angleOffsetFRTurning,
+                    DriveConstants.kFrontRightChassisAngularOffset
+                  );
+
+  private final SwerveModule backLeftModule = 
+  new SwerveModule(
+                    DriveConstants.kBackLeftDriveMotorPort,
+                    DriveConstants.kBackLeftTurningMotorPort,
+                    DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
+                    DriveConstants.angleOffsetBLTurning,
+                    DriveConstants.kBackLeftChassisAngularOffset
+                  );
+
+  private final SwerveModule backRightModule = 
+  new SwerveModule(
+                    DriveConstants.kBackRightDriveMotorPort,
+                    DriveConstants.kBackRightTurningMotorPort,
+                    DriveConstants.kBackRightDriveAbsoluteEncoderPort,
+                    DriveConstants.angleOffsetBRTurning,
+                    DriveConstants.kBackRightChassisAngularOffset
+                  );
+
+  
+  
+  /*******************
+   * Create gyroscope*
+   * ******************/
+  private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+  
+               
+ 
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+  private final SlewRateLimiter turningLimiter= new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+
+  ChassisSpeeds chassisSpeeds;
+
+  SwerveModule[] modules = {frontLeftModule,frontRightModule,backLeftModule,backRightModule};
+
+  /** Creates a new SwerveSubsystem. */
+  private boolean throttleSlow=false;
+  private boolean throttleFast=false;
+  private boolean throttleMax=false;
+  private boolean isBlue = false;
+
+  RobotConfig config;
+
+  /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
+  below are robot specific, and should be tuned. */
+  private final SwerveDrivePoseEstimator m_poseEstimator =
+                new SwerveDrivePoseEstimator(
+                    DriveConstants.kDriveKinematics,
+                    gyro.getRotation2d(),
+                    new SwerveModulePosition[] {
+                      frontLeftModule.getPosition(),
+                      frontRightModule.getPosition(),
+                      backLeftModule.getPosition(),
+                      backRightModule.getPosition()
+                    },
+                    new Pose2d(),
+                    VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+                    VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+
+  public SwerveSubsystem() 
+  {
+    
+    
+    /* delay 1 s and then reset gyro */
+    new Thread(() -> {
+                      try 
+                      {
+                          Thread.sleep(1000); //avoid to block the rest of our code from running
+                          zeroHeading();
+                          
+                      } catch (Exception e) 
+                      {
+                      }
+                    	}).start();
+
+                    
+
+    try{ 
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
+    }  
+
+    // Configure AutoBuilder last
+    AutoBuilder.configure(
+            this::getPoseEstimator, // Robot pose supplier
+            this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            PathPlannerConstants.AutoConfig,
+            config, // The robot configuration
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            this // Reference to this subsystem to set requirements
+      );
+    
+
+
+    }
+
+
+    
+
+
+  //method to get bot pose from limelight and pops up on smartdashboard
+  public void loadLimelightAngle()
+  {
+    double angleLime = LimelightHelpers.getBotPose("limelight-shooter")[5];
+    gyro.setAngleAdjustment(angleLime);
+
+  }
+
+  
+
+  @Override
+  public void periodic() 
+  {
+    // This method will be called once per scheduler run
+        
+    
+    this.updatePoseEstimator();
+  
+    this.addPoseVision();
+    
+
+    SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
+    SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
+    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose("limelight-shooter")[5]);
+    SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
+    SmartDashboard.putBoolean("True Blue", isBlue);
+    
+/* 
+
+    for (int i = 0; i < modules.length; i++) 
+    {
+      SmartDashboard.putNumber("Module " + i + " /Drive Motor Current (Amp)", modules[i].getDriveCurrent());
+      SmartDashboard.putNumber("Module " + i + " /Drive Motor Temperature (℃)", modules[i].getDriveTemperature());
+      SmartDashboard.putNumber("Module " + i + " /Turning Motor Heading (Degrees)", modules[i].getTurningHeadingDegrees());
+      SmartDashboard.putNumber("Module " + i + " /CanCoder Heading (rad)", modules[i].canCoderRad());
+      SmartDashboard.putNumber("Module " + i + " /CanCoder Heading (Degrees)", modules[i].canCoderDegrees());
+      SmartDashboard.putNumber("Module " + i + " /CanCoder Angle value (rad)", modules[i].getTurningPosition());
+      
+  
+       if (!modules[i].getCanCoderIsValid())
+       {
+        System.err.println("Absolute Encoder Error: Returning default angle.");
+
+       }
+
+    }
+    
+
+    // Output Module States to SmartDashboard
+    SwerveModuleState[] moduleStates = getModuleStates();
+    for (int i = 0; i < moduleStates.length; i++) 
+    {
+      SmartDashboard.putNumber("Module " + i + " /Speed (m/s)", moduleStates[i].speedMetersPerSecond);
+      SmartDashboard.putNumber("Module " + i + " /Angle (rad)", moduleStates[i].angle.getRadians());
+
+      
+    }*/
+
+
+  }
+
+  
+  /** Updates the field relative position of the robot. */
+  public void updatePoseEstimator() 
+  {
+    
+    m_poseEstimator.update(
+        gyro.getRotation2d(),
+        new SwerveModulePosition[]
+        {
+          frontLeftModule.getPosition(),
+          frontRightModule.getPosition(),
+          backLeftModule.getPosition(),
+          backRightModule.getPosition()
+        });
+  
+  }
+
+  /**
+   * update pose estimator using absoule coordenates from limelight
+   */
+  public void addPoseVision()
+  {
+    boolean update=false;
+
+    boolean useMegaTag2 = true; //set to false to use MegaTag1
+
+    boolean doRejectUpdate = false;
+    LimelightHelpers.PoseEstimate mt1;
+
+
+    if(useMegaTag2 == false)
+    {
+      if (isBlue)
+      {
+        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
+      }
+      else 
+      {
+         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-shooter");
+      }
+      
+      if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+      {
+        if(mt1.rawFiducials[0].ambiguity > .7)
+        {
+          doRejectUpdate = true;
+        }
+        if(mt1.rawFiducials[0].distToCamera > 3)
+        {
+          doRejectUpdate = true;
+        }
+      }
+      if(mt1.tagCount == 0)
+      {
+        doRejectUpdate = true;
+      }
+
+      if(!doRejectUpdate)
+      {
+        update=true;
+        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
+        m_poseEstimator.addVisionMeasurement(
+            mt1.pose,
+            mt1.timestampSeconds);
+        
+        
+        
+      }
+
+      SmartDashboard.putBoolean("UpdatePose", update);
+      SmartDashboard.putNumber("Pose mt1/X", mt1.pose.getX());
+      SmartDashboard.putNumber("Pose mt1/Y", mt1.pose.getY());
+      
+      
+      
+    }
+    else if (useMegaTag2 == true)
+    {
+      LimelightHelpers.SetRobotOrientation("limelight-shooter", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+      if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+      {
+        doRejectUpdate = true;
+      }
+      if(mt2.tagCount == 0)
+      {
+        doRejectUpdate = true;
+      }
+      if(!doRejectUpdate)
+      {
+        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        m_poseEstimator.addVisionMeasurement(
+            mt2.pose,
+            mt2.timestampSeconds);
+      }
+    }
+
+  }
+
+   
+
+  /** Zeroes the heading of the robot. */
+  public void zeroHeading() 
+  {
+    gyro.reset();
+    
+  }   
+  
+  /** Resets the drive encoders to currently read a position of 0. */
+  public void resetEncoders() 
+  {
+    frontLeftModule.resetDriveEncoders();
+    frontRightModule.resetDriveEncoders();
+    backLeftModule.resetDriveEncoders();
+    backRightModule.resetDriveEncoders();
+  }
+
+  
+  /**
+   * Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+   * Path Planner uses
+   * @param chassisSpeeds
+   */
+  public void drive(ChassisSpeeds chassisSpeeds) 
+  {
+    SwerveModuleState[] swerveModuleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+    
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates,Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+    
+    frontLeftModule.setDesiredState(swerveModuleStates[0]);
+    frontRightModule.setDesiredState(swerveModuleStates[1]);
+    backLeftModule.setDesiredState(swerveModuleStates[2]);
+    backRightModule.setDesiredState(swerveModuleStates[3]);
+  }
+
+  //Method to get the ROBOT RELATIVE ChassisSpeeds
+  public ChassisSpeeds getChassisSpeeds()
+  {
+    // Relative to robot
+    return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  
+   //reset the pose Estimator to a new location
+   /**MNL10/23/2024
+    * 
+    * @param pose The pose  to set the odometry.
+    */
+   public void resetOdometry(Pose2d pose) 
+   {
+
+    m_poseEstimator.resetPosition(
+                  gyro.getRotation2d(), //arrow usa gyro.getAngle() ///getGyroYaw()
+                  new SwerveModulePosition[] 
+                                          {
+                                              frontLeftModule.getPosition(),
+                                              frontRightModule.getPosition(),
+                                              backLeftModule.getPosition(),
+                                              backRightModule.getPosition()
+                                          },
+                                          pose);
+}
+
+/**
+ * 
+ * @return estimated position
+ */
+public Pose2d getPoseEstimator()
+{
+  return m_poseEstimator.getEstimatedPosition();
+}
+
+ 
+
+/**
+ * Stop all modules
+ */
+
+public void stopModules ()
+{
+  
+  for (int i = 0; i < modules.length; i++) 
+  {
+      modules[i].stopMotors();
+    
+  }
+  
+
+}
+
+  /**
+   * 
+   * @return throttle slow down the robot speed
+   */
+  public void robotSlower()
+  {
+    
+    throttleSlow = true;
+    throttleFast = false;
+    throttleMax=false;
+  }
+
+  /**
+   * 
+   * @return throttle slow down the robot speed
+   */
+  public void robotFast()
+  {
+    throttleSlow = false;
+    throttleFast = true;
+    throttleMax=false;
+  }
+
+  /**
+   * 
+   * @return throttle slow down the robot speed
+   */
+  public void robotMaxSpeed()
+  {
+    
+    throttleSlow=false;
+    throttleFast=false;
+    throttleMax=true;
+  }
+
+
+  // Improved "setX()" to use `setModuleStates()`
+  public void setX() 
+  {
+    SwerveModuleState[] xStates = new SwerveModuleState[4];
+    xStates[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+    xStates[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+    xStates[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
+    xStates[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+    setModuleStates(xStates);
+  }
+
+  /**
+ * Sets the swerve ModuleStates.
+ *
+ * @param desiredStates The desired SwerveModule states.
+ */
+  public void setModuleStates (SwerveModuleState [] desiredStates)
+  { 
+
+    //normalize the wheel speeds ;
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kTeleDriveMaxSpeedMetersPerSecond); 
+    
+    // Output Module States to each one
+    for (int i = 0; i < modules.length; i++) 
+    {
+        modules[i].setDesiredState(desiredStates[i]);
+      
+    }
+    
+  }
+
+  /**
+   * 
+   * @return states 
+   */
+  public SwerveModuleState[] getModuleStates() 
+  {
+    SwerveModuleState[] states = new SwerveModuleState[modules.length];
+    for (int i = 0; i < modules.length; i++) 
+    {
+      states[i] = modules[i].getState();
+    }
+    return states;
+  }
+
+  /**
+   * Method drive with joystick
+   * The use of these parameters as suppliers to dynamically provide speed and field orientation values.
+   * Suppliers are especially useful in cases where you need to calculate values dynamically based on factors that can change over time.
+   * The Supplier interface gives you a powerful mechanism to make your FRC robot code more flexible and adaptable. 
+   * Suppliers are incredibly useful in command-based FRC programming because they allow you to:
+   * Decouple Logic: You can separate the logic for calculating drive parameters (speeds, orientation) 
+   * from the actual drive command. This makes your code cleaner and more maintainable.
+   * Dynamic Values: You can easily update the speed and orientation values on-the-fly based on real-time conditions, 
+   * such as sensor feedback or joystick input.
+   * 
+   * @param xSpdFunction Speed of the robot in the x direction (forward).
+   * @param ySpdFunction Speed of the robot in the y direction (sideways).
+   * @param turningSpdFunction Angular rate of the robot. rad/s
+   * @param fieldOrientedFunction Boolean indicating if speeds are relative to the field or to therobot. 
+   *                              
+   **/
+
+  public void driveRobotOriented( Supplier<Double> xSpdFunction, 
+                                  Supplier<Double> ySpdFunction,
+                                  Supplier<Double> turningSpdFunction, 
+                                  Supplier<Boolean> fieldOrientedFunction)
+  {
+    
+    // 1. Get real-time joystick inputs
+    double xSpeed = xSpdFunction.get();
+    double ySpeed = ySpdFunction.get();  
+    double turningSpeed = turningSpdFunction.get();
+    boolean fieldOriented = fieldOrientedFunction.get();
+    double throttle = 1.0;
+       
+    
+    //Selects speed
+    if (throttleSlow)
+    {
+      
+      throttle =0.3;
+      System.out.println("Slow down velocity - 30%");
+      
+    }
+    else if (throttleFast)
+    {
+      
+      throttle =0.5;
+      System.out.println("Speed up velocity - 50%");
+
+    }
+    else if (throttleMax) 
+    { 
+      throttle = 0.7;
+      System.out.println("Velocity 70% ");
+    }
+
+    // 2. Apply deadband
+    xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+    ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+    turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+
+    // 3. Make the driving smoother
+    xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond*throttle;
+    ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond*throttle;
+    turningSpeed = turningLimiter.calculate(turningSpeed)* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond*throttle;
+
+    // 4. Construct desired chassis speeds
+
+    var swerveModuleStates =  DriveConstants.
+                              kDriveKinematics.
+                              toSwerveModuleStates
+                              (fieldOriented ? 
+                                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
+                                                                      ySpeed, 
+                                                                      turningSpeed, 
+                                                                      gyro.getRotation2d()) 
+                                : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
+                              );//Do this if fielOrientation is false 
+
+    
+    // 5. Convert chassis speeds to individual module states
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+    // 6. Output each module states to wheels
+    this.setModuleStates(swerveModuleStates);//*/  
+
+    
+  }
+
+  
+
+
+}
