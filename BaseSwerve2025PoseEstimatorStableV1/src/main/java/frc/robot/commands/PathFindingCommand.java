@@ -73,24 +73,28 @@ public class PathFindingCommand extends Command {
     if(pathFindingCommand.isFinished()){
         finish = true;
     }
+
+    if(RobotContainer.driverJoystick.getHID().getBButtonReleased()){
+      pathFindingCommand.cancel();
+    }
 } 
   
   public void setEndVelocity(double setVelocity){
     setEndVelocity = setVelocity;
+    pathFindingCommand.isFinished();
   }
 
 
-
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     swerveDrive.stopModules();
-
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return finish || RobotContainer.driverJoystick.getHID().getBButtonReleased();
+    return finish;
   }
 }

@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 //NavX imports
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -87,7 +88,9 @@ public class SwerveSubsystem extends SubsystemBase
   /*******************
    * Create gyroscope*
    * ******************/
-  private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+  //private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+
+  Pigeon2 pidgey = new Pigeon2(15, "rio");
   
                
  
@@ -112,7 +115,7 @@ public class SwerveSubsystem extends SubsystemBase
   private final SwerveDrivePoseEstimator m_poseEstimator =
                 new SwerveDrivePoseEstimator(
                     DriveConstants.kDriveKinematics,
-                    gyro.getRotation2d(),
+                    pidgey.getRotation2d(),
                     new SwerveModulePosition[] {
                       frontLeftModule.getPosition(),
                       frontRightModule.getPosition(),
@@ -140,7 +143,8 @@ public class SwerveSubsystem extends SubsystemBase
                     	}).start();
 
       
-         gyro.setAngleAdjustment(180);           
+         //gyro.setAngleAdjustment(180);  
+         pidgey.setYaw(180);     
 
     try{ 
       config = RobotConfig.fromGUISettings();
@@ -176,15 +180,6 @@ public class SwerveSubsystem extends SubsystemBase
 
 
     
-
-
-  //method to get bot pose from limelight and pops up on smartdashboard
-  public void loadLimelightAngle()
-  {
-    double angleLime = LimelightHelpers.getBotPose("limelight-shooter")[5];
-    gyro.setAngleAdjustment(angleLime);
-
-  }
 
   
 
@@ -246,7 +241,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     
     m_poseEstimator.update(
-        gyro.getRotation2d(),
+        pidgey.getRotation2d(),
         new SwerveModulePosition[]
         {
           frontLeftModule.getPosition(),
@@ -318,9 +313,10 @@ public class SwerveSubsystem extends SubsystemBase
     }
     else if (useMegaTag2 == true)
     {
+      //Setar o valor da Yaw para negativo 
       LimelightHelpers.SetRobotOrientation("limelight-shooter", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
-      if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+      if(Math.abs(pidgey.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
       }
@@ -344,7 +340,7 @@ public class SwerveSubsystem extends SubsystemBase
   /** Zeroes the heading of the robot. */
   public void zeroHeading() 
   {
-    gyro.reset();
+    pidgey.reset();
     
   }   
   
@@ -392,7 +388,7 @@ public class SwerveSubsystem extends SubsystemBase
    {
 
     m_poseEstimator.resetPosition(
-                  gyro.getRotation2d(), //arrow usa gyro.getAngle() ///getGyroYaw()
+                  pidgey.getRotation2d(), //arrow usa gyro.getAngle() ///getGyroYaw()
                   new SwerveModulePosition[] 
                                           {
                                               frontLeftModule.getPosition(),
@@ -583,7 +579,7 @@ public void stopModules ()
                                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
                                                                       ySpeed, 
                                                                       turningSpeed, 
-                                                                      gyro.getRotation2d()) 
+                                                                      pidgey.getRotation2d()) 
                                 : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
                               );//Do this if fielOrientation is false 
 

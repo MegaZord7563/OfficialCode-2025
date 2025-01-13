@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 
@@ -68,6 +69,10 @@ public class PathAfterFind extends Command {
     if(findToPath.isFinished()){
         finish = true;
     }
+
+    if(RobotContainer.driverJoystick.getHID().getXButtonReleased()){
+      findToPath.cancel();
+  }
 } 
   
 
