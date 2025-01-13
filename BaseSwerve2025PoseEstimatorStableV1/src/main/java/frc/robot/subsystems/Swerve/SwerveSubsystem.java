@@ -7,6 +7,8 @@ package frc.robot.subsystems.Swerve;
 //JAVA Imports
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 //NavX imports
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
@@ -198,6 +200,7 @@ public class SwerveSubsystem extends SubsystemBase
   
     this.addPoseVision();
     
+    //Logger.recordOutput(getName(), null);
 
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
     SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
