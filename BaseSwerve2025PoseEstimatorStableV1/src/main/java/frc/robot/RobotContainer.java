@@ -83,11 +83,11 @@ public class RobotContainer
     //swerveDrive 
 
     //Instantiate commands
-    Pose2d targetPose = new Pose2d(10, 5, Rotation2d.fromDegrees(180));
+    Pose2d targetPose = new Pose2d(0.7, 2.83, Rotation2d.fromDegrees(0));
 
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-            3.0, PathPlannerConstants.maxAccelerationPath,
+            1.0, PathPlannerConstants.maxAccelerationPath,
             PathPlannerConstants.maxAngularVelocityRadPerSec, PathPlannerConstants.maxAngularAccelerationRadPerSecSq);
       
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
@@ -171,10 +171,13 @@ public class RobotContainer
      //driverJoystick.y().whileTrue(new InstantCommand(swerveDrive::addPoseVision));
      driverJoystick.leftBumper().onTrue(new InstantCommand(swerveDrive::robotSlower)); 
      driverJoystick.rightBumper().onTrue(new InstantCommand(swerveDrive::robotFast)); 
-     driverJoystick.b().onTrue(new InstantCommand(swerveDrive::robotMaxSpeed)); 
+    // driverJoystick.b().onTrue(new InstantCommand(swerveDrive::robotMaxSpeed)); 
      
-     driverJoystick.a().onTrue(new InstantCommand(() -> pathFindingCommand.schedule()));
-     driverJoystick.y().onTrue(new InstantCommand(() -> findToPath.schedule()));
+    // driverJoystick.a().whileTrue(new RunCommand(() -> pathFindingCommand.schedule()));
+
+     driverJoystick.b().whileTrue(pathFindingCmd);
+
+     driverJoystick.y().whileTrue(new InstantCommand(() -> findToPath.schedule()));
      
         
      ///*Changes robot speed - speeding up

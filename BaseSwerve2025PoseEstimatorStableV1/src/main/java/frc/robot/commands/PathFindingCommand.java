@@ -8,6 +8,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
@@ -68,6 +69,7 @@ public class PathFindingCommand extends Command {
 
     pathFindingCommand.schedule();
 
+
     if(pathFindingCommand.isFinished()){
         finish = true;
     }
@@ -89,6 +91,6 @@ public class PathFindingCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return finish;
+    return finish || RobotContainer.driverJoystick.getHID().getBButtonReleased();
   }
 }
