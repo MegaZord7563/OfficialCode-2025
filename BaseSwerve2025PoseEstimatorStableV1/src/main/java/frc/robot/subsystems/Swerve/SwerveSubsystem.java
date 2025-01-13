@@ -90,7 +90,7 @@ public class SwerveSubsystem extends SubsystemBase
    * ******************/
   //private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
-  Pigeon2 pidgey = new Pigeon2(15, "rio");
+  Pigeon2 gyro = new Pigeon2(15, "rio");
   
                
  
@@ -115,7 +115,7 @@ public class SwerveSubsystem extends SubsystemBase
   private final SwerveDrivePoseEstimator m_poseEstimator =
                 new SwerveDrivePoseEstimator(
                     DriveConstants.kDriveKinematics,
-                    pidgey.getRotation2d(),
+                    gyro.getRotation2d(),
                     new SwerveModulePosition[] {
                       frontLeftModule.getPosition(),
                       frontRightModule.getPosition(),
@@ -144,7 +144,7 @@ public class SwerveSubsystem extends SubsystemBase
 
       
          //gyro.setAngleAdjustment(180);  
-         pidgey.setYaw(180);     
+         gyro.setYaw(180);     
 
     try{ 
       config = RobotConfig.fromGUISettings();
@@ -241,7 +241,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     
     m_poseEstimator.update(
-        pidgey.getRotation2d(),
+        gyro.getRotation2d(),
         new SwerveModulePosition[]
         {
           frontLeftModule.getPosition(),
@@ -316,7 +316,7 @@ public class SwerveSubsystem extends SubsystemBase
       //Setar o valor da Yaw para negativo 
       LimelightHelpers.SetRobotOrientation("limelight-shooter", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
-      if(Math.abs(pidgey.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+      if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
       }
@@ -340,7 +340,7 @@ public class SwerveSubsystem extends SubsystemBase
   /** Zeroes the heading of the robot. */
   public void zeroHeading() 
   {
-    pidgey.reset();
+    gyro.reset();
     
   }   
   
@@ -388,7 +388,7 @@ public class SwerveSubsystem extends SubsystemBase
    {
 
     m_poseEstimator.resetPosition(
-                  pidgey.getRotation2d(), //arrow usa gyro.getAngle() ///getGyroYaw()
+                  gyro.getRotation2d(), //arrow usa gyro.getAngle() ///getGyroYaw()
                   new SwerveModulePosition[] 
                                           {
                                               frontLeftModule.getPosition(),
@@ -579,7 +579,7 @@ public void stopModules ()
                                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
                                                                       ySpeed, 
                                                                       turningSpeed, 
-                                                                      pidgey.getRotation2d()) 
+                                                                      gyro.getRotation2d()) 
                                 : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
                               );//Do this if fielOrientation is false 
 
