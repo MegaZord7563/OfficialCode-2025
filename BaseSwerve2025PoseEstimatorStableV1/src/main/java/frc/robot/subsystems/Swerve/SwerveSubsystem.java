@@ -12,6 +12,7 @@ import org.littletonrobotics.junction.Logger;
 //NavX imports
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -89,7 +90,9 @@ public class SwerveSubsystem extends SubsystemBase
   /*******************
    * Create gyroscope*
    * ******************/
-  private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+  //private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+
+  Pigeon2 gyro = new Pigeon2(0, "rio");
   
                
  
@@ -142,7 +145,8 @@ public class SwerveSubsystem extends SubsystemBase
                     	}).start();
 
       
-         gyro.setAngleAdjustment(180);           
+         //gyro.setAngleAdjustment(180);  
+         gyro.setYaw(180);     
 
     try{ 
       config = RobotConfig.fromGUISettings();
@@ -179,15 +183,6 @@ public class SwerveSubsystem extends SubsystemBase
 
     
 
-
-  //method to get bot pose from limelight and pops up on smartdashboard
-  public void loadLimelightAngle()
-  {
-    double angleLime = LimelightHelpers.getBotPose("limelight-shooter")[5];
-    gyro.setAngleAdjustment(angleLime);
-
-  }
-
   
 
   @Override
@@ -200,15 +195,16 @@ public class SwerveSubsystem extends SubsystemBase
   
     this.addPoseVision();
     
-    //Logger.recordOutput(getName(), null);
+    Logger.recordOutput("Pose2d", getPoseEstimator());
+    Logger.recordOutput("Pose3d", LimelightHelpers.getBotPose3d_wpiBlue(PathPlannerConstants.limelightShooter));
+    Logger.recordOutput("SwerveStates", getModuleStates());
 
-    SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
-    SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
-    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose("limelight-shooter")[5]);
-    SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
-    SmartDashboard.putBoolean("True Blue", isBlue);
-    
-    System.out.println("Deploy");
+    Logger.recordOutput("\"PoseEstimator /Pose X (meters)\"",this.getPoseEstimator().getX());
+    Logger.recordOutput("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
+    Logger.recordOutput("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(PathPlannerConstants.limelightShooter)[5]);
+    Logger.recordOutput("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
+    Logger.recordOutput("True Blue", isBlue);
+
 /* 
 
     for (int i = 0; i < modules.length; i++) 
@@ -277,11 +273,11 @@ public class SwerveSubsystem extends SubsystemBase
     {
       if (isBlue)
       {
-        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
+        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(PathPlannerConstants.limelightShooter);
       }
       else 
       {
-         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-shooter");
+         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed(PathPlannerConstants.limelightShooter);
       }
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
@@ -321,9 +317,10 @@ public class SwerveSubsystem extends SubsystemBase
     }
     else if (useMegaTag2 == true)
     {
-      LimelightHelpers.SetRobotOrientation("limelight-shooter", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
-      if(Math.abs(gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+      //Setar o valor da Yaw para negativo 
+      LimelightHelpers.SetRobotOrientation(PathPlannerConstants.limelightShooter, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(PathPlannerConstants.limelightShooter);
+      if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
       }

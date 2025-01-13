@@ -38,7 +38,7 @@ public class Robot extends LoggedRobot  {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+    Logger.recordMetadata("ProjectName", "BaseSwerve2025PoseEstimatorStableV1"); // Set a metadata value
 
     if (isReal()) {
         Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")

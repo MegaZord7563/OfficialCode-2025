@@ -259,6 +259,7 @@ import edu.wpi.first.math.util.Units;
       public static final double maxAccelerationPath = 4.0;
       public static final double maxAngularVelocityRadPerSec = Units.degreesToRadians(540);
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
+      public static final String limelightShooter ="limelight-shooter";
   }
 
 
