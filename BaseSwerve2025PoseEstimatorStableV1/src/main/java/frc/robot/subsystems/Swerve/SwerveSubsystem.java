@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.Swerve;
 
+import java.util.Arrays;
+import java.util.List;
 //JAVA Imports
 import java.util.function.Supplier;
 
@@ -33,6 +35,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 //LOCAL Imports
 import frc.robot.Constants;
 import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.Utils.SortArrays;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Limelight.LimelightHelpers;
@@ -274,11 +277,11 @@ public class SwerveSubsystem extends SubsystemBase
     {
       if (isBlue)
       {
-        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
+        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter"); // Implement here getLimelightBestResult()
       }
       else 
       {
-         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-shooter");
+         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-shooter"); // Implement here getLimelightBestResult()
       }
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
@@ -337,6 +340,25 @@ public class SwerveSubsystem extends SubsystemBase
       }
     }
 
+  }
+
+
+  public String getLimelightBestResult(){
+    /** Include here all the limelights' names */
+    List<String> limelightName = Arrays.asList("limelight-shooter", "limelight-nova");
+
+    /** Include here all the limelights's ta's (it states how much camera area is being filled by AprilTag) */
+    List<Double> ta = Arrays.asList(LimelightHelpers.getTA(limelightName.get(0)), 
+                                    LimelightHelpers.getTA(limelightName.get(1)));
+
+    /** Include here all the limelights's tv's (it returns if limelight is identifying some AprilTag) */
+    List<Boolean> tv = Arrays.asList(LimelightHelpers.getTV(limelightName.get(0)), 
+                                    LimelightHelpers.getTV(limelightName.get(1)));
+
+    SortArrays.concurrentSort(ta, limelightName, ta, tv); //Sort all the arrays from the shortest to the biggest ta
+    SortArrays.concurrentSort(tv, limelightName, ta, tv); //Sort all the arrays from false to true
+
+    return limelightName.get(1); //Get the best limelight (the last value of the array)
   }
 
    
