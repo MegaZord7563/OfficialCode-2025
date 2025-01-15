@@ -134,7 +134,7 @@ public class SwerveSubsystem extends SubsystemBase
     
 
     /* delay 1 s and then reset gyro */
-    //*
+    /*
     new Thread(() -> {
                       try 
                       {
@@ -150,9 +150,9 @@ public class SwerveSubsystem extends SubsystemBase
          //gyro.setAngleAdjustment(180);  
          
 //*/
-  //gyro.reset();
+
   //gyro.setYaw(0,1); 
-  //zeroHeading();
+  //gyro.setYaw(0);
   
   
 
@@ -213,7 +213,7 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
     
-    System.out.println("Deploy1");
+  //  System.out.println("Deploy1");
 /* 
 
     for (int i = 0; i < modules.length; i++) 
@@ -557,7 +557,7 @@ public void stopModules ()
     {
       
       throttle =0.3;
-      System.out.println("Slow down velocity - 30%");
+      //System.out.println("Slow down velocity - 30%");
       
     }
     else if (throttleFast)

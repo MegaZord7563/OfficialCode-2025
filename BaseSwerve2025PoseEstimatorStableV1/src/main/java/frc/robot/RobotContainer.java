@@ -50,8 +50,10 @@ public class RobotContainer
   public static AutoMundoSenai autoMundoSenai = new AutoMundoSenai();
   public static AutoQuadrado autoQuadrado = new AutoQuadrado();
   public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
-  0, 0, 0, 0);
+  1, 0.7, 2.83, 0);
 
+  public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 
+  1, 2.198, 4.921, 180);
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -80,8 +82,11 @@ public class RobotContainer
     chooserAuto = AutoBuilder.buildAutoChooser();
     
     PathPlannerAuto autoPath = new PathPlannerAuto("FirstPathAutoNovo");
+    PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
 
     chooserAuto.addOption("NovoAuto", autoPath);
+
+    chooserAuto.addOption("AutoTest", autoTest);
 
     //Instantiate subsystems
     //swerveDrive 
@@ -142,7 +147,11 @@ public class RobotContainer
                                     )
                                   ); 
                                                   
-   
+
+    if(driverJoystick.getHID().getYButton()){
+      System.out.println("Y Pressed Container");
+    }
+
   }
 
   /**
@@ -158,7 +167,7 @@ public class RobotContainer
   {
     //X positions of the Wheels 
     //new JoystickButton(driverJoystick, Button.kX.value).whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
-    driverJoystick.x().whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
+    //driverJoystick.x().whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
     
     ///*Zeroing NavX2 It changes robot heading*/
      //JoystickButton robotChangeHeading = new JoystickButton (driverJoystick,XboxController.Button.kStart.value); 
@@ -166,7 +175,6 @@ public class RobotContainer
 
      driverJoystick.start().onTrue(new InstantCommand(swerveDrive::zeroHeading));
      
-
 
      ///*Changes robot speed - slowing down
      //JoystickButton throttle1 = new JoystickButton (driverJoystick,XboxController.Button.kLeftBumper.value); 
@@ -177,11 +185,15 @@ public class RobotContainer
      driverJoystick.rightBumper().onTrue(new InstantCommand(swerveDrive::robotFast)); 
     // driverJoystick.b().onTrue(new InstantCommand(swerveDrive::robotMaxSpeed)); 
      
-    // driverJoystick.a().whileTrue(new RunCommand(() -> pathFindingCommand.schedule()));
+     //driverJoystick.a().whileTrue(new RunCommand(() -> pathFindingCommand.schedule()));
 
-     driverJoystick.b().whileTrue(pathFindingCmd);
+     driverJoystick.b().onTrue(pathFindingCmd);
+     driverJoystick.b().onFalse(new InstantCommand(()-> pathFindingCmd.endCommand()));
 
-     driverJoystick.y().whileTrue(new InstantCommand(() -> findToPath.schedule()));
+     driverJoystick.x().onTrue(pathFindingCmd2);
+     driverJoystick.x().onFalse(new InstantCommand(()-> pathFindingCmd2.endCommand()));
+
+     //driverJoystick.y().whileTrue(new InstantCommand(() -> findToPath.schedule()));
      
         
      ///*Changes robot speed - speeding up
