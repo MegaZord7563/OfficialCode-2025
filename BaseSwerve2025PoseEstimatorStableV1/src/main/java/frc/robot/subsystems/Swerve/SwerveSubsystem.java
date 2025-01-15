@@ -607,9 +607,20 @@ public void stopModules ()
     
   }
 
-  private void initializePigeon2(Pigeon2Configurator cfg){
+  /**
+     * Initialize Pigeon2 device from the configurator object
+     * 
+     * @param cfg Configurator of the Pigeon2 device
+     */
+  private void initializePigeon2(Pigeon2Configurator cfg)
+  {
     var toApply = new Pigeon2Configuration();
+    /*
+    * User can change configs if they want, or leave this blank for factory-default
+    */
     cfg.apply(toApply);
+   
+    /* And initialize yaw to 0 */
     cfg.setYaw(0);
   }
 
