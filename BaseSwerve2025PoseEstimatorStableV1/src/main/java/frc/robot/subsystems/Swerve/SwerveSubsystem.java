@@ -10,6 +10,10 @@ import java.util.function.Supplier;
 //NavX imports
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.configs.Pigeon2Configurator;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
@@ -24,6 +28,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -90,10 +95,8 @@ public class SwerveSubsystem extends SubsystemBase
    * ******************/
   //private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
-  Pigeon2 gyro = new Pigeon2(15, "rio");
-  
-               
- 
+  Pigeon2 gyro = new Pigeon2(30, "rio");
+              
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
   private final SlewRateLimiter turningLimiter= new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
@@ -129,24 +132,34 @@ public class SwerveSubsystem extends SubsystemBase
   public SwerveSubsystem() 
   {
     
-    
+
     /* delay 1 s and then reset gyro */
+    //*
     new Thread(() -> {
                       try 
                       {
                           Thread.sleep(1000); //avoid to block the rest of our code from running
-                          zeroHeading();
+                          gyro.reset();
                           
                       } catch (Exception e) 
                       {
                       }
                     	}).start();
 
-      
+    initializePigeon2(gyro.getConfigurator());
          //gyro.setAngleAdjustment(180);  
-         gyro.setYaw(180);     
+         
+//*/
+  //gyro.reset();
+  //gyro.setYaw(0,1); 
+  //zeroHeading();
+  
+  
 
+  
+  
     try{ 
+
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
       // Handle exception as needed
@@ -196,11 +209,11 @@ public class SwerveSubsystem extends SubsystemBase
 
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
     SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
-    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose("limelight-shooter")[5]);
+    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightName)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
     
-    System.out.println("Deploy");
+    System.out.println("Deploy1");
 /* 
 
     for (int i = 0; i < modules.length; i++) 
@@ -269,11 +282,11 @@ public class SwerveSubsystem extends SubsystemBase
     {
       if (isBlue)
       {
-        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-shooter");
+        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.limelightName);
       }
       else 
       {
-         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-shooter");
+         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed(DriveConstants.limelightName);
       }
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
@@ -314,8 +327,8 @@ public class SwerveSubsystem extends SubsystemBase
     else if (useMegaTag2 == true)
     {
       //Setar o valor da Yaw para negativo 
-      LimelightHelpers.SetRobotOrientation("limelight-shooter", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightName);
       if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
@@ -590,6 +603,12 @@ public void stopModules ()
     this.setModuleStates(swerveModuleStates);//*/  
 
     
+  }
+
+  private void initializePigeon2(Pigeon2Configurator cfg){
+    var toApply = new Pigeon2Configuration();
+    cfg.apply(toApply);
+    cfg.setYaw(0);
   }
 
   
