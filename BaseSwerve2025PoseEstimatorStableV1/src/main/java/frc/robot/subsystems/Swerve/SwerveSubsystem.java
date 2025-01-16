@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.Swerve;
 
-import java.util.Comparator;
 //JAVA Imports
 import java.util.function.Supplier;
 
@@ -135,7 +134,7 @@ public class SwerveSubsystem extends SubsystemBase
     
 
     /* delay 1 s and then reset gyro */
-    /*
+    //*
     new Thread(() -> {
                       try 
                       {
@@ -151,9 +150,9 @@ public class SwerveSubsystem extends SubsystemBase
          //gyro.setAngleAdjustment(180);  
          
 //*/
-
+  //gyro.reset();
   //gyro.setYaw(0,1); 
-  //gyro.setYaw(0);
+  //zeroHeading();
   
   
 
@@ -214,7 +213,7 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
     
-  //  System.out.println("Deploy1");
+    System.out.println("Deploy1");
 /* 
 
     for (int i = 0; i < modules.length; i++) 
@@ -266,8 +265,6 @@ public class SwerveSubsystem extends SubsystemBase
   
   }
 
-
-
   /**
    * update pose estimator using absoule coordenates from limelight
    */
@@ -279,6 +276,9 @@ public class SwerveSubsystem extends SubsystemBase
 
     boolean doRejectUpdate = false;
     LimelightHelpers.PoseEstimate mt1;
+
+  
+
 
     if(useMegaTag2 == false)
     {
@@ -328,23 +328,39 @@ public class SwerveSubsystem extends SubsystemBase
     }
     else if (useMegaTag2 == true)
     {
-      //Setar o valor da Yaw para negativo 
+        // Determine which measurement to use based on tag count or other criteria
+      LimelightHelpers.PoseEstimate bestMeasurement = null;
+       
       LimelightHelpers.SetRobotOrientation(DriveConstants.limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightName);
+      
+      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-nova");
+      
+      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+      
       if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
       }
-      if(mt2.tagCount == 0)
+      if(frontLimelight.tagCount == 0  && rearLimelight.tagCount == 0)
       {
         doRejectUpdate = true;
       }
       if(!doRejectUpdate)
       {
+      
+          if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0) 
+          {
+              // Both cameras have valid measurements, choose the one with the higher tag count
+              bestMeasurement = (frontLimelight.tagCount >= rearLimelight.tagCount) ? frontLimelight : rearLimelight;
+          } else if (frontLimelight.tagCount > 0) 
+          {
+              bestMeasurement = frontLimelight;
+          } else if (rearLimelight.tagCount > 0) 
+          {
+              bestMeasurement = rearLimelight;
+          }
         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        m_poseEstimator.addVisionMeasurement(
-            mt2.pose,
-            mt2.timestampSeconds);
+        m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
       }
     }
 
@@ -559,7 +575,7 @@ public void stopModules ()
     {
       
       throttle =0.3;
-      //System.out.println("Slow down velocity - 30%");
+      System.out.println("Slow down velocity - 30%");
       
     }
     else if (throttleFast)
@@ -619,8 +635,10 @@ public void stopModules ()
     * User can change configs if they want, or leave this blank for factory-default
     */
     cfg.apply(toApply);
+    
    
     /* And initialize yaw to 0 */
+    
     cfg.setYaw(0);
   }
 
