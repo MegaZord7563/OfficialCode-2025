@@ -275,7 +275,11 @@ public class SwerveSubsystem extends SubsystemBase
     boolean useMegaTag2 = true; //set to false to use MegaTag1
 
     boolean doRejectUpdate = false;
+
     LimelightHelpers.PoseEstimate mt1;
+
+    // Determine which measurement to use based on tag count or other criteria
+    LimelightHelpers.PoseEstimate bestMeasurement = null;
 
   
 
@@ -328,11 +332,11 @@ public class SwerveSubsystem extends SubsystemBase
     }
     else if (useMegaTag2 == true)
     {
-        // Determine which measurement to use based on tag count or other criteria
-      LimelightHelpers.PoseEstimate bestMeasurement = null;
-       
+      
+      // Set the robot's orientation using the current estimated position's rotation degrees 
       LimelightHelpers.SetRobotOrientation(DriveConstants.limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       
+      //Pose estimates are obtained from both cameras.
       LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-nova");
       
       LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
@@ -341,24 +345,31 @@ public class SwerveSubsystem extends SubsystemBase
       {
         doRejectUpdate = true;
       }
+      /**
+       * The tagCount variable represents the number of vision tags (fiducial markers) 
+       * detected by the Limelight camera.
+       * */ 
       if(frontLimelight.tagCount == 0  && rearLimelight.tagCount == 0)
       {
         doRejectUpdate = true;
       }
       if(!doRejectUpdate)
       {
-      
+          //The best measurement is selected based on the tag count from each camera.
           if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0) 
           {
-              // Both cameras have valid measurements, choose the one with the higher tag count
-              bestMeasurement = (frontLimelight.tagCount >= rearLimelight.tagCount) ? frontLimelight : rearLimelight;
+            // Both cameras have valid measurements, choose the one with the higher tag count
+            bestMeasurement = (frontLimelight.tagCount >= rearLimelight.tagCount) ? frontLimelight : rearLimelight;
+          
           } else if (frontLimelight.tagCount > 0) 
           {
               bestMeasurement = frontLimelight;
+
           } else if (rearLimelight.tagCount > 0) 
           {
               bestMeasurement = rearLimelight;
           }
+        //The selected measurement is then used to update the robot's pose estimation, provided the angular velocity condition is met.
         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
       }
