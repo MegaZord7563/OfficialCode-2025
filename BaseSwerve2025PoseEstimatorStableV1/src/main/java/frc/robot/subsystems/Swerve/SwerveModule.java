@@ -22,14 +22,12 @@ import com.revrobotics.RelativeEncoder;
 //REV imports
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
+
 import com.revrobotics.spark.SparkClosedLoopController;
 
 
@@ -345,18 +343,14 @@ public class SwerveModule extends SubsystemBase
 
     /* User can change the configs if they want, or leave it empty for factory-default */
     absoluteCaNcoder.getConfigurator().apply(configs);
-    
+
   
  
   }
 
   
 
-  public void turningPidControllerGains()
-  {
-    
 
-  }
 
   /**
    * Tunning TalonFx PIDController
