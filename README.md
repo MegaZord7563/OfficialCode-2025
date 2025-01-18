@@ -32,8 +32,9 @@ This is the official code from the FRC Megazord #7563 Team here you can browse i
   How to create?
 
   ## Instantiating:
+    *
     *private final SwerveDrivePoseEstimator m_poseEstimator =
-    *            new SwerveDrivePoseEstimator(
+    *           new SwerveDrivePoseEstimator(
                     DriveConstants.kDriveKinematics,
                      gyro.getRotation2d(),
                     new SwerveModulePosition[] {
@@ -45,3 +46,31 @@ This is the official code from the FRC Megazord #7563 Team here you can browse i
                     new Pose2d(),
                     VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
                     VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+
+
+## UpdatePoseEstimator
+Class that Update the Pose
+
+ public void updatePoseEstimator() 
+ {
+    
+    m_poseEstimator.update(
+        gyro.getRotation2d(),
+        new SwerveModulePosition[]
+        {
+          frontLeftModule.getPosition(),
+          frontRightModule.getPosition(),
+          backLeftModule.getPosition(),
+          backRightModule.getPosition()
+        });
+  
+  }
+
+
+We use poseEstimator in other Places but thease two are the most important
+
+## PathPlanner
+
+How to create?
+
+  
