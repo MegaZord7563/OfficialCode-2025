@@ -1,76 +1,162 @@
-# 2025 Megazord robot Code
-This is the official code from the FRC Megazord #7563 Team here you can browse into commits and Branchs, but remember just create a new file if its necessary
-
-# Rules:
-- Do not create copies of the same file, instead try to create a new Branch.
-- Just make changes in the Main Branch if the code is already validated.
-- If you do a change, you must to commit.
-- Never do a Merge if you are not sure of what you are doing
-
-  # Systems:
-  Here we're gonna to do a brief review of each Subsystem of the robot
-
-  # Swerve
-  The SwerveDrive allow us to move fast and with precision in any position of the field.
-
-  The code its separed in 3 different places
-  # SwerveModules
-
-  Here we're gonna to set the output for each wheel separatly, as shown in the pic:
-  ![image](https://github.com/user-attachments/assets/3db5946f-9272-4c8a-95ba-dd79039eae32)
-  
-  # Swerve Subsystem / Command
-  In this part of the code we're gonna to mix all the wheel's together and create ChassisSpeeds, and the command will look for the inputs of the the Joystick and convert in outputSpeeds
-  ![image](https://github.com/user-attachments/assets/bf6685db-2e2a-4c8e-84aa-dfef68be0d86)
-
-  # Inside the swerve
-  - Here we have some controlls to automate our robot, like the Pose estimator , and with it we can implament controlls like PathPlanner For Autonomous and PathFinding
- 
-  # Pose Estimator
-  This class wraps Swerve Drive Odometry to fuse latency-compensated vision measurements with swerve drive encoder distance measurements. It is intended to be a drop-in replacement for SwerveDriveOdometry.
-
-  How to create?
-
-  ## Instantiating:
-    *
-    *private final SwerveDrivePoseEstimator m_poseEstimator =
-    *           new SwerveDrivePoseEstimator(
-                    DriveConstants.kDriveKinematics,
-                     gyro.getRotation2d(),
-                    new SwerveModulePosition[] {
-                      frontLeftModule.getPosition(),
-                      frontRightModule.getPosition(),
-                      backLeftModule.getPosition(),
-                      backRightModule.getPosition()
-                    },
-                    new Pose2d(),
-                    VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-                    VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+Desculpe novamente pelo erro anterior. Aqui está o conteúdo completo no formato **.md**, pronto para ser copiado:
 
 
-## UpdatePoseEstimator
-Class that Update the Pose
+# 2025 Megazord Robot Code
 
- public void updatePoseEstimator() 
- {
-    
-    m_poseEstimator.update(
+Welcome to the official code repository for the **2025 Megazord Robot (FRC Team 7563)**. This documentation provides an overview of the robot's subsystems, control systems, and how to interact with the codebase.
+
+## Rules
+
+Please follow these coding guidelines to maintain consistency and integrity in the repository:
+
+- **Do not create copies** of the same file; instead, create a new branch for your changes.
+- **Only make changes** to the main branch after the code has been validated.
+- Always **commit your changes** if you modify any code.
+- **Never merge** if you are unsure of what you are doing. Always double-check before performing merges.
+
+## Robot Systems Overview
+
+### Swerve Drive
+
+The **Swerve Drive** enables precise, omnidirectional movement, allowing the robot to navigate the field with agility. The code is separated into three main components:
+
+### 1. **SwerveModules**
+
+This part of the code controls the output for each individual wheel. Each module is responsible for one wheel's direction and speed. The configuration of the modules is shown in the image below:
+
+![Swerve Modules](https://github.com/user-attachments/assets/3db5946f-9272-4c8a-95ba-dd79039eae32)
+
+### 2. **Swerve Subsystem / Command**
+
+Here, the code combines the wheel outputs and creates **ChassisSpeeds** to control the robot’s movement. Joystick inputs are processed and translated into robot output speeds.
+
+![Swerve Subsystem](https://github.com/user-attachments/assets/bf6685db-2e2a-4c8e-84aa-dfef68be0d86)
+
+### 3. **Swerve Control System**
+
+This section includes key controls to automate the robot's movements, such as:
+
+- **Pose Estimator**: Used to estimate the robot's position on the field by combining encoder data and vision inputs.
+- **Path Planner**: For autonomous navigation and path-following.
+
+### Pose Estimator
+
+The **Pose Estimator** class wraps the **Swerve Drive Odometry** and helps fuse latency-compensated vision data with encoder data. This allows us to accurately estimate the robot's position on the field.
+
+#### Instantiating the Pose Estimator:
+
+```java
+private final SwerveDrivePoseEstimator m_poseEstimator =
+    new SwerveDrivePoseEstimator(
+        DriveConstants.kDriveKinematics,
         gyro.getRotation2d(),
-        new SwerveModulePosition[]
-        {
+        new SwerveModulePosition[] {
           frontLeftModule.getPosition(),
           frontRightModule.getPosition(),
           backLeftModule.getPosition(),
           backRightModule.getPosition()
-        });
-  
-  }
+        },
+        new Pose2d(),
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))
+    );
+```
 
+---
 
-We use poseEstimator in other Places but thease two are the most important
+## Path Planner
 
-## PathPlanner
+**Path Planner** is a motion profile generator used in FRC robots. It allows for precise path-following and generates motion profiles using Bézier curves. Some notable features of **Path Planner** include:
 
-How to create?
+- **Holonomic mode**: This mode decouples the robot's rotation from its direction of travel, allowing for more flexible path following.
+- **Real-time path preview**: Visualize paths in real-time during robot operation.
+- **Event markers**: Markers can trigger other code along the path, such as triggering actions at specific points during path following.
+- **Path generation**: Create motion profiles and commands for autonomous routines.
+- **Path reloading**: Paths can be reloaded on the robot without the need to redeploy code.
 
-  
+### Instantiating Path Planner
+
+To set up **Path Planner**, we configure the **AutoBuilder** with the required parameters, such as the robot's pose, odometry reset method, and driving method:
+
+```java
+AutoBuilder.configure(
+    this::getPoseEstimator,        // Robot pose supplier
+    this::resetOdometry,           // Method to reset odometry
+    this::getChassisSpeeds,        // ChassisSpeeds supplier (ROBOT RELATIVE)
+    this::drive,                   // Method to drive the robot (ROBOT RELATIVE)
+    PathPlannerConstants.AutoConfig, 
+    config,                        // Robot configuration
+    () -> {
+        // Control path mirroring for the red alliance
+        var alliance = DriverStation.getAlliance();
+        return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
+    },
+    this                            // Reference to this subsystem
+);
+```
+
+In this code, we configure the **AutoBuilder** with the following:
+- A **pose estimator** to provide the current pose of the robot.
+- A method to **reset odometry** when a new autonomous path starts.
+- A **ChassisSpeeds supplier** that provides robot velocities relative to the robot's frame of reference.
+- A **drive method** to apply velocities to the robot's motors.
+
+### In the Robot Container
+
+To use **Path Planner** for autonomous routines, define an autonomous path and add it to the **SendableChooser**. This allows the robot to select and execute specific paths at runtime:
+
+```java
+PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
+chooserAuto.addOption("AutoTest", autoTest);
+```
+
+This code adds a new autonomous routine named "AutoTest" to the **SendableChooser**, which will allow the robot to choose this routine during a match.
+
+---
+
+## Pathfinding
+
+**Pathfinding** with **PathPlannerLib** enables the robot to automatically generate a path between two points while avoiding obstacles. The generated path can be combined with pre-planned paths for more refined control.
+
+### Initializing Pathfinding
+
+To use the **Pathfinding** capabilities, first create the necessary constraints (e.g., velocity, acceleration, etc.):
+
+```java
+// Pathfinding constraints
+PathConstraints constraints = new PathConstraints(
+    maxVelocity, 
+    PathPlannerConstants.maxAccelerationPath,
+    PathPlannerConstants.maxAngularVelocityRadPerSec,
+    PathPlannerConstants.maxAngularAccelerationRadPerSecSq
+);
+
+// Building the pathfinding command
+pathFindingCommand = AutoBuilder.pathfindToPose(
+    targetPose,
+    constraints,
+    setEndVelocity  // Goal end velocity in meters/sec
+);
+
+pathFindingCommand.schedule();
+```
+
+This code defines the constraints for pathfinding, including maximum velocity, angular velocity, and acceleration. Then, it creates the pathfinding command that will generate a path to the target pose and execute the movement.
+
+### Stopping Pathfinding
+
+When pathfinding is no longer needed (for example, if the task is finished or the robot encounters an obstacle), the following method can be called to cancel the pathfinding command and stop the robot:
+
+```java
+public void endCommand() {
+    pathFindingCommand.cancel();
+    PPHolonomicDriveController.overrideXYFeedback(() -> swerveDrive.getPoseEstimator().getX(), 
+                                                   () -> swerveDrive.getPoseEstimator().getY());
+    PPHolonomicDriveController.overrideRotationFeedback(() -> swerveDrive.getPoseEstimator().getRotation().getRadians());
+    System.out.println("EndCommand");
+    finish = true;
+}
+```
+
+This code cancels the ongoing **Pathfinding** command and stops the robot's movement. It also overrides the robot's feedback controls to ensure that the robot is no longer following the generated path.
+```
