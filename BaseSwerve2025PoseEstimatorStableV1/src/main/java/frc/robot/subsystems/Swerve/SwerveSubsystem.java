@@ -337,9 +337,9 @@ public class SwerveSubsystem extends SubsystemBase
       LimelightHelpers.SetRobotOrientation(DriveConstants.limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       
       //Pose estimates are obtained from both cameras.
-      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-nova");
+      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
       
-      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-nova");
       
       if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
@@ -650,7 +650,7 @@ public void stopModules ()
    
     /* And initialize yaw to 0 */
     
-    cfg.setYaw(0);
+    cfg.setYaw(180);
   }
 
   
