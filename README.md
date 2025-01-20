@@ -1,5 +1,3 @@
-Desculpe novamente pelo erro anterior. Aqui está o conteúdo completo no formato **.md**, pronto para ser copiado:
-
 
 # 2025 Megazord Robot Code
 
