@@ -1,7 +1,13 @@
 package frc.robot.commands;
 
+import java.util.concurrent.AbstractExecutorService;
+
+import edu.wpi.first.units.mutable.GenericMutableMeasureImpl;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 
 public class LiftCommand extends Command{
@@ -20,7 +26,10 @@ public class LiftCommand extends Command{
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    liftSubsystem.liftMotorRightEncoder.getPosition();
+    if (RobotContainer.driverJoystick.getHID().getAButtonPressed()) {
+        getNowPosition();
+    };
+    //liftSubsystem.liftMotorRightEncoder.getPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,7 +38,10 @@ public class LiftCommand extends Command{
 
 
   }
-
+  public void getNowPosition(){
+    liftSubsystem.liftMotorRightEncoder.getPosition();
+  }
+    
 
   // Called once the command ends or is interrupted.
   @Override
