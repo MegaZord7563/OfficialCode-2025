@@ -209,7 +209,7 @@ public class SwerveSubsystem extends SubsystemBase
 
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
     SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
-    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightName)[5]);
+    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
     
@@ -288,11 +288,11 @@ public class SwerveSubsystem extends SubsystemBase
     {
       if (isBlue)
       {
-        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.limelightName);
+        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.limelightFront);
       }
       else 
       {
-         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed(DriveConstants.limelightName);
+         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed(DriveConstants.limelightFront);
       }
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
@@ -334,12 +334,12 @@ public class SwerveSubsystem extends SubsystemBase
     {
       
       // Set the robot's orientation using the current estimated position's rotation degrees 
-      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightFront, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       
       //Pose estimates are obtained from both cameras.
-      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightFront);
       
-      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-nova");
+      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightBack);
       
       if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
