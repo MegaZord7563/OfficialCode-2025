@@ -31,6 +31,11 @@ import edu.wpi.first.math.util.Units;
  public final class Constants 
  {
 
+
+  public static final class LiftConstants {
+    public static final ClosedLoopSlot pidLiftSparkSlot = ClosedLoopSlot.kSlot0;
+  }
+
   public static final class ModuleConstants 
   {
 

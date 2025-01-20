@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -10,7 +11,9 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LiftConstants;
 import frc.robot.Constants.ModuleConstants;
 
 public class LiftSubsystem extends SubsystemBase {
@@ -23,7 +26,7 @@ SparkMaxConfig configLeftMotor = new SparkMaxConfig();
 
 private final SparkClosedLoopController liftPidController;
 
-private final RelativeEncoder liftMotorRightEncoder;
+public final RelativeEncoder liftMotorRightEncoder;
 
 
 public LiftSubsystem(){
@@ -41,7 +44,13 @@ configLeftMotor();
 
 @Override
 public void periodic(){
-        
+SmartDashboard.putNumber("liftMotorRightEncoder", liftMotorRightEncoder.getPosition());
+
+}
+
+public void setPosition(double reference){
+
+    liftPidController.setReference(reference, ControlType.kPosition, LiftConstants.pidLiftSparkSlot);
 }
 
 public void configRightMotor(){
