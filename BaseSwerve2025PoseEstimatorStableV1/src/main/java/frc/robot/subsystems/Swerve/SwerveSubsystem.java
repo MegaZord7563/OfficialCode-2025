@@ -113,12 +113,29 @@ public class SwerveSubsystem extends SubsystemBase
 
   RobotConfig config;
 
+  //Select alliance heading
+  private double allianceHeading = 0;
+
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
   below are robot specific, and should be tuned. */
-  private final SwerveDrivePoseEstimator m_poseEstimator =
+  private final SwerveDrivePoseEstimator m_poseEstimator;
+                
+
+  public SwerveSubsystem() 
+  {
+
+    //Robot Front is allways towards to red wall
+    var alliance2 = DriverStation.getAlliance();
+    if (alliance2.get() == DriverStation.Alliance.Red) 
+    {
+      allianceHeading = 180;
+    }
+
+    //Initialize pose estimator always towards to red wall
+    m_poseEstimator =
                 new SwerveDrivePoseEstimator(
                     DriveConstants.kDriveKinematics,
-                    gyro.getRotation2d(),
+                    Rotation2d.fromDegrees(allianceHeading),//gyro.getRotation2d(),
                     new SwerveModulePosition[] {
                       frontLeftModule.getPosition(),
                       frontRightModule.getPosition(),
@@ -128,14 +145,14 @@ public class SwerveSubsystem extends SubsystemBase
                     new Pose2d(),
                     VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
                     VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
-
-  public SwerveSubsystem() 
-  {
     
+    //camera pose set up - to initialize cameras according to its assembling on the robot
+    //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,-0.13,0,0.685,0,0,0);
 
     /* delay 1 s and then reset gyro */
-    //*
+    /*
     new Thread(() -> {
+
                       try 
                       {
                           Thread.sleep(1000); //avoid to block the rest of our code from running
@@ -145,7 +162,7 @@ public class SwerveSubsystem extends SubsystemBase
                       {
                       }
                     	}).start();
-
+//*/
     initializePigeon2(gyro.getConfigurator());
          //gyro.setAngleAdjustment(180);  
          
@@ -650,8 +667,9 @@ public void stopModules ()
     
    
     /* And initialize yaw to 0 */
+    //MUST NOT TOUCH
+    cfg.setYaw(0); 
     
-    cfg.setYaw(0);
   }
 
   

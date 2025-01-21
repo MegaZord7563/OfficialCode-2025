@@ -57,6 +57,7 @@ public class RobotContainer
   1, 2.198, 4.921, 180);
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
+  public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -193,6 +194,9 @@ public class RobotContainer
 
      driverJoystick.y().onTrue(pathAfterFind);
      driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
+
+     //driverJoystick.y().onTrue(pathAfterFindRed);
+     //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFindRed.endCommand()));
      
         
      ///*Changes robot speed - speeding up
