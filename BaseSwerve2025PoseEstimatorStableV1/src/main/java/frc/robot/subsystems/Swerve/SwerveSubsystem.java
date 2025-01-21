@@ -333,7 +333,8 @@ public class SwerveSubsystem extends SubsystemBase
     else if (useMegaTag2 == true)
     {
       
-      // Set the robot's orientation using the current estimated position's rotation degrees 
+      // Set the robot's orientation using the current estimated position's rotation degrees for each camera.
+      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightBack, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       LimelightHelpers.SetRobotOrientation(DriveConstants.limelightFront, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       
       //Pose estimates are obtained from both cameras.
@@ -650,7 +651,7 @@ public void stopModules ()
    
     /* And initialize yaw to 0 */
     
-    cfg.setYaw(180);
+    cfg.setYaw(0);
   }
 
   
