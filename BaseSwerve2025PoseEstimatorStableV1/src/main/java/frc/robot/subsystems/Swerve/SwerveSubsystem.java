@@ -113,7 +113,7 @@ public class SwerveSubsystem extends SubsystemBase
 
   RobotConfig config;
 
-  //Select alliance heading
+  //Select alliance heading - default is blue
   private double allianceHeading = 0;
 
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
@@ -131,7 +131,7 @@ public class SwerveSubsystem extends SubsystemBase
       allianceHeading = 180;
     }
 
-    //Initialize pose estimator always towards to red wall
+    //Initialize pose estimator ALWAYS towards to red wall
     m_poseEstimator =
                 new SwerveDrivePoseEstimator(
                     DriveConstants.kDriveKinematics,
