@@ -32,6 +32,7 @@ import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.commands.AutoMundoSenai;
 import frc.robot.commands.AutoQuadrado;
+import frc.robot.commands.PathAfterFind;
 import frc.robot.commands.PathFindingCommand;
 import frc.robot.subsystems.Limelight.LimelightHelpers;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -54,6 +55,9 @@ public class RobotContainer
 
   public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 
   1, 2.198, 4.921, 180);
+
+  public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
+  public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -83,28 +87,21 @@ public class RobotContainer
     
     PathPlannerAuto autoPath = new PathPlannerAuto("FirstPathAutoNovo");
     PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
+    PathPlannerAuto autoField = new PathPlannerAuto("NewFieldAuto");
 
     chooserAuto.addOption("NovoAuto", autoPath);
 
     chooserAuto.addOption("AutoTest", autoTest);
 
+    chooserAuto.addOption("NewFieldAuto", autoField);
+
     //Instantiate subsystems
     //swerveDrive 
-
-    //Instantiate commands
-    Pose2d targetPose = new Pose2d(0.7, 2.83, Rotation2d.fromDegrees(0));
 
     // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
             1.0, PathPlannerConstants.maxAccelerationPath,
             PathPlannerConstants.maxAngularVelocityRadPerSec, PathPlannerConstants.maxAngularAccelerationRadPerSecSq);
-      
-    // Since AutoBuilder is configured, we can use it to build pathfinding commands
-    pathFindingCommand = AutoBuilder.pathfindToPose(
-            targetPose,
-            constraints,
-            0.0// Goal end velocity in meters/sec
-    );
 
 
     try {
@@ -193,7 +190,13 @@ public class RobotContainer
      driverJoystick.x().onTrue(pathFindingCmd2);
      driverJoystick.x().onFalse(new InstantCommand(()-> pathFindingCmd2.endCommand()));
 
-     //driverJoystick.y().whileTrue(new InstantCommand(() -> findToPath.schedule()));
+     //driverJoystick.y().onTrue(new InstantCommand(() -> findToPath.schedule()));
+
+     driverJoystick.y().onTrue(pathAfterFind);
+     driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
+
+     //driverJoystick.y().onTrue(pathAfterFindRed);
+     //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFindRed.endCommand()));
      
         
      ///*Changes robot speed - speeding up

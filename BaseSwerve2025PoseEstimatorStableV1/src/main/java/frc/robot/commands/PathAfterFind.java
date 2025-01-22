@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
@@ -46,16 +47,13 @@ public class PathAfterFind extends Command {
   @Override
   public void initialize() {
     finish = false;
-  }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-       // Create the constraints to use while pathfinding
-       PathConstraints constraints = new PathConstraints(
-        maxVelocity, PathPlannerConstants.maxAccelerationPath,
-            PathPlannerConstants.maxAngularVelocityRadPerSec, 
-            PathPlannerConstants.maxAngularAccelerationRadPerSecSq);
+    // Create the constraints to use while pathfinding
+    PathConstraints constraints = new PathConstraints(
+      maxVelocity, PathPlannerConstants.maxAccelerationPath,
+      PathPlannerConstants.maxAngularVelocityRadPerSec, 
+      PathPlannerConstants.maxAngularAccelerationRadPerSecSq
+    );
 
     try {
       pathToFollow = PathPlannerPath.fromPathFile(pathName);
@@ -66,21 +64,33 @@ public class PathAfterFind extends Command {
     findToPath = AutoBuilder.pathfindThenFollowPath(pathToFollow, constraints);
 
     findToPath.schedule();
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    
     if(findToPath.isFinished()){
         finish = true;
     }
-
-    if(RobotContainer.driverJoystick.getHID().getXButtonReleased()){
-      findToPath.cancel();
-  }
 } 
+
+  public void endCommand (){
+    findToPath.cancel();
+    PPHolonomicDriveController.overrideXYFeedback(()->swerveDrive.getPoseEstimator().getX(), ()->swerveDrive.getPoseEstimator().getY());
+    PPHolonomicDriveController.overrideRotationFeedback(()-> swerveDrive.getPoseEstimator().getRotation().getRadians());
+    System.out.println("EndCommand");
+    finish = true;
+  }
   
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    PPHolonomicDriveController.clearXYFeedbackOverride();
+    PPHolonomicDriveController.clearRotationFeedbackOverride();
     swerveDrive.stopModules();
-
+    System.out.println("Comando Finalizado");
   }
 
   // Returns true when the command should end.
