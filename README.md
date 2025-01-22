@@ -158,3 +158,13 @@ public void endCommand() {
 
 This code cancels the ongoing **Pathfinding** command and stops the robot's movement. It also overrides the robot's feedback controls to ensure that the robot is no longer following the generated path.
 ```
+
+```
+## Swerve initialization
+
+### Pigeon Orientation
+
+![image](https://github.com/user-attachments/assets/daf11b26-5f23-4e2e-bedb-bd8ce64805d8)
+
+Always the front side of the robot must be turned to the red side of the field.
+
