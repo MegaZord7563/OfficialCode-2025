@@ -9,6 +9,7 @@ import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -32,8 +33,11 @@ import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.commands.AutoMundoSenai;
 import frc.robot.commands.AutoQuadrado;
+import frc.robot.commands.LiftCommand;
+import frc.robot.commands.LiftCommandAuto;
 import frc.robot.commands.PathAfterFind;
 import frc.robot.commands.PathFindingCommand;
+import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.Limelight.LimelightHelpers;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
@@ -46,8 +50,15 @@ import frc.robot.subsystems.Swerve.SwerveSubsystem;
 public class RobotContainer 
 {
   // The robot's subsystems and commands are defined here...
-  //public static LimelightHelpers limelightHelpers = new LimelightHelpers();
+  public static LimelightHelpers limelightHelpers = new LimelightHelpers();
   public static SwerveSubsystem swerveDrive = new SwerveSubsystem();
+  public static LiftSubsystem liftSubsystem = new LiftSubsystem();
+
+/**
+ * 
+ */
+  public static LiftCommand liftCmd = new LiftCommand();
+  public static LiftCommandAuto liftAuto = new LiftCommandAuto();
   public static AutoMundoSenai autoMundoSenai = new AutoMundoSenai();
   public static AutoQuadrado autoQuadrado = new AutoQuadrado();
   public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
@@ -82,18 +93,34 @@ public class RobotContainer
   public RobotContainer() 
   {
 
+     // Register Named Commands
+    NamedCommands.registerCommand("lift", liftAuto);
+
+  
+    
+    liftCmd.addRequirements(liftSubsystem);
+    liftAuto.addRequirements(liftSubsystem);
+   
+      
     // Build an auto chooser. This will use Commands.none() as the default option.
     chooserAuto = AutoBuilder.buildAutoChooser();
     
     PathPlannerAuto autoPath = new PathPlannerAuto("FirstPathAutoNovo");
     PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
     PathPlannerAuto autoField = new PathPlannerAuto("NewFieldAuto");
+    PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
+    
+   
+    
+    //autoLift.event("Lift").onTrue(new LiftCommandAuto());
 
     chooserAuto.addOption("NovoAuto", autoPath);
 
     chooserAuto.addOption("AutoTest", autoTest);
 
     chooserAuto.addOption("NewFieldAuto", autoField);
+
+    chooserAuto.addOption("AutoLift", autoLift);
 
     //Instantiate subsystems
     //swerveDrive 
@@ -184,11 +211,11 @@ public class RobotContainer
      
      //driverJoystick.a().whileTrue(new RunCommand(() -> pathFindingCommand.schedule()));
 
-     driverJoystick.b().onTrue(pathFindingCmd);
-     driverJoystick.b().onFalse(new InstantCommand(()-> pathFindingCmd.endCommand()));
+     //driverJoystick.b().onTrue(liftAuto);
+     //driverJoystick.b().onFalse(new InstantCommand(()-> pathFindingCmd.endCommand()));
 
-     driverJoystick.x().onTrue(pathFindingCmd2);
-     driverJoystick.x().onFalse(new InstantCommand(()-> pathFindingCmd2.endCommand()));
+     //driverJoystick.x().onTrue(pathFindingCmd2);
+     //driverJoystick.x().onFalse(new InstantCommand(()-> pathFindingCmd2.endCommand()));
 
      //driverJoystick.y().onTrue(new InstantCommand(() -> findToPath.schedule()));
 

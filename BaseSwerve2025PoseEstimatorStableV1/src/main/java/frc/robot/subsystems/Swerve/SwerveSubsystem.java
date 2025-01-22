@@ -125,6 +125,8 @@ public class SwerveSubsystem extends SubsystemBase
 
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
   below are robot specific, and should be tuned. */
+  
+  // Create a new SwerveDrivePoseEstimator
   private final SwerveDrivePoseEstimator m_poseEstimator;
 
   // Create a NetworkTable publisher to publish the pose to NetworkTables

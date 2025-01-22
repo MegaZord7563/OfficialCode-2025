@@ -8,7 +8,9 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.PathFindingCommand;
+import frc.robot.subsystems.Limelight.LimelightHelpers;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,16 +29,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    //RobotContainer.swerveDrive.zeroHeading();
+    
+    /*
     for (int port = 5800; port <= 5809; port++) {
       PortForwarder.add(port, "limelight-front.local", port);
     }
 
     for (int port = 5800; port <= 5809; port++) {
       PortForwarder.add(port+10, "limelight-back.local", port);
-    }
+    }*/
 
     m_robotContainer = new RobotContainer();
   }
@@ -59,7 +64,13 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() 
+  {
+    //01/25/2025 MNL
+    LimelightHelpers.getLatestResults(DriveConstants.limelightFront);
+    LimelightHelpers.getLatestResults(DriveConstants.limelightBack);
+
+  }
 
   @Override
   public void disabledPeriodic() {}

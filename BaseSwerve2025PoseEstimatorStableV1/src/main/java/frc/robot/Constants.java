@@ -263,6 +263,32 @@ import edu.wpi.first.math.util.Units;
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
   }
 
+  public static final class SubsystemsConstants{
+    public static final class LiftConstants{
+      public static final int kLiftMotorId = 24;
+
+      public static final IdleMode kLiftIdleMode = IdleMode.kBrake;
+      public static final int kLiftCurrentLimit = 20;
+      public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
+      public static final double kLiftEncoderPositionPIDMinInput =0 ;
+      public static final double kLiftEncoderPositionPIDMaxInput= 2 * Math.PI;
+
+      
+      public static final double kLiftPositionConversionFacotr = 1;
+      public static final double kLiftVelocityConversionFactor = 1;
+
+      public static final double kPLift = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kILift = 0;
+      public static final double kDLift = 0;
+      public static final double kLiftFF = 1.0/473.0; // = 1/kV
+      public static final double kLiftMinOutput = -1;
+      public static final double kLiftMaxOutput = 1;
+
+
+  } 
+
+  } 
+
 
   public static final class OIConstants 
   {
