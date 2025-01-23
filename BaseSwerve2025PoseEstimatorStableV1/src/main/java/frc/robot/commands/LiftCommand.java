@@ -1,17 +1,17 @@
 package frc.robot.commands;
 
-import java.util.concurrent.AbstractExecutorService;
-
-import edu.wpi.first.units.mutable.GenericMutableMeasureImpl;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
+//WPI Imports
 import edu.wpi.first.wpilibj2.command.Command;
+
+//Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LiftSubsystem;
 
-import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 
-public class LiftCommand extends Command{
+
+public class LiftCommand extends Command
+{
      // Instantiate the object
      boolean finish =false;
 

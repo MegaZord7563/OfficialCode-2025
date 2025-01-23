@@ -147,6 +147,7 @@ public class SwerveModule extends SubsystemBase
    */
    canCoderConfigs();
 
+   
     config
     .idleMode(ModuleConstants.kTurningMotorIdleMode)
     .smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);

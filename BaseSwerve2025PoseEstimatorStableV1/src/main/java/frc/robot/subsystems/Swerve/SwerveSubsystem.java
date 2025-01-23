@@ -7,14 +7,13 @@ package frc.robot.subsystems.Swerve;
 //JAVA Imports
 import java.util.function.Supplier;
 
-//NavX imports
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+
+//CTRE imports
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Pigeon2Configurator;
-import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.hardware.Pigeon2;
+
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -30,7 +29,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.units.measure.Angle;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,7 +37,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 
-//LOCAL Imports
+//Robot Imports
 import frc.robot.Constants;
 import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Constants.DriveConstants;
