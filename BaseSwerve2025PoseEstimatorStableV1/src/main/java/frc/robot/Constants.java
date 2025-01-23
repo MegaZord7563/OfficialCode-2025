@@ -66,7 +66,12 @@ import edu.wpi.first.math.util.Units;
       public static final double kPTurning = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kITurning = 0;
       public static final double kDTurning = 0;
-      public static final double kTurningFF = 1.0/473.0; // = 1/kV
+
+      //The F parameter should only be set when using a velocity-based PID controller, 
+      //and should be set to zero otherwise to avoid unwanted behavior.
+      public static final double kTurningFF = 0; //1.0/473.0; //
+      
+      
       public static final double kTurningMinOutput = -1;
       public static final double kTurningMaxOutput = 1;
 
@@ -216,10 +221,11 @@ import edu.wpi.first.math.util.Units;
       
 
       //it's not currently used
-      public static final double kDirectionSlewRate = 1.2; // radians per second
+      /*public static final double kDirectionSlewRate = 1.2; // radians per second
       public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
-      public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+      public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)*/
     
+      //
       public static final String limelightFront = "limelight-front";
       public static final String limelightBack = "limelight-back";
 

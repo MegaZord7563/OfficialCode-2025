@@ -145,7 +145,7 @@ public class SwerveModule extends SubsystemBase
    * @see https://docs.revrobotics.com/brushless/revlib/revlib-overview/migrating-to-revlib-2025
    * 
    */
-  canCoderConfigs();
+   canCoderConfigs();
 
     config
     .idleMode(ModuleConstants.kTurningMotorIdleMode)
