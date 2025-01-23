@@ -146,8 +146,9 @@ public class SwerveModule extends SubsystemBase
    * @see https://docs.revrobotics.com/brushless/revlib/revlib-overview/migrating-to-revlib-2025
    * 
    */
-  canCoderConfigs();
+   canCoderConfigs();
 
+   
     config
     .idleMode(ModuleConstants.kTurningMotorIdleMode)
     .smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
@@ -180,9 +181,9 @@ public class SwerveModule extends SubsystemBase
     turningMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     //Metodos geters
-    boolean isInverted = turningMotor.configAccessor.getInverted();
+    /*boolean isInverted = turningMotor.configAccessor.getInverted();
     double positionFactor = turningMotor.configAccessor.encoder.getPositionConversionFactor();
-    double velocityFactor = turningMotor.configAccessor.encoder.getVelocityConversionFactor();
+    double velocityFactor = turningMotor.configAccessor.encoder.getVelocityConversionFactor();*/
 
 
 
