@@ -1,24 +1,25 @@
 package frc.robot.commands;
 
 
-
+//Java Imports
 import java.io.IOException;
-
 import org.json.simple.parser.ParseException;
 
+//WPILIB Imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.PathPlannerConstants;
-import frc.robot.RobotContainer;
+
+//Robot Imports
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 
-public class PathAfterFind extends Command {
+public class PathAfterFind extends Command 
+{
 
   // Instantiate the object
   private final SwerveSubsystem swerveDrive;
@@ -29,7 +30,7 @@ public class PathAfterFind extends Command {
   private final String pathName;
   private PathPlannerPath pathToFollow;
 
-
+ //Creates a boolean variable
   private boolean finish;
   
 
@@ -40,12 +41,14 @@ public class PathAfterFind extends Command {
     this.maxVelocity = maxVelocity;
     this.pathName = pathName;
 
+    // Add the requirements for the swerveDrive subsystem
     addRequirements(swerveDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
+  public void initialize() 
+  {
     finish = false;
 
     // Create the constraints to use while pathfinding
@@ -55,27 +58,35 @@ public class PathAfterFind extends Command {
       PathPlannerConstants.maxAngularAccelerationRadPerSecSq
     );
 
-    try {
+    // Load the path from the file
+    try 
+    {
       pathToFollow = PathPlannerPath.fromPathFile(pathName);
     } catch (FileVersionException | IOException | ParseException e) {
       e.printStackTrace();
     }
 
+    // Create the pathfinding command
     findToPath = AutoBuilder.pathfindThenFollowPath(pathToFollow, constraints);
 
+    // Schedule the pathfinding command
     findToPath.schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    
-    if(findToPath.isFinished()){
+  public void execute() 
+  {
+    // Check if the pathfinding command is finished
+    if(findToPath.isFinished())
+    {
         finish = true;
     }
-} 
+  } 
 
-  public void endCommand (){
+
+  public void endCommand ()
+  {
     findToPath.cancel();
     PPHolonomicDriveController.overrideXYFeedback(()->swerveDrive.getPoseEstimator().getX(), ()->swerveDrive.getPoseEstimator().getY());
     PPHolonomicDriveController.overrideRotationFeedback(()-> swerveDrive.getPoseEstimator().getRotation().getRadians());
@@ -86,7 +97,8 @@ public class PathAfterFind extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void end(boolean interrupted) 
+  {
     PPHolonomicDriveController.clearXYFeedbackOverride();
     PPHolonomicDriveController.clearRotationFeedbackOverride();
     swerveDrive.stopModules();
@@ -95,7 +107,9 @@ public class PathAfterFind extends Command {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished() 
+  {
     return finish;
   }
+  
 }

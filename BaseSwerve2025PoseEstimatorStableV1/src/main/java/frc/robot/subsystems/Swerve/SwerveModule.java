@@ -179,9 +179,9 @@ public class SwerveModule extends SubsystemBase
     turningMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     //Metodos geters
-    boolean isInverted = turningMotor.configAccessor.getInverted();
+    /*boolean isInverted = turningMotor.configAccessor.getInverted();
     double positionFactor = turningMotor.configAccessor.encoder.getPositionConversionFactor();
-    double velocityFactor = turningMotor.configAccessor.encoder.getVelocityConversionFactor();
+    double velocityFactor = turningMotor.configAccessor.encoder.getVelocityConversionFactor();*/
 
 
 

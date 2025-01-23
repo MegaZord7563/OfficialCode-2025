@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() 
   {
     //01/25/2025 MNL
+    //This is a test to see if we can get the limelight values when the robot is disabled
     LimelightHelpers.getLatestResults(DriveConstants.limelightFront);
     LimelightHelpers.getLatestResults(DriveConstants.limelightBack);
 

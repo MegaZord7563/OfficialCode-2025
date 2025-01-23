@@ -28,6 +28,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 
+ //Constants class
  public final class Constants 
  {
 
@@ -115,6 +116,7 @@ import edu.wpi.first.math.util.Units;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
   }
 
+  //Drive Constants
   public static final class DriveConstants 
   {
 
@@ -248,6 +250,7 @@ import edu.wpi.first.math.util.Units;
       
   }
 
+  //Path Planner Constants
   public static final class PathPlannerConstants
   {
     public static final double kPTranslationPath = 0.95;//Anterior 0.125,
@@ -263,20 +266,27 @@ import edu.wpi.first.math.util.Units;
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
   }
 
-  public static final class SubsystemsConstants{
-    public static final class LiftConstants{
+  //Subsystem Constants
+  public static final class SubsystemsConstants
+  {
+    //Lift Constants
+    public static final class LiftConstants
+    {
+      //Lift
       public static final int kLiftMotorId = 24;
 
+      //Lift SparkMax
       public static final IdleMode kLiftIdleMode = IdleMode.kBrake;
       public static final int kLiftCurrentLimit = 20;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kLiftEncoderPositionPIDMinInput =0 ;
       public static final double kLiftEncoderPositionPIDMaxInput= 2 * Math.PI;
 
-      
+      //Lift Encoder
       public static final double kLiftPositionConversionFacotr = 1;
       public static final double kLiftVelocityConversionFactor = 1;
 
+      //Lift PID
       public static final double kPLift = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kILift = 0;
       public static final double kDLift = 0;
@@ -285,11 +295,12 @@ import edu.wpi.first.math.util.Units;
       public static final double kLiftMaxOutput = 1;
 
 
-  } 
+    } 
 
   } 
 
 
+  //OI Constants
   public static final class OIConstants 
   {
       
@@ -330,10 +341,7 @@ import edu.wpi.first.math.util.Units;
       }
 
       
-      //Set up camera resolution
-
-      public static final int cameraWheightRes = 320;
-      public static final int camerHeightRes = 240;
+      
       public static final double kDeadband =0.1;
 }
 
