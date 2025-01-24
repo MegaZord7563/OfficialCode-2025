@@ -31,8 +31,9 @@ public class LiftCommand extends Command
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    liftSubsystem.startLift(0.5);
+  public void execute() 
+  {
+    liftSubsystem.moveLift(100, false);
   }    
 
   // Called once the command ends or is interrupted.

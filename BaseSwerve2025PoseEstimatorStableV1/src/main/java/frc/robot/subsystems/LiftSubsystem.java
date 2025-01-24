@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems;
 
+
 //REV Imports
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -25,69 +27,99 @@ import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 public class LiftSubsystem extends SubsystemBase 
 {
   // The lift motor
-  private final SparkMax liftMotor;
-  private SparkMaxConfig config = new SparkMaxConfig();
+  private final SparkMax liftLeaderMotor;
+  private SparkMaxConfig globalConfig = new SparkMaxConfig();
+  
+  private final SparkMax liftFollowerMotor;
+  private SparkMaxConfig followerConfig = new SparkMaxConfig();
 
   // The lift encoder
-  private final RelativeEncoder liftEncoder;
+  private final RelativeEncoder liftLeaderEncoder;
+  //private final RelativeEncoder liftFollowerEncoder;
 
   // The lift PID controller
-  private final SparkClosedLoopController liftPidController;
+  private final SparkClosedLoopController liftLeaderPidController;
+  //private final SparkClosedLoopController liftFollowerPidController;
 
 
   /** Creates a new LiftSubsytem. */
   public LiftSubsystem() 
   {
     // Create the lift motor
-    liftMotor = new SparkMax(LiftConstants.kLiftMotorId,MotorType.kBrushless);
+    liftLeaderMotor = new SparkMax(LiftConstants.kLiftLeftMotorId,MotorType.kBrushless);
+    liftFollowerMotor = new SparkMax(LiftConstants.kLiftRightMotorId,MotorType.kBrushless);
 
     // Create the lift encoder
-    liftEncoder = liftMotor.getEncoder();
-     liftPidController = liftMotor.getClosedLoopController(); 
-    config.closedLoop
+    liftLeaderEncoder = liftLeaderMotor.getEncoder();
+    //liftRightEncoder = liftRightMotor.getEncoder();
+
+    //Create PID controller
+    liftLeaderPidController = liftLeaderMotor.getClosedLoopController();
+    //liftRightPidController = liftLeftMotor.getClosedLoopController();
+
+    //Calls motors config
+    motorsConfig();
+    
+
+    
+  }
+
+  
+
+  public void motorsConfig()
+  {
+    globalConfig.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
     // Configure the lift motor
-     config
+     globalConfig
     .idleMode(LiftConstants.kLiftIdleMode)
-    .smartCurrentLimit(LiftConstants.kLiftCurrentLimit);
+    .smartCurrentLimit(LiftConstants.kLiftCurrentLimit)
+    .inverted(false);
 
     // Configure the lift encoder 
-    config.encoder
-    .positionConversionFactor(LiftConstants.kLiftPositionConversionFacotr)
+    globalConfig.encoder
+    .positionConversionFactor(LiftConstants.kLiftPositionConversionFactor)
     .velocityConversionFactor(LiftConstants.kLiftVelocityConversionFactor);
 
     // Configure the lift PID controller
-    config.closedLoop
+    globalConfig.closedLoop
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
-    .pidf(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift, LiftConstants.kLiftFF)
-      //This is a velocity feed-forward. This is unique to each type of motor, 
-      //and can be calculated by taking the reciprocal of the motor's velocity 
-      //constant (Kv), in other words 1/Kv.
+    // slot, as it will default to slot 0.
+    .pidf(LiftConstants.kPLiftUp, 
+          LiftConstants.kILiftUp, 
+          LiftConstants.kDLiftUp, 
+          LiftConstants.kLiftUpFF)
 
-
-                            //WRAPING
-
+    .pidf(LiftConstants.kPLiftDown, 
+          LiftConstants.kILiftDown, 
+          LiftConstants.kDLiftDown, 
+          LiftConstants.kLiftDownFF,
+          ClosedLoopSlot.kSlot1)
+     
     // Enable PID wrap around for the turning motor. 
     //This will allow the PID controller to go through 0 to get to the setpoint i.e. 
     //going from 350 degrees to 10 degrees will go through 0 rather than the other direction which is a longer route.
     .positionWrappingEnabled(true)                                           
     .positionWrappingMinInput(LiftConstants.kLiftEncoderPositionPIDMinInput) 
     .positionWrappingMaxInput(LiftConstants.kLiftEncoderPositionPIDMaxInput)  
-    .outputRange(LiftConstants.kLiftMinOutput,// Set the output range of the PID controller.                                 
-    LiftConstants.kLiftMaxOutput,LiftConstants.pidSparkSlot)// Set the output range of the PID controller.
-    ;
+    .outputRange( LiftConstants.kLiftMinOutput,// Set the output range of the PID controller.                                 
+                  LiftConstants.kLiftMaxOutput,
+                  LiftConstants.pidSparkSlot);// Set the output range of the PID controller.
+  
+    
+    followerConfig.apply(globalConfig)
+                  .inverted(true)
+                  .follow(liftLeaderMotor);
 
-    // Configure the lift motor
-    liftMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
+    // Configure the lift motor - like burn flash
+    liftLeaderMotor.configure(globalConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
+    liftFollowerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
 
-    /*boolean isInverted = liftMotor.configAccessor.getInverted();
-    double positionFactor = liftMotor.configAccessor.encoder.getPositionConversionFactor();
-    double velocityFactor = liftMotor.configAccessor.encoder.getVelocityConversionFactor();*/
 
-    //Reset encoder
-    liftEncoder.setPosition(0);
   }
+
+  
 
   @Override
   public void periodic() 
@@ -99,9 +131,17 @@ public class LiftSubsystem extends SubsystemBase
    * Set the lift motor speed
    * @param LiftMotorSpeed
    */
-  public void startLift(double LiftMotorSpeed)
+  public void moveLift(double targetPosition, boolean direction)
   {
-    liftPidController.setReference(LiftMotorSpeed, ControlType.kVelocity);
+    if (direction)
+    {
+      liftLeaderPidController.setReference(targetPosition, ControlType.kPosition);
+    }
+    else
+    {
+      liftLeaderPidController.setReference(targetPosition, ControlType.kPosition,ClosedLoopSlot.kSlot1);
+    }
+    
   }
 
   /**
@@ -110,10 +150,14 @@ public class LiftSubsystem extends SubsystemBase
    */
   public void stopLift()
   {
-    //liftPidController.setReference(0, ControlType.kVelocity);
-    liftMotor.set(0);
+    liftLeaderMotor.set(0);
+    
   }
 
+  public double getLiftPosition()
+  {
+    return liftLeaderEncoder.getPosition();
+  }
  
   /**
    * Set the lift encoder position
@@ -121,7 +165,10 @@ public class LiftSubsystem extends SubsystemBase
    */
   public void resetLiftEncoder()
   {
-    liftEncoder.setPosition(0);
+    liftLeaderEncoder.setPosition(0);
+    
   }
+
+  
 }
 

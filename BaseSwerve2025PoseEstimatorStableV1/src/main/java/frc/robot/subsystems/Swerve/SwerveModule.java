@@ -256,29 +256,30 @@ public class SwerveModule extends SubsystemBase
     correctedDesiredState.speedMetersPerSecond = state.speedMetersPerSecond;
     correctedDesiredState.angle = state.angle.plus(Rotation2d.fromRadians(m_chassisAngularOffset));
 
-    // Optimize the reference state to avoid spinning further than 90 degrees.
-    SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
-                                              new Rotation2d(turningEncoder.getPosition()));
+    /**SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
+                                              new Rotation2d(turningEncoder.getPosition()));*/
+    
 
+  //01/23/2025 MNL precisa testar a correção
+   correctedDesiredState.optimize(new Rotation2d(turningEncoder.getPosition()));
+    
+  // set velocity to 8 rps, add 0.5 V to overcome gravity
+  /*  
+  double driveVelocityRPS = Conversions.MPSToRPS(optimizedDesiredState.speedMetersPerSecond, 
+                                                ModuleConstants.kWheelCircumferenceMeters,
+                                                ModuleConstants.kDriveMotorGearRatio);*/
   
-      //It scales the velocity down using the robot's max speed
-      // set velocity to 8 rps, add 0.5 V to overcome gravity
-      
-    double driveVelocityRPS = Conversions.MPSToRPS(optimizedDesiredState.speedMetersPerSecond, 
-                                                  ModuleConstants.kWheelCircumferenceMeters,
-                                                  ModuleConstants.kDriveMotorGearRatio);
-    
-    driveMotor.setControl(m_request.withVelocity(driveVelocityRPS)); 
-    //driveMotor.setControl(m_request.withVelocity(1.0).withFeedForward(0.5)); 
-    // driveMotor.setControl(m_request.withDu(1.0)); 
-    
+  //
+  double driveVelocityRPS = Conversions.MPSToRPS(correctedDesiredState.speedMetersPerSecond, 
+                                                ModuleConstants.kWheelCircumferenceMeters,
+                                                ModuleConstants.kDriveMotorGearRatio);
 
-    //pid controller calculate its position
-    turningPidController.setReference(optimizedDesiredState.angle.getRadians(), ControlType.kPosition, ModuleConstants.pidSparkSlot);
-    
-    
-
-    m_desiredState = state;
+  driveMotor.setControl(m_request.withVelocity(driveVelocityRPS)); 
+  turningPidController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition, ModuleConstants.pidSparkSlot);  
+     
+  //turningPidController.setReference(optimizedDesiredState.angle.getRadians(), ControlType.kPosition, ModuleConstants.pidSparkSlot);
+  
+   m_desiredState = state;
   }
 
   

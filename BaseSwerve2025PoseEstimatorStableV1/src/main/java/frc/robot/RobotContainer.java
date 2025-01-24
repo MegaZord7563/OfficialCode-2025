@@ -24,8 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
-import frc.robot.commands.AutoMundoSenai;
-import frc.robot.commands.AutoQuadrado;
 import frc.robot.commands.LiftCommand;
 import frc.robot.commands.LiftCommandAuto;
 import frc.robot.commands.PathAfterFind;
@@ -54,14 +52,12 @@ public class RobotContainer
   public static LiftCommand liftCmd = new LiftCommand();
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
   
-  public static AutoMundoSenai autoMundoSenai = new AutoMundoSenai();
-  public static AutoQuadrado autoQuadrado = new AutoQuadrado();
-  
+    
   public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
-  1, 0.7, 2.83, 0);
+                                                    1, 0.7, 2.83, 0);
 
   public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 
-  1, 2.198, 4.921, 180);
+                                                    1, 2.198, 4.921, 180);
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
   public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
@@ -126,8 +122,7 @@ public class RobotContainer
     
 
     // Add the path to the auto chooser
-    autoMundoSenai.addRequirements(swerveDrive);
-    autoQuadrado.addRequirements(swerveDrive);
+   
     
     // Instantiate Xbox Controller
     driverJoystick= new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
