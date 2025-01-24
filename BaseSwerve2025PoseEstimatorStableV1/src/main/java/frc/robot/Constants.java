@@ -395,6 +395,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kCurrentThresholdTime = 0.1;
       public static final boolean kEnableCurrentLimit = true;
       public static final double kClosedLoopRamp=0.25;
+      public static boolean kInverted = false;
 
     }
   } 

@@ -28,6 +28,9 @@ import frc.robot.commands.LiftCommand;
 import frc.robot.commands.LiftCommandAuto;
 import frc.robot.commands.PathAfterFind;
 import frc.robot.commands.PathFindingCommand;
+import frc.robot.subsystems.AlgaSubsystem;
+import frc.robot.subsystems.CoralSubsystem;
+import frc.robot.subsystems.EscaladorSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 import frc.robot.subsystems.Limelight.LimelightHelpers;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -46,6 +49,10 @@ public class RobotContainer
   public static LimelightHelpers limelightHelpers = new LimelightHelpers();
   public static SwerveSubsystem swerveDrive = new SwerveSubsystem();
   public static LiftSubsystem liftSubsystem = new LiftSubsystem();
+  public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
+  public static AlgaSubsystem algaSubsystem = new AlgaSubsystem();
+  public static CoralSubsystem coralSubsystem = new CoralSubsystem();
+  
 
 
   //Commands

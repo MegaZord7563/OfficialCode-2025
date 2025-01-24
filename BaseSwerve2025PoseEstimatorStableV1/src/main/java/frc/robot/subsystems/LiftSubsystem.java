@@ -91,6 +91,7 @@ public class LiftSubsystem extends SubsystemBase
           LiftConstants.kDLiftUp, 
           LiftConstants.kLiftUpFF)
 
+    //slot 1
     .pidf(LiftConstants.kPLiftDown, 
           LiftConstants.kILiftDown, 
           LiftConstants.kDLiftDown, 
@@ -107,7 +108,18 @@ public class LiftSubsystem extends SubsystemBase
                   LiftConstants.kLiftMaxOutput,
                   LiftConstants.pidSparkSlot);// Set the output range of the PID controller.
   
-    
+    globalConfig.closedLoop.maxMotion
+    // Set MAXMotion parameters for position control. We need to pass
+    // a closed loop slot to the maxMotion method to set the parameters for that slot.
+    // In this case, we are setting the parameters for slot 2.
+    .maxVelocity(1000)
+    .maxAcceleration(1000)
+    .allowedClosedLoopError(1)
+    // Set MAXMotion parameters for velocity control in slot 2
+    .maxAcceleration(500, ClosedLoopSlot.kSlot2)
+    .maxVelocity(6000, ClosedLoopSlot.kSlot2)
+    .allowedClosedLoopError(1, ClosedLoopSlot.kSlot2);
+
     followerConfig.apply(globalConfig)
                   .inverted(true)
                   .follow(liftLeaderMotor);
@@ -135,11 +147,18 @@ public class LiftSubsystem extends SubsystemBase
   {
     if (direction)
     {
+      System.out.println("Switching to Position Control UP");
       liftLeaderPidController.setReference(targetPosition, ControlType.kPosition);
     }
     else
     {
-      liftLeaderPidController.setReference(targetPosition, ControlType.kPosition,ClosedLoopSlot.kSlot1);
+      System.out.println("Switching to Position Control DOWN");
+      liftLeaderPidController.setReference(targetPosition, 
+                                            ControlType.kPosition,
+                                            ClosedLoopSlot.kSlot1);
+     /*  liftLeaderPidController.setReference(targetPosition, 
+                                            ControlType.kMAXMotionPositionControl,
+                                            ClosedLoopSlot.kSlot2);*/
     }
     
   }
