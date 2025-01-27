@@ -82,7 +82,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
       public static final double KA = 0.11;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP = 0.0665;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP = 1.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -90,7 +90,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
       public static final double kMinOutput= -1;
       public static final double kMaxOutput = 1;
 
-      public static final double kP1 = 2.4;
+      public static final double kP1 = 2.0;
       public static final double kI1 =0.0;
       public static final double kD1=0.0;
 
