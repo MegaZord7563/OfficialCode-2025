@@ -133,6 +133,10 @@ public class EscaladorSubsystem extends SubsystemBase
     globalConfig.Slot0.kP = EscaladorConstants.kP1; //0.11; // An error of 1 rps results in 0.11 V output
     globalConfig.Slot0.kI = EscaladorConstants.kI1; //0; // no output for integrated error
     globalConfig.Slot0.kD = EscaladorConstants.kD1; //0; // no output for error derivative
+
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(8))
+      .withPeakReverseVoltage(Volts.of(-8));
+
     
 
 
@@ -161,8 +165,7 @@ public class EscaladorSubsystem extends SubsystemBase
 
     /* And initialize encoder position to 0 */
     resetEncoder();
-
-
+    
 
   }
 
@@ -186,7 +189,7 @@ public class EscaladorSubsystem extends SubsystemBase
    * @param targetSetpoint
    * @param isPositionControl
    */
-  public void runMotors( double targetSetpoint, boolean isPositionControl)
+  public void runMotors(double targetSetpoint, boolean isPositionControl)
   {
     if(isPositionControl)
     {
