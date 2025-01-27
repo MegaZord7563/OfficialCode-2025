@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.PathFindingCommand;
+import frc.robot.Constants.DriveConstants;
+
+import frc.robot.subsystems.Limelight.LimelightHelpers;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -15,7 +18,8 @@ import frc.robot.commands.PathFindingCommand;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot 
+{
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -25,10 +29,22 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   @Override
-  public void robotInit() {
+  public void robotInit() 
+  {
+    
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    //RobotContainer.swerveDrive.zeroHeading();
+    
+    /*
+    for (int port = 5800; port <= 5809; port++) {
+      PortForwarder.add(port, "limelight-front.local", port);
+    }
+
+    for (int port = 5800; port <= 5809; port++) {
+      PortForwarder.add(port+10, "limelight-back.local", port);
+    }*/
+
     m_robotContainer = new RobotContainer();
   }
 
@@ -50,7 +66,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() 
+  {
+    //01/25/2025 MNL
+    //This is a test to see if we can get the limelight values when the robot is disabled
+    LimelightHelpers.getLatestResults(DriveConstants.limelightFront);
+    LimelightHelpers.getLatestResults(DriveConstants.limelightBack);
+
+  }
 
   @Override
   public void disabledPeriodic() {}
