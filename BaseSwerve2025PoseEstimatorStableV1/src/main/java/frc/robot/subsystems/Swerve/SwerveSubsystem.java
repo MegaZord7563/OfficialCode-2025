@@ -7,14 +7,13 @@ package frc.robot.subsystems.Swerve;
 //JAVA Imports
 import java.util.function.Supplier;
 
-//NavX imports
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+
+//CTRE imports
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Pigeon2Configurator;
-import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.hardware.Pigeon2;
+
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -28,7 +27,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,12 +37,13 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 
-//LOCAL Imports
+//Robot Imports
 import frc.robot.Constants;
 import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Limelight.LimelightHelpers;
+
 
 
 
@@ -51,6 +53,7 @@ public class SwerveSubsystem extends SubsystemBase
   /**************************
    * Create 4 Swerve Modules*
    **************************/
+
   public final SwerveModule frontLeftModule = 
   new SwerveModule
                   (
@@ -95,14 +98,18 @@ public class SwerveSubsystem extends SubsystemBase
    * ******************/
   //private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
+  //Create Pigeon2 gyro
   Pigeon2 gyro = new Pigeon2(30, "rio");
-              
+       
+  // Create a slew rate limiter to limit the rate of change of the commanded robot velocity
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
   private final SlewRateLimiter turningLimiter= new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
 
+  
   ChassisSpeeds chassisSpeeds;
 
+  //Array of modules
   SwerveModule[] modules = {frontLeftModule,frontRightModule,backLeftModule,backRightModule};
 
   /** Creates a new SwerveSubsystem. */
@@ -111,14 +118,39 @@ public class SwerveSubsystem extends SubsystemBase
   private boolean throttleMax=false;
   private boolean isBlue = false;
 
+  //PathPlanner Config
   RobotConfig config;
+
+  //Select alliance heading - default is blue
+  private double allianceHeading = 0;
 
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
   below are robot specific, and should be tuned. */
-  private final SwerveDrivePoseEstimator m_poseEstimator =
+  
+  // Create a new SwerveDrivePoseEstimator
+  private final SwerveDrivePoseEstimator m_poseEstimator;
+
+  // Create a NetworkTable publisher to publish the pose to NetworkTables
+  StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault()
+  .getStructTopic("MyPose", Pose2d.struct).publish();
+                
+
+  
+  public SwerveSubsystem() 
+  {
+
+    //Robot Front is allways towards to red wall
+    var alliance2 = DriverStation.getAlliance();
+    if (alliance2.get() == DriverStation.Alliance.Red) 
+    {
+      allianceHeading = 180;
+    }
+
+    //Initialize pose estimator ALWAYS towards to red wall
+    m_poseEstimator =
                 new SwerveDrivePoseEstimator(
                     DriveConstants.kDriveKinematics,
-                    gyro.getRotation2d(),
+                    Rotation2d.fromDegrees(allianceHeading),//gyro.getRotation2d(),
                     new SwerveModulePosition[] {
                       frontLeftModule.getPosition(),
                       frontRightModule.getPosition(),
@@ -128,14 +160,14 @@ public class SwerveSubsystem extends SubsystemBase
                     new Pose2d(),
                     VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
                     VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
-
-  public SwerveSubsystem() 
-  {
     
+    //camera pose set up - to initialize cameras according to its assembling on the robot
+    //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,-0.13,0,0.685,0,0,0);
 
     /* delay 1 s and then reset gyro */
-    //*
+    /*
     new Thread(() -> {
+
                       try 
                       {
                           Thread.sleep(1000); //avoid to block the rest of our code from running
@@ -145,7 +177,8 @@ public class SwerveSubsystem extends SubsystemBase
                       {
                       }
                     	}).start();
-
+//*/
+    //initialize Pigeon2 gyro
     initializePigeon2(gyro.getConfigurator());
          //gyro.setAngleAdjustment(180);  
          
@@ -157,7 +190,7 @@ public class SwerveSubsystem extends SubsystemBase
   
 
   
-  
+  // Initialize the PathPlanner config and AutoBuilder
     try{ 
 
       config = RobotConfig.fromGUISettings();
@@ -207,13 +240,17 @@ public class SwerveSubsystem extends SubsystemBase
     this.addPoseVision();
     
 
+    // Output the pose to SmartDashboard
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
     SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
-    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightName)[5]);
+    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
     
     System.out.println("Deploy1");
+
+    // Publish the pose to NetworkTables
+    publisher.set(getPoseEstimator());
 /* 
 
     for (int i = 0; i < modules.length; i++) 
@@ -252,7 +289,7 @@ public class SwerveSubsystem extends SubsystemBase
   /** Updates the field relative position of the robot. */
   public void updatePoseEstimator() 
   {
-    
+    // Update the pose estimator with the latest sensor measurements
     m_poseEstimator.update(
         gyro.getRotation2d(),
         new SwerveModulePosition[]
@@ -270,6 +307,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public void addPoseVision()
   {
+    
     boolean update=false;
 
     boolean useMegaTag2 = true; //set to false to use MegaTag1
@@ -284,15 +322,16 @@ public class SwerveSubsystem extends SubsystemBase
   
 
 
+    
     if(useMegaTag2 == false)
     {
       if (isBlue)
       {
-        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.limelightName);
+        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.limelightFront);
       }
       else 
       {
-         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed(DriveConstants.limelightName);
+         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed(DriveConstants.limelightFront);
       }
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
@@ -333,13 +372,14 @@ public class SwerveSubsystem extends SubsystemBase
     else if (useMegaTag2 == true)
     {
       
-      // Set the robot's orientation using the current estimated position's rotation degrees 
-      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
+      // Set the robot's orientation using the current estimated position's rotation degrees for each camera.
+      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightBack, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightFront, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       
       //Pose estimates are obtained from both cameras.
-      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-nova");
+      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightFront);
       
-      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightBack);
       
       if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
@@ -349,6 +389,7 @@ public class SwerveSubsystem extends SubsystemBase
        * The tagCount variable represents the number of vision tags (fiducial markers) 
        * detected by the Limelight camera.
        * */ 
+      
       if(frontLimelight.tagCount == 0  && rearLimelight.tagCount == 0)
       {
         doRejectUpdate = true;
@@ -649,8 +690,9 @@ public void stopModules ()
     
    
     /* And initialize yaw to 0 */
+    //MUST NOT TOUCH
+    cfg.setYaw(0); 
     
-    cfg.setYaw(0);
   }
 
   
