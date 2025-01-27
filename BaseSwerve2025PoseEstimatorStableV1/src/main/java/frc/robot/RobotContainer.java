@@ -46,6 +46,7 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   
   //Subsystems
+  //Put all subsystems here
   public static LimelightHelpers limelightHelpers = new LimelightHelpers();
   public static SwerveSubsystem swerveDrive = new SwerveSubsystem();
   public static LiftSubsystem liftSubsystem = new LiftSubsystem();
