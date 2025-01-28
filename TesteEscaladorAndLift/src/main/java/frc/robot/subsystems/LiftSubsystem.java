@@ -16,6 +16,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -74,8 +75,7 @@ public class LiftSubsystem extends SubsystemBase
   public void initializeMotors()
   {
     
-    globalConfig.closedLoop
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    
 
     // Configure the lift motor
      globalConfig
@@ -95,8 +95,10 @@ public class LiftSubsystem extends SubsystemBase
     .positionConversionFactor(LiftConstants.kLiftPositionConversionFactor)
     .velocityConversionFactor(LiftConstants.kLiftVelocityConversionFactor);
 
-    // Configure the lift PID controller
     globalConfig.closedLoop
+    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    // Configure the lift PID controller
+   
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
     // slot, as it will default to slot 0.
     .pidf(LiftConstants.kPLiftUp, 
@@ -109,30 +111,28 @@ public class LiftSubsystem extends SubsystemBase
           LiftConstants.kILiftDown, 
           LiftConstants.kDLiftDown, 
           LiftConstants.kLiftDownFF,
-          ClosedLoopSlot.kSlot2)
+          ClosedLoopSlot.kSlot2);
      
     // Enable PID wrap around for the turning motor. 
     //This will allow the PID controller to go through 0 to get to the setpoint i.e. 
     //going from 350 degrees to 10 degrees will go through 0 rather than the other direction which is a longer route.
-    .positionWrappingEnabled(false)  //01/28 MNL - it was true before                                         
+    /*.positionWrappingEnabled(true)  //01/28 MNL - it was true before                                         
     .positionWrappingMinInput(LiftConstants.kLiftEncoderPositionPIDMinInput) 
     .positionWrappingMaxInput(LiftConstants.kLiftEncoderPositionPIDMaxInput)  
     .outputRange( LiftConstants.kLiftMinOutput,// Set the output range of the PID controller.                                 
                   LiftConstants.kLiftMaxOutput,
-                  LiftConstants.pidSparkSlot);// Set the output range of the PID controller.
+                  ClosedLoopSlot.kSlot1);// Set the output range of the PID controller.*/
   
     //Max motion config
     globalConfig.closedLoop.maxMotion
     // Set MAXMotion parameters for position control. We need to pass
     // a closed loop slot to the maxMotion method to set the parameters for that slot.
     // In this case, we are setting the parameters for slot 2.
-    .maxVelocity(5000)
-    .maxAcceleration(1000)
-    .allowedClosedLoopError(0.01)
     // Set MAXMotion parameters for velocity control in slot 2
-    .maxAcceleration(500, ClosedLoopSlot.kSlot2)
-    .maxVelocity(6000, ClosedLoopSlot.kSlot2)
-    .allowedClosedLoopError(0.01, ClosedLoopSlot.kSlot2);
+    .maxAcceleration(4.0, ClosedLoopSlot.kSlot2)
+    .maxVelocity(100, ClosedLoopSlot.kSlot2)
+    .allowedClosedLoopError(0.1, ClosedLoopSlot.kSlot2);
+    //.positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal,ClosedLoopSlot.kSlot2);
 
     
 
@@ -168,7 +168,8 @@ public class LiftSubsystem extends SubsystemBase
       /*liftLeaderPidController.setReference(targetPosition, 
                                             ControlType.kPosition,
                                             ClosedLoopSlot.kSlot1);
-     */  liftLeaderPidController.setReference(targetPosition, 
+     */  
+      liftLeaderPidController.setReference( targetPosition, 
                                             ControlType.kMAXMotionPositionControl,
                                             ClosedLoopSlot.kSlot2);
     }
@@ -177,11 +178,11 @@ public class LiftSubsystem extends SubsystemBase
 
   /**
    * Stop the lift motor
-   * @
+   * @ Stop the lift motor
    */
   public void stopLift()
   {
-    liftLeaderMotor.set(0);
+    liftLeaderPidController.setReference(0, ControlType.kDutyCycle);
     
   }
 
