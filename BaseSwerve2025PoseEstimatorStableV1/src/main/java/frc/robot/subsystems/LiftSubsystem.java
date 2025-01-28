@@ -181,7 +181,7 @@ public class LiftSubsystem extends SubsystemBase
    */
   public void stopLift()
   {
-    liftLeaderMotor.set(0);
+    liftLeaderPidController.setReference(0, ControlType.kDutyCycle);
     
   }
 

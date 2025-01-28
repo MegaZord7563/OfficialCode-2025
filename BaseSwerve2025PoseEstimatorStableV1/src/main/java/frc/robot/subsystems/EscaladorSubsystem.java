@@ -145,7 +145,7 @@ public class EscaladorSubsystem extends SubsystemBase
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
-      System.out.println("Could not apply configs, error code: " + status.toString());
+      System.out.println("Could not apply escalador configs, error code: " + status.toString());
     }
      /* Set up followers to follow leaders */
     escaladorFollowerMotor.setControl(new Follower(escaladorLeaderMotor.getDeviceID(), false));
