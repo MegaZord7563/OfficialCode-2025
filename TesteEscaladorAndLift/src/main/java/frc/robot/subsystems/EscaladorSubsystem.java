@@ -4,28 +4,24 @@
 
 package frc.robot.subsystems;
 
-
-import com.ctre.phoenix6.StatusCode;
 //CTRE imports
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
-import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPILib imports
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static edu.wpi.first.units.Units.*;
 
+//Java imports
 import java.util.function.Supplier;
 
 //Robot imports
@@ -38,12 +34,12 @@ public class EscaladorSubsystem extends SubsystemBase
   private final TalonFX escaladorLeaderMotor;
   private final TalonFX escaladorFollowerMotor;
 
-  /* Start at velocity 0, use slot 0 */
+  /* Start at motion 0, use slot 2 */
    private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
 
   //private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(1);
 
-  /* Start at velocity 0, use slot 1 */
+  //
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
   /* Keep a brake request so we can disable the motor */
@@ -59,7 +55,7 @@ public class EscaladorSubsystem extends SubsystemBase
     escaladorLeaderMotor = new TalonFX (EscaladorConstants.kMotor1Id,"rio");
     escaladorFollowerMotor = new TalonFX(EscaladorConstants.kMotor2Id, "rio");
 
-    //Configure motors
+    //Initialize motors
     initializeMotors();
     resetEncoder();
 
@@ -73,12 +69,9 @@ public class EscaladorSubsystem extends SubsystemBase
    * @category TalonFx settings for drive motors
    * 
    */
-
-  /**
-   * Config motor
-   */
   private void initializeMotors()
   { 
+    //
     TalonFXConfiguration globalConfig = new TalonFXConfiguration();
 
     escaladorLeaderMotor.clearStickyFaults();
@@ -94,7 +87,7 @@ public class EscaladorSubsystem extends SubsystemBase
     currentLimitConfigs.StatorCurrentLimit = EscaladorConstants.kCurrentThreshold;
     currentLimitConfigs.StatorCurrentLimitEnable = EscaladorConstants.kEnableCurrentLimit; 
     
-    /*MNL 10/28/2024 precisa testar as 3 configs */
+    //01/28/2025 MNL - Validated
     /* Gear Ratio Config */
     globalConfig.Feedback.SensorToMechanismRatio = 1; 
     globalConfig.ClosedLoopGeneral.ContinuousWrap = false;//keep default = FALSE - MUST NOT TOUCH IT
@@ -114,10 +107,7 @@ public class EscaladorSubsystem extends SubsystemBase
       // Take approximately 0.1 seconds to reach max accel 
       .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(100));
     
-    //*/
-    // in init function, set slot 0 gains
-    //var slot0Configs = new Slot0Configs();
-        
+            
     /* Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
     globalConfig.Slot1.kS = EscaladorConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
     globalConfig.Slot1.kV = EscaladorConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
@@ -129,16 +119,13 @@ public class EscaladorSubsystem extends SubsystemBase
                         .withPeakReverseVoltage(Volts.of(-8));*/
 
     
-
-    // in init function, set slot 1 gains
-    //var slot1Configs = new Slot1Configs();
     //Voltage-based POSITION does not require a feed forward 
     globalConfig.Slot0.kP = EscaladorConstants.kP1; //0.11; // An error of 1 rps results in 0.11 V output
     globalConfig.Slot0.kI = EscaladorConstants.kI1; //0; // no output for integrated error
     globalConfig.Slot0.kD = EscaladorConstants.kD1; //0; // no output for error derivative
 
     globalConfig.Voltage.withPeakForwardVoltage(Volts.of(8))
-      .withPeakReverseVoltage(Volts.of(-8));
+                        .withPeakReverseVoltage(Volts.of(-8));
 
     
 
@@ -172,6 +159,9 @@ public class EscaladorSubsystem extends SubsystemBase
 
   }
 
+  /**
+   * @ reset encoder
+   */
   public void resetEncoder()
   {
     escaladorLeaderMotor.setPosition(0);
@@ -194,6 +184,7 @@ public class EscaladorSubsystem extends SubsystemBase
    */
   public void runMotors( Supplier<Double> targerSetpoint, Supplier<Boolean> isPositionControl)
   {
+    //
     double setPoint = targerSetpoint.get();
     boolean position = isPositionControl.get();
     if(position)
@@ -228,11 +219,19 @@ public class EscaladorSubsystem extends SubsystemBase
     escaladorLeaderMotor.setControl(m_brake);
   }
 
+  /**
+   * 
+   * @return position in rotations as double
+   */
   public double getEscaladorPosition()
   {
     return escaladorLeaderMotor.getPosition().getValueAsDouble();
   }
   
+  /**
+   * 
+   * @return velocity in rotations/sec
+   */
   public double getEscaladorVelocity()
   {
     return escaladorLeaderMotor.getVelocity().getValueAsDouble();

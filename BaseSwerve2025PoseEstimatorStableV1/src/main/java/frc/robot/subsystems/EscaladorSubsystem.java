@@ -4,26 +4,26 @@
 
 package frc.robot.subsystems;
 
-
-import com.ctre.phoenix6.StatusCode;
 //CTRE imports
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
-import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 //WPILib imports
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static edu.wpi.first.units.Units.*;
+
+//Java imports
+import java.util.function.Supplier;
+
 //Robot imports
 import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
 
@@ -34,30 +34,30 @@ public class EscaladorSubsystem extends SubsystemBase
   private final TalonFX escaladorLeaderMotor;
   private final TalonFX escaladorFollowerMotor;
 
-  /* Start at velocity 0, use slot 0 */
-   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
+  /* Start at motion 0, use slot 2 */
+   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
 
-  private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
+  //private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(1);
 
-  /* Start at velocity 0, use slot 1 */
-  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(1);
+  //
+  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
   
   //Global config
-  private TalonFXConfiguration globalConfig = new TalonFXConfiguration();
+  //private TalonFXConfiguration globalConfig = new TalonFXConfiguration();
 
   /** Creates a new EscaladorSubsystem. */
   public EscaladorSubsystem() 
   {
     //Instantiate TalonFX motors
-    escaladorLeaderMotor = new TalonFX (EscaladorConstants.kMotor1Id);
-    escaladorFollowerMotor = new TalonFX(EscaladorConstants.kMotor2Id);
+    escaladorLeaderMotor = new TalonFX (EscaladorConstants.kMotor1Id,"rio");
+    escaladorFollowerMotor = new TalonFX(EscaladorConstants.kMotor2Id, "rio");
 
-    //Configure motors
-    configMotors();
-   
+    //Initialize motors
+    initializeMotors();
+    resetEncoder();
 
   }
 
@@ -69,12 +69,11 @@ public class EscaladorSubsystem extends SubsystemBase
    * @category TalonFx settings for drive motors
    * 
    */
-
-  /**
-   * Config motor
-   */
-  private void configMotors()
+  private void initializeMotors()
   { 
+    //
+    TalonFXConfiguration globalConfig = new TalonFXConfiguration();
+
     escaladorLeaderMotor.clearStickyFaults();
     //Factory Default
     escaladorLeaderMotor.getConfigurator().apply(new TalonFXConfiguration());      
@@ -88,61 +87,57 @@ public class EscaladorSubsystem extends SubsystemBase
     currentLimitConfigs.StatorCurrentLimit = EscaladorConstants.kCurrentThreshold;
     currentLimitConfigs.StatorCurrentLimitEnable = EscaladorConstants.kEnableCurrentLimit; 
     
-    /*MNL 10/28/2024 precisa testar as 3 configs */
+    //01/28/2025 MNL - Validated
     /* Gear Ratio Config */
-    globalConfig.Feedback.SensorToMechanismRatio=1;
-    globalConfig.ClosedLoopGeneral.ContinuousWrap = true;
+    globalConfig.Feedback.SensorToMechanismRatio = 1; 
+    globalConfig.ClosedLoopGeneral.ContinuousWrap = false;//keep default = FALSE - MUST NOT TOUCH IT
     /* Closed Loop Ramping */
     globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = EscaladorConstants.kClosedLoopRamp;
     
     /* User can optionally change the configs or leave it alone to perform a factory default */
     globalConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     
-    /* Apply the config */
-    //escaladorFollowerMotor.getConfigurator().apply(globalConfig);
-        
-    //escaladorLeaderMotor.getConfigurator().apply(globalConfig);
-
+   
+    
     /* Configure Motion Magic */
+    
     MotionMagicConfigs mm = globalConfig.MotionMagic;
     mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(5)) // 5 (mechanism) rotations per second cruise
       .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(10)) // Take approximately 0.5 seconds to reach max vel
       // Take approximately 0.1 seconds to reach max accel 
       .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(100));
     
-    
-    // in init function, set slot 0 gains
-    var slot0Configs = new Slot0Configs();
-        
-    /* Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor */
-    slot0Configs.kS = EscaladorConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
-    slot0Configs.kV = EscaladorConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
-    slot0Configs.kP = EscaladorConstants.kP; //0.11; // An error of 1 rps results in 0.11 V output
-    slot0Configs.kI = EscaladorConstants.kI; //0; // no output for integrated error
-    slot0Configs.kD = EscaladorConstants.kD; //0; // no output for error derivative
+            
+    /* Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
+    globalConfig.Slot1.kS = EscaladorConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
+    globalConfig.Slot1.kV = EscaladorConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
+    globalConfig.Slot1.kP = EscaladorConstants.kP; //0.11; // An error of 1 rps results in 0.11 V output
+    globalConfig.Slot1.kI = EscaladorConstants.kI; //0; // no output for integrated error
+    globalConfig.Slot1.kD = EscaladorConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
-    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(10))
-                        .withPeakReverseVoltage(Volts.of(-10));
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(8))
+                        .withPeakReverseVoltage(Volts.of(-8));*/
 
     
-
-    // in init function, set slot 1 gains
-    var slot1Configs = new Slot1Configs();
     //Voltage-based POSITION does not require a feed forward 
-    slot1Configs.kP = EscaladorConstants.kP1; //0.11; // An error of 1 rps results in 0.11 V output
-    slot1Configs.kI = EscaladorConstants.kI1; //0; // no output for integrated error
-    slot1Configs.kD = EscaladorConstants.kD1; //0; // no output for error derivative
+    globalConfig.Slot0.kP = EscaladorConstants.kP1; //0.11; // An error of 1 rps results in 0.11 V output
+    globalConfig.Slot0.kI = EscaladorConstants.kI1; //0; // no output for integrated error
+    globalConfig.Slot0.kD = EscaladorConstants.kD1; //0; // no output for error derivative
+
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(8))
+                        .withPeakReverseVoltage(Volts.of(-8));
+
     
 
 
     // in init function, set slot 2 gains to apply motion magic
-    var slot2Configs = new Slot2Configs();
-    slot2Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
-    slot2Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-    slot2Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
-    slot2Configs.kI = 0; // no output for integrated error
-    slot2Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
-
+    //var slot2Configs = new Slot2Configs();
+    globalConfig.Slot2.kS = 0.25; // Add 0.25 V output to overcome static friction
+    globalConfig.Slot2.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
+    globalConfig.Slot2.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
+    globalConfig.Slot2.kI = 0; // no output for integrated error
+    globalConfig.Slot2.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+  
     /* Retry config apply up to 5 times, report if failure */
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
@@ -156,19 +151,30 @@ public class EscaladorSubsystem extends SubsystemBase
     escaladorFollowerMotor.setControl(new Follower(escaladorLeaderMotor.getDeviceID(), false));
 
     //Enable safety
-    escaladorLeaderMotor.setSafetyEnabled(true);
+    //escaladorLeaderMotor.setSafetyEnabled(true);
 
     /* And initialize encoder position to 0 */
-    escaladorLeaderMotor.getConfigurator().setPosition(0);
+    resetEncoder();
+    
 
+  }
 
+  /**
+   * @ reset encoder
+   */
+  public void resetEncoder()
+  {
+    escaladorLeaderMotor.setPosition(0);
   }
 
   
   @Override
   public void periodic() 
   {
+    escaladorLeaderMotor.getPosition().getValueAsDouble();
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Escalador Velocity", getEscaladorVelocity());
+    SmartDashboard.putNumber("Escalador Position", getEscaladorPosition());
   }
 
   /**
@@ -176,24 +182,27 @@ public class EscaladorSubsystem extends SubsystemBase
    * @param targetSetpoint
    * @param isPositionControl
    */
-  public void runMotors( double targertSetpoint, boolean isPositionControl)
+  public void runMotors( Supplier<Double> targerSetpoint, Supplier<Boolean> isPositionControl)
   {
-    if(isPositionControl)
+    //
+    double setPoint = targerSetpoint.get();
+    boolean position = isPositionControl.get();
+    if(position)
     {
       //Set position control is slot 1
       System.out.println("Switching to Position Control");
-      //escaladorLeaderMotor.setControl(m_positionVoltage.withSlot(1).withPosition(targertSetpoint));
+      //escaladorLeaderMotor.setControl(m_positionVoltage.withPosition(setPoint));
       
       //Motion Magic - Set position control is slot 1
-      escaladorLeaderMotor.setControl(m_mmReq.withPosition(targertSetpoint).withSlot(1));
+      escaladorLeaderMotor.setControl(m_mmReq.withPosition(setPoint).withSlot(2));
       System.out.println("Current Position: " + escaladorLeaderMotor.getPosition().getValue());
     }
     else
     {
       //Set velocity control is slot 0  
       System.out.println("Switching to Velocity Control");
-      escaladorLeaderMotor.setControl(m_velocityVoltage.withSlot(0).withVelocity(targertSetpoint));
-      System.out.println("Target Velocity: " + targertSetpoint);
+      //escaladorLeaderMotor.setControl(m_velocityVoltage.withSlot(1).withVelocity(targetSetpoint));
+      //System.out.println("Target Velocity: " + targetSetpoint);
       System.out.println("Current Velocity: " + escaladorLeaderMotor.getVelocity().getValue());
     }
 
@@ -209,6 +218,23 @@ public class EscaladorSubsystem extends SubsystemBase
     /* Disable the motor instead */
     escaladorLeaderMotor.setControl(m_brake);
   }
+
+  /**
+   * 
+   * @return position in rotations as double
+   */
+  public double getEscaladorPosition()
+  {
+    return escaladorLeaderMotor.getPosition().getValueAsDouble();
+  }
   
+  /**
+   * 
+   * @return velocity in rotations/sec
+   */
+  public double getEscaladorVelocity()
+  {
+    return escaladorLeaderMotor.getVelocity().getValueAsDouble();
+  }
 
 }

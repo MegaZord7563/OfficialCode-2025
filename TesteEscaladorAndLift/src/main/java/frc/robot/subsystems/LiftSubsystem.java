@@ -60,7 +60,7 @@ public class LiftSubsystem extends SubsystemBase
     //liftRightPidController = liftLeftMotor.getClosedLoopController();
 
     //Calls motors config
-    motorsConfig();
+    initializeMotors();
     liftLeaderEncoder.setPosition(0);
     
 
@@ -68,9 +68,12 @@ public class LiftSubsystem extends SubsystemBase
   }
 
   
-
-  public void motorsConfig()
+  /**
+   * @ motors initialization
+   */
+  public void initializeMotors()
   {
+    
     globalConfig.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
@@ -80,6 +83,7 @@ public class LiftSubsystem extends SubsystemBase
     .smartCurrentLimit(LiftConstants.kLiftCurrentLimit)
     .inverted(false);
 
+    //Config follower motor
     followerConfig
     .apply(globalConfig)
     //.inverted(true)
@@ -110,13 +114,14 @@ public class LiftSubsystem extends SubsystemBase
     // Enable PID wrap around for the turning motor. 
     //This will allow the PID controller to go through 0 to get to the setpoint i.e. 
     //going from 350 degrees to 10 degrees will go through 0 rather than the other direction which is a longer route.
-    .positionWrappingEnabled(true)                                           
+    .positionWrappingEnabled(false)  //01/28 MNL - it was true before                                         
     .positionWrappingMinInput(LiftConstants.kLiftEncoderPositionPIDMinInput) 
     .positionWrappingMaxInput(LiftConstants.kLiftEncoderPositionPIDMaxInput)  
     .outputRange( LiftConstants.kLiftMinOutput,// Set the output range of the PID controller.                                 
                   LiftConstants.kLiftMaxOutput,
                   LiftConstants.pidSparkSlot);// Set the output range of the PID controller.
   
+    //Max motion config
     globalConfig.closedLoop.maxMotion
     // Set MAXMotion parameters for position control. We need to pass
     // a closed loop slot to the maxMotion method to set the parameters for that slot.
@@ -180,6 +185,10 @@ public class LiftSubsystem extends SubsystemBase
     
   }
 
+  /**
+   * Get lift position
+   * @return
+   */
   public double getLiftPosition()
   {
     return liftLeaderEncoder.getPosition();
