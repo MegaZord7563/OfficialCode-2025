@@ -106,7 +106,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
     public static final class CoralConstants
     {
       //Coral
-      public static final int kCoralMotorId = 22;
+      public static final int kCoralMotorId = 23;
       
 
       //Coral SparkMax
@@ -135,6 +135,42 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
       public static final double kICoralDown = 0;
       public static final double kDCoralDown = 0.7;
       public static final double kCoralDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      
+    } 
+
+    //Ramp Constants - SparkMax
+    public static final class RampConstants
+    {
+      //Ramp
+      public static final int kRampMotorId = 24;
+      
+
+      //Ramp SparkMax
+      public static final IdleMode kRampIdleMode = IdleMode.kBrake;
+      public static final int kRampCurrentLimit = 40;
+      public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
+      public static final double kRampEncoderPositionPIDMinInput =0 ;
+      public static final double kRampEncoderPositionPIDMaxInput= 2 * Math.PI;
+
+      //Ramp Encoder
+      public static final double KGearRatio = 1.0/60.0; // 
+      public static final double kWheelDiameter = 0.013; //meters
+      public static final double kRampPositionConversionFactor = Math.PI* KGearRatio * kWheelDiameter; //rotation to Meters
+    
+
+      //Ramp PID Up
+      public static final double kPRampUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIRampUp = 0;
+      public static final double kDRampUp = 0;
+      public static final double kRampUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kRampMinOutput = -1;
+      public static final double kRampMaxOutput = 1;
+
+      //Ramp PID Down
+      public static final double kPRampDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIRampDown = 0;
+      public static final double kDRampDown = 0.7;
+      public static final double kRampDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       
     } 
 

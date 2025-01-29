@@ -18,6 +18,9 @@ import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 
 import frc.robot.subsystems.EscaladorSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.ArticuladorAlgaeSubsystem;
+import frc.robot.subsystems.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.RampSubsystem;
 
 
 /**
@@ -33,8 +36,11 @@ public class RobotContainer
   //Subsystems
   //Put all subsystems here
   
-  public static LiftSubsystem liftSubsystem = new LiftSubsystem();
+  //public static LiftSubsystem liftSubsystem = new LiftSubsystem();
   public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
+  public static ArticuladorAlgaeSubsystem algaeSubsystem = new ArticuladorAlgaeSubsystem();
+  public static ArticuladorCoralSubsystem coralSubsystem = new ArticuladorCoralSubsystem();
+  public static RampSubsystem rampSubsystem = new RampSubsystem();
   
   
 
@@ -128,9 +134,32 @@ public class RobotContainer
     //                                                                            false)));
     //driverJoystick.x().onFalse((new RunCommand(()->escaladorSubsystem.stopMotors())));
 
+
+    /*//Lift
     driverJoystick.a().whileTrue((new RunCommand(()->liftSubsystem.moveLift(1.0, false))));
     driverJoystick.b().whileTrue((new RunCommand(()->liftSubsystem.stopLift())));
     driverJoystick.y().whileTrue((new RunCommand(()->liftSubsystem.moveLift(0, true))));
+    //*/
+
+    /*//Algae
+    driverJoystick.a().whileTrue((new RunCommand(()->algaeSubsystem.moveAlgae(1.0))));
+    driverJoystick.b().whileTrue((new RunCommand(()->algaeSubsystem.stopAlgae())));
+    driverJoystick.y().whileTrue((new RunCommand(()->algaeSubsystem.moveAlgae(0))));
+    //*/
+
+    /*//Coral
+    driverJoystick.a().whileTrue((new RunCommand(()->coralSubsystem.moveCoral(1.0))));
+    driverJoystick.b().whileTrue((new RunCommand(()->coralSubsystem.stopCoral())));
+    driverJoystick.y().whileTrue((new RunCommand(()->coralSubsystem.moveCoral(0))));
+    //*/
+
+    //*//Ramp
+    driverJoystick.a().whileTrue((new RunCommand(()->rampSubsystem.moveRamp(1.0))));
+    driverJoystick.b().whileTrue((new RunCommand(()->rampSubsystem.stopRamp())));
+    driverJoystick.y().whileTrue((new RunCommand(()->rampSubsystem.moveRamp(0))));
+    //*/
+    
+    
     /*
     driverJoystick.b().whileTrue((new RunCommand(()->escaladorSubsystem.runMotors(()-> 10.0, 
                                                                                   ()-> true))));
