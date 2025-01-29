@@ -25,18 +25,11 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
  public final class Constants 
  {
 
- /*************************************************************
-  * constante que limita a velocidade maxima drive autonomous *
-  *************************************************************/
-
-
-  //Path Planner Constants
-  
-
+ 
   //Subsystem Constants
   public static final class SubsystemsConstants
   {
-    //Lift Constants
+    //Lift Constants - SparkMax
     public static final class LiftConstants
     {
       //Lift
@@ -51,10 +44,12 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
       public static final double kLiftEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       //Lift Encoder
-      public static final double kLiftPositionConversionFactor = (2 * Math.PI)* 1/20.0 * 0.013; //Meters
-      public static final double kLiftVelocityConversionFactor = (2 * Math.PI)/60.0; //Rad/s
+      public static final double KGearRatio = 1.0/20.0; // 
+      public static final double kWheelDiameter = 0.013; //meters
+      public static final double kLiftPositionConversionFactor = Math.PI* KGearRatio * kWheelDiameter; //rotation to Meters
+      public static final double kLiftVelocityConversionFactor = KGearRatio* (2.0 * Math.PI); //rotation to Rad/s
 
-      //Lift PID
+      //Lift PID Up
       public static final double kPLiftUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kILiftUp = 0;
       public static final double kDLiftUp = 0;
@@ -62,26 +57,31 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
       public static final double kLiftMinOutput = -1;
       public static final double kLiftMaxOutput = 1;
 
-      public static final double kPLiftDown = 1.0;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      //Lift PID Down
+      public static final double kPLiftDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kILiftDown = 0;
-      public static final double kDLiftDown = 0;
+      public static final double kDLiftDown = 0.7;
       public static final double kLiftDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       
     } 
 
     
 
+    //Escalador Constants - TalonFX
     public static final class EscaladorConstants
     {
+      //Escalador
       public static final int kMotor1Id = 25;
       public static final int kMotor2Id = 19;
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
 
+      
       public static final double KS = 0.1;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
       public static final double KV = 0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
       public static final double KA = 0.11;  //0.27;
 
       //TO DO: This must be tuned to specific robot
+      //PID slot 0
       public static final double kP = 1.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
@@ -90,6 +90,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
       public static final double kMinOutput= -1;
       public static final double kMaxOutput = 1;
 
+      //PID slot 1
       public static final double kP1 = 2.0;
       public static final double kI1 =0.0;
       public static final double kD1=0.0;
@@ -111,7 +112,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
   //OI Constants
   public static final class OIConstants 
   {
-      
+      //Joystick Driver
       public static final class JoystickDriverConstants 
       {
         //Joystick Driver

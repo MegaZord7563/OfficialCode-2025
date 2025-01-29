@@ -19,6 +19,8 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.MAXMotionConfig.MAXMotionPositionMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPILIB Imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,6 +46,11 @@ public class LiftSubsystem extends SubsystemBase
   private final SparkClosedLoopController liftLeaderPidController;
   //private final SparkClosedLoopController liftFollowerPidController;
 
+  // Create a PID controller whose setpoint's change is subject to maximum
+  // velocity and acceleration constraints.
+  private final TrapezoidProfile.Constraints m_constraints = new TrapezoidProfile.Constraints(14.0, 7.0);
+  private final ProfiledPIDController m_controller = new ProfiledPIDController(2.3, 0.0, 0.7, m_constraints, 0.02);
+
 
   /** Creates a new LiftSubsytem. */
   public LiftSubsystem() 
@@ -52,13 +59,13 @@ public class LiftSubsystem extends SubsystemBase
     liftLeaderMotor = new SparkMax(LiftConstants.kLiftLeftMotorId,MotorType.kBrushless);
     liftFollowerMotor = new SparkMax(LiftConstants.kLiftRightMotorId,MotorType.kBrushless);
 
-    // Create the lift encoder
-    liftLeaderEncoder = liftLeaderMotor.getEncoder();
-    //liftRightEncoder = liftRightMotor.getEncoder();
-
     //Create PID controller
     liftLeaderPidController = liftLeaderMotor.getClosedLoopController();
     //liftRightPidController = liftLeftMotor.getClosedLoopController();
+
+    // Create the lift encoder
+    liftLeaderEncoder = liftLeaderMotor.getEncoder();
+    //liftRightEncoder = liftRightMotor.getEncoder();
 
     //Calls motors config
     initializeMotors();
@@ -74,9 +81,6 @@ public class LiftSubsystem extends SubsystemBase
    */
   public void initializeMotors()
   {
-    
-    
-
     // Configure the lift motor
      globalConfig
     .idleMode(LiftConstants.kLiftIdleMode)
@@ -125,14 +129,15 @@ public class LiftSubsystem extends SubsystemBase
   
     //Max motion config
     globalConfig.closedLoop.maxMotion
+    .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal,ClosedLoopSlot.kSlot2)
     // Set MAXMotion parameters for position control. We need to pass
     // a closed loop slot to the maxMotion method to set the parameters for that slot.
     // In this case, we are setting the parameters for slot 2.
     // Set MAXMotion parameters for velocity control in slot 2
-    .maxAcceleration(4.0, ClosedLoopSlot.kSlot2)
-    .maxVelocity(100, ClosedLoopSlot.kSlot2)
-    .allowedClosedLoopError(0.1, ClosedLoopSlot.kSlot2);
-    //.positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal,ClosedLoopSlot.kSlot2);
+    .maxAcceleration(3.5, ClosedLoopSlot.kSlot2) //4.0
+    .maxVelocity(7.0, ClosedLoopSlot.kSlot2)         //100
+    .allowedClosedLoopError(0.05, ClosedLoopSlot.kSlot2);
+    
 
     
 
@@ -157,10 +162,15 @@ public class LiftSubsystem extends SubsystemBase
    */
   public void moveLift(double targetPosition, boolean direction)
   {
+    
     if (direction)
-    {
+    { 
+      m_controller.setGoal(targetPosition);
       System.out.println("Switching to Position Control UP");
-      liftLeaderPidController.setReference(targetPosition, ControlType.kPosition);
+      //liftLeaderPidController.setReference(targetPosition, ControlType.kPosition);
+     
+      liftLeaderMotor.setVoltage(m_controller.calculate(liftLeaderEncoder.getPosition()));
+      System.out.println("Current Position: " + liftLeaderEncoder.getPosition());
     }
     else
     {
@@ -172,6 +182,7 @@ public class LiftSubsystem extends SubsystemBase
       liftLeaderPidController.setReference( targetPosition, 
                                             ControlType.kMAXMotionPositionControl,
                                             ClosedLoopSlot.kSlot2);
+      System.out.println("Current Position: " + liftLeaderEncoder.getPosition());
     }
     
   }

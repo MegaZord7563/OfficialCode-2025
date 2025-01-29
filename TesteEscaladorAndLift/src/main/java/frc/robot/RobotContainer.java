@@ -128,9 +128,9 @@ public class RobotContainer
     //                                                                            false)));
     //driverJoystick.x().onFalse((new RunCommand(()->escaladorSubsystem.stopMotors())));
 
-    driverJoystick.a().whileTrue((new RunCommand(()->liftSubsystem.moveLift(2.5, false))));
+    driverJoystick.a().whileTrue((new RunCommand(()->liftSubsystem.moveLift(1.0, false))));
     driverJoystick.b().whileTrue((new RunCommand(()->liftSubsystem.stopLift())));
-    driverJoystick.y().whileTrue((new RunCommand(()->liftSubsystem.moveLift(0, false))));
+    driverJoystick.y().whileTrue((new RunCommand(()->liftSubsystem.moveLift(0, true))));
     /*
     driverJoystick.b().whileTrue((new RunCommand(()->escaladorSubsystem.runMotors(()-> 10.0, 
                                                                                   ()-> true))));
