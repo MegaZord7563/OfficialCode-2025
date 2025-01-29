@@ -113,7 +113,7 @@ public class RampSubsystem extends SubsystemBase
                                             ClosedLoopSlot.kSlot1);
      */  
       rampPidController.setReference(targetPosition, 
-                                            ControlType.kMAXMotionPositionControl);
+                                            ControlType.kPosition);
       System.out.println("Current Position: " + rampEncoder.getPosition());
     
     

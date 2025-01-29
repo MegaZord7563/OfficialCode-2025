@@ -116,7 +116,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
                                             ClosedLoopSlot.kSlot1);
      */  
       algaePidController.setReference(targetPosition, 
-                                            ControlType.kMAXMotionPositionControl);
+                                            ControlType.kPosition);
       System.out.println("Current Position: " + algaeEncoder.getPosition());
     
     

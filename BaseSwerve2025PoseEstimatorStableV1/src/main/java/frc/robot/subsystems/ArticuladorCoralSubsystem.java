@@ -116,7 +116,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
                                             ClosedLoopSlot.kSlot1);
      */  
       coralPidController.setReference(targetPosition, 
-                                            ControlType.kMAXMotionPositionControl);
+                                            ControlType.kPosition);
       System.out.println("Current Position: " + coralEncoder.getPosition());
     
     
