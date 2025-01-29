@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
-import frc.robot.Constants.SubsystemsConstants.CoralConstants;
+import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
 
 /** Add your docs here. */
 public class ArticuladorCoralSubsystem extends SubsystemBase 
@@ -43,7 +43,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
   public ArticuladorCoralSubsystem() 
   {
     // Create the coral motor
-    coralMotor = new SparkMax(CoralConstants.kCoralMotorId,MotorType.kBrushless);
+    coralMotor = new SparkMax(ArticuladorCoralConstants.kArticuladorCoralMotorId,MotorType.kBrushless);
   
     //Create PID controller
     coralPidController = coralMotor.getClosedLoopController();
@@ -68,13 +68,13 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
   {
     // Configure the coral motor
      config
-    .idleMode(CoralConstants.kCoralIdleMode) //LiftConstants.kLiftIdleMode
-    .smartCurrentLimit(CoralConstants.kCoralCurrentLimit) //LiftConstants.kLiftCurrentLimit
+    .idleMode(ArticuladorCoralConstants.kArticuladorCoralIdleMode) //LiftConstants.kLiftIdleMode
+    .smartCurrentLimit(ArticuladorCoralConstants.kArticuladorCoralCurrentLimit) //LiftConstants.kLiftCurrentLimit
     .inverted(false);
   
     // Configure the coral encoder 
     config.encoder
-    .positionConversionFactor(CoralConstants.kCoralPositionConversionFactor);
+    .positionConversionFactor(ArticuladorCoralConstants.kArticuladorCoralPositionConversionFactor);
     
 
     config.closedLoop
@@ -83,10 +83,10 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
     // slot, as it will default to slot 0.
-    .pidf(CoralConstants.kPCoralUp, 
-          CoralConstants.kICoralUp, 
-          CoralConstants.kDCoralUp, 
-          CoralConstants.kCoralUpFF);          
+    .pidf(ArticuladorCoralConstants.kPArticuladorCoralUp, 
+          ArticuladorCoralConstants.kIArticuladorCoralUp, 
+          ArticuladorCoralConstants.kDArticuladorCoralUp, 
+          ArticuladorCoralConstants.kArticuladorCoralUpFF);          
 
     // Configure the coral motor - like burn flash
     coralMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
@@ -116,7 +116,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
                                             ClosedLoopSlot.kSlot1);
      */  
       coralPidController.setReference(targetPosition, 
-                                            ControlType.kMAXMotionPositionControl);
+                                            ControlType.kPosition);
       System.out.println("Current Position: " + coralEncoder.getPosition());
     
     
