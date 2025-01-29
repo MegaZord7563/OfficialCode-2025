@@ -364,6 +364,116 @@ import edu.wpi.first.math.util.Units;
 
     }
 
+    //ArticuladorAlgae Constants - SparkMax
+    public static final class ArticuladorAlgaeConstants
+    {
+      //ArticuladorAlgae
+      public static final int kArticuladorAlgaeMotorId = 22;
+      
+
+      //ArticuladorAlgae SparkMax
+      public static final IdleMode kArticuladorAlgaeIdleMode = IdleMode.kBrake;
+      public static final int kArticuladorAlgaeCurrentLimit = 40;
+      public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
+      public static final double kArticuladorAlgaeEncoderPositionPIDMinInput =0 ;
+      public static final double kArticuladorAlgaeEncoderPositionPIDMaxInput= 2 * Math.PI;
+
+      //ArticuladorAlgae Encoder
+      public static final double KGearRatio = 1.0/20.0; // 
+      public static final double kWheelDiameter = 0.013; //meters
+      public static final double kArticuladorAlgaePositionConversionFactor = Math.PI* KGearRatio * kWheelDiameter; //rotation to Meters
+      public static final double kArticuladorAlgaeVelocityConversionFactor = KGearRatio* (2.0 * Math.PI); //rotation to Rad/s
+
+      //ArticuladorAlgae PID Up
+      public static final double kPArticuladorAlgaeUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIArticuladorAlgaeUp = 0;
+      public static final double kDArticuladorAlgaeUp = 0;
+      public static final double kArticuladorAlgaeUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kArticuladorAlgaeMinOutput = -1;
+      public static final double kArticuladorAlgaeMaxOutput = 1;
+
+      //ArticuladorAlgae PID Down
+      public static final double kPArticuladorAlgaeDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIArticuladorAlgaeDown = 0;
+      public static final double kDArticuladorAlgaeDown = 0.7;
+      public static final double kArticuladorAlgaeDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      
+    } 
+
+    //ArticuladorCoral Constants - SparkMax
+    public static final class ArticuladorCoralConstants
+    {
+      //ArticuladorCoral
+      public static final int kArticuladorCoralMotorId = 23;
+      
+
+      //ArticuladorCoral SparkMax
+      public static final IdleMode kArticuladorCoralIdleMode = IdleMode.kBrake;
+      public static final int kArticuladorCoralCurrentLimit = 40;
+      public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
+      public static final double kArticuladorCoralEncoderPositionPIDMinInput =0 ;
+      public static final double kArticuladorCoralEncoderPositionPIDMaxInput= 2 * Math.PI;
+
+      //ArticuladorCoral Encoder
+      public static final double KGearRatio = 1.0/20.0; // 
+      public static final double kWheelDiameter = 0.013; //meters
+      public static final double kArticuladorCoralPositionConversionFactor = Math.PI* KGearRatio * kWheelDiameter; //rotation to Meters
+      public static final double kArticuladorCoralVelocityConversionFactor = KGearRatio* (2.0 * Math.PI); //rotation to Rad/s
+
+      //ArticuladorCoral PID Up
+      public static final double kPArticuladorCoralUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIArticuladorCoralUp = 0;
+      public static final double kDArticuladorCoralUp = 0;
+      public static final double kArticuladorCoralUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kArticuladorCoralMinOutput = -1;
+      public static final double kArticuladorCoralMaxOutput = 1;
+
+      //ArticuladorCoral PID Down
+      public static final double kPArticuladorCoralDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIArticuladorCoralDown = 0;
+      public static final double kDArticuladorCoralDown = 0.7;
+      public static final double kArticuladorCoralDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      
+    } 
+
+    //Ramp Constants - SparkMax
+    public static final class RampConstants
+    {
+      //Ramp
+      public static final int kRampMotorId = 24;
+      
+
+      //Ramp SparkMax
+      public static final IdleMode kRampIdleMode = IdleMode.kBrake;
+      public static final int kRampCurrentLimit = 40;
+      public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
+      public static final double kRampEncoderPositionPIDMinInput =0 ;
+      public static final double kRampEncoderPositionPIDMaxInput= 2 * Math.PI;
+
+      //Ramp Encoder
+      public static final double KGearRatio = 1.0/60.0; // 
+      public static final double kWheelDiameter = 0.013; //meters
+      public static final double kRampPositionConversionFactor = Math.PI* KGearRatio * kWheelDiameter; //rotation to Meters
+    
+
+      //Ramp PID Up
+      public static final double kPRampUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIRampUp = 0;
+      public static final double kDRampUp = 0;
+      public static final double kRampUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kRampMinOutput = -1;
+      public static final double kRampMaxOutput = 1;
+
+      //Ramp PID Down
+      public static final double kPRampDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIRampDown = 0;
+      public static final double kDRampDown = 0.7;
+      public static final double kRampDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      
+    } 
+
+
+
     public static final class EscaladorConstants
     {
       public static final int kMotor1Id = 19;

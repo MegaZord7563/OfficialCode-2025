@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
-import frc.robot.Constants.SubsystemsConstants.AlgaeConstants;
+import frc.robot.Constants.SubsystemsConstants.ArticuladorAlgaeConstants;
 
 /** Add your docs here. */
 public class ArticuladorAlgaeSubsystem extends SubsystemBase 
@@ -42,7 +42,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
   public ArticuladorAlgaeSubsystem() 
   {
     // Create the algae motor
-    algaeMotor = new SparkMax(AlgaeConstants.kAlgaeMotorId,MotorType.kBrushless);
+    algaeMotor = new SparkMax(ArticuladorAlgaeConstants.kArticuladorAlgaeMotorId,MotorType.kBrushless);
   
     //Create PID controller
     algaePidController = algaeMotor.getClosedLoopController();
@@ -68,13 +68,13 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
   {
     // Configure the algae motor
      config
-    .idleMode(AlgaeConstants.kAlgaeIdleMode) 
-    .smartCurrentLimit(AlgaeConstants.kAlgaeCurrentLimit) 
+    .idleMode(ArticuladorAlgaeConstants.kArticuladorAlgaeIdleMode) 
+    .smartCurrentLimit(ArticuladorAlgaeConstants.kArticuladorAlgaeCurrentLimit) 
     .inverted(false);
   
     // Configure the algae encoder 
     config.encoder
-    .positionConversionFactor(AlgaeConstants.kAlgaePositionConversionFactor);
+    .positionConversionFactor(ArticuladorAlgaeConstants.kArticuladorAlgaePositionConversionFactor);
     
 
     config.closedLoop
@@ -83,10 +83,10 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
    
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
     // slot, as it will default to slot 0.
-    .pidf(AlgaeConstants.kPAlgaeUp, 
-          AlgaeConstants.kIAlgaeUp, 
-          AlgaeConstants.kDAlgaeUp, 
-          AlgaeConstants.kAlgaeUpFF);
+    .pidf(ArticuladorAlgaeConstants.kPArticuladorAlgaeUp, 
+          ArticuladorAlgaeConstants.kIArticuladorAlgaeUp, 
+          ArticuladorAlgaeConstants.kDArticuladorAlgaeUp, 
+          ArticuladorAlgaeConstants.kArticuladorAlgaeUpFF);
               
     
     // Configure the algae motor - like burn flash
