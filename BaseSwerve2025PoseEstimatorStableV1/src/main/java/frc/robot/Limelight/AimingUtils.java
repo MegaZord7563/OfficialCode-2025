@@ -13,7 +13,12 @@ public class AimingUtils
     private static final double kMaxAngularSpeed = 1.0; // Maximum angular speed in radians per second
     private static final double kMaxSpeed = 1.0; // Maximum forward speed in meters per second
 
-    // Method to aim at the target using Limelight's tx value
+    
+    /**
+     * Method to aim at the target using Limelight's tx value
+     * @param limelightName
+     * @return targetingAngularVelocity
+     */
     public static double aimAtTarget(String limelightName) 
     {
         // Get the horizontal offset from crosshair to target (tx)
@@ -28,7 +33,12 @@ public class AimingUtils
         return targetingAngularVelocity;
     }
 
-    // Method to range to the target using Limelight's ty value
+   
+    /**
+     * Method to range to the target using Limelight's ty value
+     * @param limelightName
+     * @return targetingForwardSpeed
+     */
     public static double rangeToTarget(String limelightName) 
     {
         // Get the vertical offset from crosshair to target (ty)
@@ -43,8 +53,13 @@ public class AimingUtils
         return targetingForwardSpeed;
     }
 
-    // Method to estimate the distance to the target using Limelight's ty value
-    public static double estimateDistanceToTarget() 
+    
+    /**
+     * Method to estimate the distance to the target using Limelight's ty value
+     * @param limeligthName
+     * @return distanceToTarget
+     */
+    public static double estimateDistanceToTarget(String limeligthName) 
     {
         // Constants for distance calculation
         double targetHeight = 2.5; // Height of the target in meters
@@ -52,7 +67,7 @@ public class AimingUtils
         double limelightAngle = 30.0; // Mounting angle of the Limelight in degrees
 
         // Get the vertical offset from crosshair to target (ty)
-        double ty = LimelightHelpers.getTY("limelight-front");
+        double ty = LimelightHelpers.getTY(limeligthName);
 
         // Calculate the angle to the target in radians
         double angleToTarget = Math.toRadians(limelightAngle + ty);
@@ -63,7 +78,13 @@ public class AimingUtils
         return distanceToTarget;
     }
 
-    // Method to estimate the distance to the target using the robot's current pose
+    
+    /**
+     * Method to estimate the distance to the target from the robot's pose
+     * @param swerveSubsystem
+     * @param targetPosition
+     * @return
+     */
     public static double estimateDistanceToTargetFromPose(SwerveSubsystem swerveSubsystem, Translation2d targetPosition) 
     {
         // Get the current robot pose from the pose estimator
@@ -77,4 +98,123 @@ public class AimingUtils
 
         return distanceToTarget;
     }
+
+    /**
+     * Method to track the Coral Station using Limelight's AprilTag detection
+     * @param limelightName
+     */
+    public static void  trackCoralStation(String limelightName)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{1, 2, 12, 13}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+
+    }
+
+    
+    /**
+     * // Method to track the processor using Limelight's AprilTag detection
+     * @param limelightName
+     * 
+     */
+    public static void  trackProcessor(String limelightName)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{3, 16}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+
+    }
+
+      /**
+     * Method to track the Reef Position using Limelight's AprilTag detection
+     * @param limelightName
+     * @param Id1
+     * @param Id2
+     */
+    public static void  trackReefPosition(String limelightName, int Id1, int Id2)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{Id1, Id2}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+
+    }
+
+    /**
+     * Method to track the Reef A using Limelight's AprilTag detection
+     * @param limelightName
+     */
+    public static void  trackReefAB(String limelightName)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{7, 18}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+
+    }
+    
+   /**
+    * Method to track the Reef C using Limelight's AprilTag detection
+    * @param limelightName
+    */
+    public static void trackReefCD(String limelightName)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{8, 17}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+
+    }
+    
+    /**
+     * Method to track the Reef E using Limelight's AprilTag detection
+     * @param limelightName
+     */
+    public static void  trackReefEF(String limelightName)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{9, 22}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+
+    }
+
+    /**
+     * Method to track the Reef G using Limelight's AprilTag detection
+     * @param limelightName
+     */
+    public static void  trackReefGH(String limelightName)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{10, 21}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+                
+
+    }
+
+   /**
+    * Method to track the Reef IJ using Limelight's AprilTag detection
+    * @param limelightName
+    */
+    public static void  trackReefIJ(String limelightName)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{11, 20}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+                
+
+    }
+    
+    /**
+     * Method to track the Reef KL using Limelight's AprilTag detection
+     * @param limelightName
+     */
+    public static void  trackReefKL(String limelightName)
+    {
+        // Configure AprilTag detection
+        LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, new int[]{6, 19}); // Only track these tag IDs
+        LimelightHelpers.SetFiducialDownscalingOverride(limelightName, 2.0f); // Process at half resolution for improved framerate and reduced range
+                
+
+    }
+    
+
+
+
 }

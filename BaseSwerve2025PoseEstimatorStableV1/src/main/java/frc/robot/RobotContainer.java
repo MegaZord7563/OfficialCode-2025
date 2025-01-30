@@ -79,8 +79,8 @@ public class RobotContainer
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
 
   //Swerve commands
-  public static TrackAlgae trackAlgaeCmd = new TrackAlgae();
-  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd();
+  public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
+  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( 0, 0);
   
   //PathFindingCommand
   public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
@@ -225,7 +225,7 @@ public class RobotContainer
      driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
 
      //drive to goal
-     driverJoystick.a().whileTrue(aimAndRangeCmd);
+     driverJoystick.a().whileTrue(new AimAndRangeCmd(1, 2));
      driverJoystick.b().whileTrue(trackAlgaeCmd);
 
 
