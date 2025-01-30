@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.swerve;
 
 
 // WPI imports
@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 // Robot imports
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Limelight.AimingUtils;
+import frc.robot.Limelight.AimingUtils;
+import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -20,6 +21,7 @@ public class AimAndRangeCmd extends Command
   // Instantiate the object
   private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
   private final Translation2d targetPosition = new Translation2d(0, 0);
+  private static String limelightName = "limelight-front";
 
   /** Creates a new AimAndRangeCmd. */
   public AimAndRangeCmd() 
@@ -32,7 +34,8 @@ public class AimAndRangeCmd extends Command
   @Override
   public void initialize() 
   {
-
+      // Switch to pipeline 0
+    LimelightHelpers.setPipelineIndex(limelightName, 1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,10 +43,10 @@ public class AimAndRangeCmd extends Command
   public void execute() 
   {
     // Get the angular velocity needed to aim at the target
-        double angularVelocity = AimingUtils.aimAtTarget();
+        double angularVelocity = AimingUtils.aimAtTarget(limelightName);
 
         // Get the forward speed needed to range to the target
-        double forwardSpeed = AimingUtils.rangeToTarget();
+        double forwardSpeed = AimingUtils.rangeToTarget(limelightName);
 
         // Drive the swerve subsystem with the calculated speeds
         swerveDrive.driveRobotOriented(()->forwardSpeed,()-> 0.0, ()->angularVelocity,()->true);

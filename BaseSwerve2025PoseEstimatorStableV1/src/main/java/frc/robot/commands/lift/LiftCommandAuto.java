@@ -1,24 +1,21 @@
-package frc.robot.commands;
+package frc.robot.commands.lift;
 
-//WPI Imports
+
 import edu.wpi.first.wpilibj2.command.Command;
-
-//Robot imports
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.lift.LiftSubsystem;
 
 
 
 
-public class LiftCommand extends Command
-{
+public class LiftCommandAuto extends Command{
      // Instantiate the object
-     boolean finish =false;
+     private boolean finish =false;
 
     private final LiftSubsystem liftSubsystem;
 
   /** Creates a new AngleCmd. */
-  public LiftCommand() {
+  public LiftCommandAuto() {
     liftSubsystem = RobotContainer.liftSubsystem;
   }
 
@@ -27,13 +24,23 @@ public class LiftCommand extends Command
   public void initialize() {
     System.out.println("Lift Command Initialized");
     liftSubsystem.resetLiftEncoder();
+    finish = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() 
   {
-    liftSubsystem.moveLift(100, false);
+    liftSubsystem.moveLift(200, false);
+    
+    new Thread(() -> {
+      try {
+        
+          Thread.sleep(5000); //avoid to block the rest of our code from running
+          finish=true;
+      } catch (Exception e) {
+      }
+    }).start();;
   }    
 
   // Called once the command ends or is interrupted.
@@ -46,7 +53,7 @@ public class LiftCommand extends Command
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.driverJoystick.getHID().getBButtonReleased();
+    return finish;
   }
 
 }

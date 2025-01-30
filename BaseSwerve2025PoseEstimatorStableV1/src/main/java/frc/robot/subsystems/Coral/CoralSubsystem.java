@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.Coral;
 
 
 //REV Imports
@@ -19,52 +19,50 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 //WPILIB Imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.SubsystemsConstants.AlgaIntakeConstants;
 import frc.robot.Constants.SubsystemsConstants.CoralIntakeConstants;
 
 //Robot Imports
 
 
 /** Add your docs here. */
-public class AlgaSubsystem extends SubsystemBase 
+public class CoralSubsystem extends SubsystemBase 
 {
   // The lift motor
-  private final SparkMax algaMotor;
+  private final SparkMax coralMotor;
   private SparkMaxConfig globalConfig = new SparkMaxConfig();
   
   
 
   // The lift encoder
-  private final RelativeEncoder algaEncoder;
+  private final RelativeEncoder coralEncoder;
   
 
   // The lift PID controller
-  private SparkClosedLoopController algaPidController;
+  private SparkClosedLoopController coralPidController;
   
 
 
   /** Creates a new LiftSubsytem. */
-  public AlgaSubsystem() 
+  public CoralSubsystem() 
   {
     // Create the  motor
-    algaMotor = new SparkMax(CoralIntakeConstants.kCoralMotorId, MotorType.kBrushless);
+    coralMotor = new SparkMax(CoralIntakeConstants.kCoralMotorId, MotorType.kBrushless);
     
 
     // Create the  encoder
-    algaEncoder = algaMotor.getEncoder();
+    coralEncoder = coralMotor.getEncoder();
     //liftRightEncoder = liftRightMotor.getEncoder();
 
     //Create PID controller
-    algaPidController = algaMotor.getClosedLoopController();
+    coralPidController = coralMotor.getClosedLoopController();
     
 
     //Calls motors config
     motorsConfig();
     
 
+    
   }
-
-  
 
   
   public void motorsConfig()
@@ -74,25 +72,25 @@ public class AlgaSubsystem extends SubsystemBase
 
     // Configure the lift motor
      globalConfig
-    .idleMode(AlgaIntakeConstants.kAlgaIdleMode)
-    .smartCurrentLimit(AlgaIntakeConstants.kAlgaCurrentLimit)
+    .idleMode(CoralIntakeConstants.kCoralIdleMode)
+    .smartCurrentLimit(CoralIntakeConstants.kCoralCurrentLimit)
     .inverted(false);
 
     // Configure the lift encoder 
     globalConfig.encoder
-    .velocityConversionFactor(AlgaIntakeConstants.kAlgaVelocityConversionFactor);
+    .velocityConversionFactor(CoralIntakeConstants.kCoralVelocityConversionFactor);
 
     // Configure the lift PID controller
     globalConfig.closedLoop
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
     // slot, as it will default to slot 0.
-    .pidf(AlgaIntakeConstants.kP, 
-          AlgaIntakeConstants.kI, 
-          AlgaIntakeConstants.kD, 
-          AlgaIntakeConstants.kFF);
+    .pidf(CoralIntakeConstants.kP, 
+          CoralIntakeConstants.kI, 
+          CoralIntakeConstants.kD, 
+          CoralIntakeConstants.kFF);
 
     // Configure the lift motor - like burn flash
-    algaMotor.configure(globalConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
+    coralMotor.configure(globalConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
     
   }
 
@@ -106,12 +104,12 @@ public class AlgaSubsystem extends SubsystemBase
 
   /**
    * Set the coral motor speed
-   * @param AlgaMotorSpeed
+   * @param CoralMotorSpeed
    */
-  public void startAlga(double targetSpeed)
+  public void startCoral(double targetSpeed)
   {
     
-      algaPidController.setReference(targetSpeed, ControlType.kVelocity);
+      coralPidController.setReference(targetSpeed, ControlType.kVelocity);
     
     
   }
@@ -122,13 +120,13 @@ public class AlgaSubsystem extends SubsystemBase
    */
   public void stopMotor()
   {
-    algaMotor.set(0);
+    coralMotor.set(0);
     
   }
 
   public double getCoralSpeed()
   {
-    return algaEncoder.getVelocity();
+    return coralEncoder.getVelocity();
   }
  
   

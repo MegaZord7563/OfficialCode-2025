@@ -1,5 +1,5 @@
 
-package frc.robot.subsystems.Limelight;
+package frc.robot.Limelight;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -14,10 +14,10 @@ public class AimingUtils
     private static final double kMaxSpeed = 1.0; // Maximum forward speed in meters per second
 
     // Method to aim at the target using Limelight's tx value
-    public static double aimAtTarget() 
+    public static double aimAtTarget(String limelightName) 
     {
         // Get the horizontal offset from crosshair to target (tx)
-        double targetingAngularVelocity = LimelightHelpers.getTX("limelight-front") * kP;
+        double targetingAngularVelocity = LimelightHelpers.getTX(limelightName) * kP;
 
         // Convert to radians per second for our drive method
         targetingAngularVelocity *= kMaxAngularSpeed;
@@ -29,10 +29,10 @@ public class AimingUtils
     }
 
     // Method to range to the target using Limelight's ty value
-    public static double rangeToTarget() 
+    public static double rangeToTarget(String limelightName) 
     {
         // Get the vertical offset from crosshair to target (ty)
-        double targetingForwardSpeed = LimelightHelpers.getTY("limelight-front") * kP;
+        double targetingForwardSpeed = LimelightHelpers.getTY(limelightName) * kP;
 
         // Convert to meters per second for our drive method
         targetingForwardSpeed *= kMaxSpeed;

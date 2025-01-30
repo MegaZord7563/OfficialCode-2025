@@ -24,16 +24,21 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
-import frc.robot.commands.LiftCommand;
-import frc.robot.commands.LiftCommandAuto;
-import frc.robot.commands.PathAfterFind;
-import frc.robot.commands.PathFindingCommand;
-import frc.robot.subsystems.AlgaSubsystem;
-import frc.robot.subsystems.CoralSubsystem;
-import frc.robot.subsystems.EscaladorSubsystem;
-import frc.robot.subsystems.LiftSubsystem;
-import frc.robot.subsystems.Limelight.LimelightHelpers;
+import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.commands.lift.LiftCommand;
+import frc.robot.commands.lift.LiftCommandAuto;
+import frc.robot.commands.pathPlanner.PathAfterFind;
+import frc.robot.commands.pathPlanner.PathFindingCommand;
+import frc.robot.commands.swerve.AimAndRangeCmd;
+import frc.robot.commands.swerve.TrackAlgae;
+import frc.robot.subsystems.Algae.AlgaSubsystem;
+import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
+import frc.robot.subsystems.Climber.EscaladorSubsystem;
+import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.Coral.CoralSubsystem;
+import frc.robot.subsystems.Coral.RampSubsystem;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
+import frc.robot.subsystems.lift.LiftSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -48,19 +53,36 @@ public class RobotContainer
   //Subsystems
   //Put all subsystems here
   public static LimelightHelpers limelightHelpers = new LimelightHelpers();
+  
+  //Swerve Drive
   public static SwerveSubsystem swerveDrive = new SwerveSubsystem();
+  
+  //Lift Subsystem
   public static LiftSubsystem liftSubsystem = new LiftSubsystem();
+  
+  //Climber Subsystem
   public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
+  
+  //Alga Subsystem
   public static AlgaSubsystem algaSubsystem = new AlgaSubsystem();
+  public static ArticuladorAlgaeSubsystem articuladorAlgaeSubsystem = new ArticuladorAlgaeSubsystem();
+  
+  //Coral Subsystem
   public static CoralSubsystem coralSubsystem = new CoralSubsystem();
+  public static ArticuladorCoralSubsystem articuladorCoralSubsystem = new ArticuladorCoralSubsystem();
+  public static RampSubsystem rampSubsystem = new RampSubsystem();
   
 
 
-  //Commands
+  //Lift Commands
   public static LiftCommand liftCmd = new LiftCommand();
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
+
+  //Swerve commands
+  public static TrackAlgae trackAlgaeCmd = new TrackAlgae();
+  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd();
   
-    
+  //PathFindingCommand
   public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
                                                     1, 0.7, 2.83, 0);
 
@@ -81,8 +103,6 @@ public class RobotContainer
   * Declare class SendableChoser()  
   *  Pop up selection of option on the SmartDashBoard   
   */
-
-  //Declare SendableChooser
   SendableChooser<Command> chooserAuto;
  
 
@@ -93,13 +113,20 @@ public class RobotContainer
   public RobotContainer() 
   {
 
-     // Register Named Commands
+     // First of All - Register Named Commands
     NamedCommands.registerCommand("lift", liftAuto);
 
   
     // Add commands to the subsystem
+    
+    //Lift Commands
     liftCmd.addRequirements(liftSubsystem);
     liftAuto.addRequirements(liftSubsystem);
+
+    //Swerve Commands
+    trackAlgaeCmd.addRequirements(swerveDrive);
+    aimAndRangeCmd.addRequirements(swerveDrive);
+
    
       
     // Build an auto chooser. This will use Commands.none() as the default option.
@@ -192,11 +219,16 @@ public class RobotContainer
      driverJoystick.leftBumper().onTrue(new InstantCommand(swerveDrive::robotSlower)); 
      driverJoystick.rightBumper().onTrue(new InstantCommand(swerveDrive::robotFast)); 
     // driverJoystick.b().onTrue(new InstantCommand(swerveDrive::robotMaxSpeed)); 
-               
+              
+    //find path
      driverJoystick.y().onTrue(pathAfterFind);
      driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
 
-     //driverJoystick.y().onTrue(pathAfterFindRed);
+     //drive to goal
+     driverJoystick.a().whileTrue(aimAndRangeCmd);
+     driverJoystick.b().whileTrue(trackAlgaeCmd);
+
+
      //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFindRed.endCommand()));
      
 
