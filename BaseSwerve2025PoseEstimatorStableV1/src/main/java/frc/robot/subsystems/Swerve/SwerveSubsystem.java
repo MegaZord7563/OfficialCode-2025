@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.Swerve;
 
+import java.lang.reflect.Field;
 //JAVA Imports
 import java.util.function.Supplier;
 
@@ -29,8 +30,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
-
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.VecBuilder;
@@ -99,7 +102,7 @@ public class SwerveSubsystem extends SubsystemBase
   //private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
   //Create Pigeon2 gyro
-  Pigeon2 gyro = new Pigeon2(30, "rio");
+  Pigeon2 gyro = new Pigeon2(DriveConstants.kPigeonPort, "rio");
        
   // Create a slew rate limiter to limit the rate of change of the commanded robot velocity
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -108,7 +111,7 @@ public class SwerveSubsystem extends SubsystemBase
 
   
   ChassisSpeeds chassisSpeeds;
-
+  //private final Field2d field2d;
   //Array of modules
   SwerveModule[] modules = {frontLeftModule,frontRightModule,backLeftModule,backRightModule};
 
@@ -124,6 +127,10 @@ public class SwerveSubsystem extends SubsystemBase
   //Select alliance heading - default is blue
   private double allianceHeading = 0;
 
+      
+  boolean deploy = true;
+  int countDeploy = 0;
+
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
   below are robot specific, and should be tuned. */
   
@@ -138,6 +145,9 @@ public class SwerveSubsystem extends SubsystemBase
   
   public SwerveSubsystem() 
   {
+
+    //field2d = new Field2d();
+    //SmartDashboard.putData("Field", field2d);
 
     //Robot Front is allways towards to red wall
     var alliance2 = DriverStation.getAlliance();
@@ -225,7 +235,6 @@ public class SwerveSubsystem extends SubsystemBase
     }
 
 
-    
 
   
 
@@ -246,8 +255,16 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
+    SmartDashboard.putNumber("MatchTime", DriverStation.getMatchTime());
     
-    System.out.println("Deploy1");
+
+    if(deploy){
+      countDeploy++;
+      if(countDeploy == 20){
+        deploy = false;
+      }
+      System.out.println("Deploy1");
+    }
 
     // Publish the pose to NetworkTables
     publisher.set(getPoseEstimator());
@@ -282,6 +299,27 @@ public class SwerveSubsystem extends SubsystemBase
       
     }*/
 
+    //field2d.setRobotPose(getPoseEstimator());
+   /* SmartDashboard.putData("Swerve Drive", new Sendable() {
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("SwerveDrive");
+
+    builder.addDoubleProperty("Front Left Angle", () -> frontLeftModule.getTurningPosition(), null);
+    builder.addDoubleProperty("Front Left Velocity", () -> frontLeftModule.getDriveVelocityMPS(), null);
+
+    builder.addDoubleProperty("Front Right Angle", () -> frontRightModule.getTurningPosition(), null);
+    builder.addDoubleProperty("Front Right Velocity", () -> frontRightModule.getDriveVelocityMPS(), null);
+
+    builder.addDoubleProperty("Back Left Angle", () -> backLeftModule.getTurningPosition(), null);
+    builder.addDoubleProperty("Back Left Velocity", () -> backLeftModule.getDriveVelocityMPS(), null);
+
+    builder.addDoubleProperty("Back Right Angle", () -> backRightModule.getTurningPosition(), null);
+    builder.addDoubleProperty("Back Right Velocity", () -> backRightModule.getDriveVelocityMPS(), null);
+
+    builder.addDoubleProperty("Robot Angle", () -> gyro.getRotation2d().getDegrees(), null);
+    }
+  });*/
 
   }
 

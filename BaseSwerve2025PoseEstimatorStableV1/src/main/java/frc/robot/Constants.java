@@ -173,22 +173,23 @@ import edu.wpi.first.math.util.Units;
       public static final double kBackRightChassisAngularOffset = Math.PI;
 
       // Portas dos Kraken
-      public static final int kFrontLeftDriveMotorPort = 15;//10
-      public static final int kBackLeftDriveMotorPort = 12;//14
-      public static final int kFrontRightDriveMotorPort = 10;//15
-      public static final int kBackRightDriveMotorPort = 14;//12
+      public static final int kFrontLeftDriveMotorPort = 15;
+      public static final int kBackLeftDriveMotorPort = 12;
+      public static final int kFrontRightDriveMotorPort = 10;
+      public static final int kBackRightDriveMotorPort = 14;
 
       //Portas dos Sparks
-      public static final int kFrontLeftTurningMotorPort = 16;//9
-      public static final int kBackLeftTurningMotorPort = 11;//13
-      public static final int kFrontRightTurningMotorPort = 9;//16
-      public static final int kBackRightTurningMotorPort = 13;//11
+      public static final int kFrontLeftTurningMotorPort = 16;
+      public static final int kBackLeftTurningMotorPort = 11;
+      public static final int kFrontRightTurningMotorPort = 9;
+      public static final int kBackRightTurningMotorPort = 13;
 
       //CanCoder ports
-      public static final int kFrontLeftDriveAbsoluteEncoderPort = 5;//7
-      public static final int kBackLeftDriveAbsoluteEncoderPort = 4;//6
-      public static final int kFrontRightDriveAbsoluteEncoderPort = 7;//5
-      public static final int kBackRightDriveAbsoluteEncoderPort = 6;//4
+      public static final int kFrontLeftDriveAbsoluteEncoderPort = 5;
+      public static final int kBackLeftDriveAbsoluteEncoderPort = 4;
+      public static final int kFrontRightDriveAbsoluteEncoderPort = 7;
+      public static final int kBackRightDriveAbsoluteEncoderPort = 6;
+      public static final int kPigeonPort = 30;
 
      
       
@@ -283,7 +284,7 @@ import edu.wpi.first.math.util.Units;
     {
       //Lift
       public static final int kLiftLeftMotorId = 24;
-      public static final int kLiftRightMotorId = 23;
+      //public static final int kLiftRightMotorId = 23;
 
       //Lift SparkMax
       public static final IdleMode kLiftIdleMode = IdleMode.kBrake;
@@ -315,7 +316,7 @@ import edu.wpi.first.math.util.Units;
     {
       //Coral
      
-      public static final int kCoralMotorId = 21;
+      public static final int kCoralMotorId = 3;
 
       //Coral SparkMax
       public static final IdleMode kCoralIdleMode = IdleMode.kBrake;
@@ -341,7 +342,7 @@ import edu.wpi.first.math.util.Units;
     public static final class AlgaIntakeConstants
     {
       //Alga
-      public static final int kAlgaMotorId = 20;
+      public static final int kAlgaMotorId =23 ; //20
       
       //Alga SparkMax
       public static final IdleMode kAlgaIdleMode = IdleMode.kBrake;
@@ -404,7 +405,7 @@ import edu.wpi.first.math.util.Units;
     public static final class ArticuladorCoralConstants
     {
       //ArticuladorCoral
-      public static final int kArticuladorCoralMotorId = 23;
+      public static final int kArticuladorCoralMotorId = 21;
       
 
       //ArticuladorCoral SparkMax
@@ -440,7 +441,7 @@ import edu.wpi.first.math.util.Units;
     public static final class RampConstants
     {
       //Ramp
-      public static final int kRampMotorId = 24;
+      public static final int kRampMotorId = 17;
       
 
       //Ramp SparkMax
@@ -477,7 +478,7 @@ import edu.wpi.first.math.util.Units;
     public static final class EscaladorConstants
     {
       public static final int kMotor1Id = 19;
-      public static final int kMotor2Id = 18;
+      public static final int kMotor2Id = 25;
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
 
       public static final double KS = 0.1;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
@@ -535,7 +536,7 @@ import edu.wpi.first.math.util.Units;
       public static final class JoystickOperatorConstants 
       {
         //Joystick Operator
-        public static final int kOperatorControllerPort = 3;
+        public static final int kOperatorControllerPort = 2;
         public static final double kOperatorDeathBand = 0.05;
         public static final int kX = 1;
         public static final int kA = 2;

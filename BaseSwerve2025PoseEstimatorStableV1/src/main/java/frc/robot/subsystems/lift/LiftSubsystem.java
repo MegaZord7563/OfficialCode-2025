@@ -32,8 +32,8 @@ public class LiftSubsystem extends SubsystemBase
   private final SparkMax liftLeaderMotor;
   private SparkMaxConfig globalConfig = new SparkMaxConfig();
   
-  private final SparkMax liftFollowerMotor;
-  private SparkMaxConfig followerConfig = new SparkMaxConfig();
+  //private final SparkMax liftFollowerMotor;
+  //private SparkMaxConfig followerConfig = new SparkMaxConfig();
 
   // The lift encoder
   private final RelativeEncoder liftLeaderEncoder;
@@ -49,7 +49,7 @@ public class LiftSubsystem extends SubsystemBase
   {
     // Create the lift motor
     liftLeaderMotor = new SparkMax(LiftConstants.kLiftLeftMotorId,MotorType.kBrushless);
-    liftFollowerMotor = new SparkMax(LiftConstants.kLiftRightMotorId,MotorType.kBrushless);
+    //liftFollowerMotor = new SparkMax(LiftConstants.kLiftRightMotorId,MotorType.kBrushless);
 
     // Create the lift encoder
     liftLeaderEncoder = liftLeaderMotor.getEncoder();
@@ -84,10 +84,10 @@ public class LiftSubsystem extends SubsystemBase
     .inverted(false);
 
     //Config follower motor
-    followerConfig
+    /*followerConfig
     .apply(globalConfig)
     //.inverted(true)
-    .follow(liftLeaderMotor, true);
+    .follow(liftLeaderMotor, true);*/
     
 
     // Configure the lift encoder 
@@ -138,7 +138,7 @@ public class LiftSubsystem extends SubsystemBase
 
     // Configure the lift motor - like burn flash
     liftLeaderMotor.configure(globalConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
-    liftFollowerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
+   // liftFollowerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
 
   }
 

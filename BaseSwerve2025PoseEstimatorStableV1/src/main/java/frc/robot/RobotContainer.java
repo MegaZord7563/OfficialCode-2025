@@ -11,8 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-
-
+import edu.wpi.first.wpilibj.DriverStation;
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.lift.LiftCommandAuto;
 import frc.robot.commands.pathPlanner.PathAfterFind;
@@ -68,9 +68,11 @@ public class RobotContainer
   public static ArticuladorAlgaeSubsystem articuladorAlgaeSubsystem = new ArticuladorAlgaeSubsystem();
   
   //Coral Subsystem
-  public static CoralSubsystem coralSubsystem = new CoralSubsystem();
+  //public static CoralSubsystem coralSubsystem = new CoralSubsystem();
   public static ArticuladorCoralSubsystem articuladorCoralSubsystem = new ArticuladorCoralSubsystem();
   public static RampSubsystem rampSubsystem = new RampSubsystem();
+
+  public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
   
 
 
@@ -115,7 +117,7 @@ public class RobotContainer
 
      // First of All - Register Named Commands
     NamedCommands.registerCommand("lift", liftAuto);
-
+    
   
     // Add commands to the subsystem
     
@@ -126,7 +128,6 @@ public class RobotContainer
     //Swerve Commands
     trackAlgaeCmd.addRequirements(swerveDrive);
     aimAndRangeCmd.addRequirements(swerveDrive);
-
    
       
     // Build an auto chooser. This will use Commands.none() as the default option.
