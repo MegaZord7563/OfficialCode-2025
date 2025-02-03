@@ -43,13 +43,20 @@ import edu.wpi.first.math.util.Units;
       public static final double kWheelDiameterMeters = Units.inchesToMeters(4);//0.1016m
       public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;// 0.1016*3.14=
       
-      public static final double kDriveMotorGearRatio = 1 / 5.14; //L4   L3=1/6.12
-      public static final double kTurningMotorGearRatio = 1 /12.8; //   1/18.0
+      public static final double kDriveL3= 1.0/6.12;
+      public static final double kTurningL3= 1.0/12.8;
+
+      public static final double kDriveL4= 1.0/5.14;
+      public static final double kTurningL4= 1.0/12.8;
+
+      
+      public static final double kDriveMotorGearRatio = kDriveL3;   //1 / 5.14; //L4   L3=1/6.12
+      public static final double kTurningMotorGearRatio = kTurningL3; //1 /12.8; //   1/18.0
       
       public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
       public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * (2 * Math.PI);
 
-      public static final double kTurningEncoderPositionFactor =2 * Math.PI; // radians
+      //public static final double kTurningEncoderPositionFactor =2 * Math.PI; // radians
       public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
       
       public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
@@ -213,7 +220,7 @@ import edu.wpi.first.math.util.Units;
        * constante que limita a velocidade maxima drive teleop*
        * ******************************************************/
       
-      public static final double kPhysicalMaxSpeedMetersPerSecond = 6; //kRAKEN - GEAR RATIO L4
+      public static final double kPhysicalMaxSpeedMetersPerSecond = 5; //kRAKEN - GEAR RATIO L4
       public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
       
       public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1.052;// anterior 1.175  4,25531914893617  

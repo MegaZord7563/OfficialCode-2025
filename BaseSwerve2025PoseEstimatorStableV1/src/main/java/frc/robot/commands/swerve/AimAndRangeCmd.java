@@ -5,6 +5,7 @@
 package frc.robot.commands.swerve;
 
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 // WPI imports
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,23 +23,38 @@ public class AimAndRangeCmd extends Command
 {
   // Instantiate the object
   private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-  private  Translation2d targetPosition = new Translation2d(0, 0);
+  private  Pose2d targetPosition = new Pose2d(0, 0, null);
   private static String limelightName = "limelight-front";
 
   // Variables
-  private final int kId1, kId2; // Replace with the correct class ID for the game piece
+  private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
   private static boolean finish = false; 
+
+  //Max speed variables
+  private final double kMaxSpeed2Drive = 0.3;                   // Simple speed limit so we don't drive too fast
+  private final double kMaxSpeed2Steer = 0.3; 
+  private final double kMaxSpeed2Rot = 0.3; 
+
+  //PID offset variables
+  private final double kPsteer = 0.03;                    // how hard to turn toward the target
+  private final double kPdrive = 0.1; //0.26 
+  private final double kProt = 0.0; //0.26 
+  //PID controller
+  private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
+  private PIDController pidSteer = new PIDController(kPsteer,0,0);
+  private PIDController pidRot = new PIDController(kProt,0,0);
 
 
 
   /** Creates a new AimAndRangeCmd. */
-  public AimAndRangeCmd(int Id1, int Id2) 
+  public AimAndRangeCmd(double kX, double kY , double kRot) 
   {
     //AimingUtils.trackReefPosition(limelightName,Id1, Id2);
 
     // Set the class ID
-    kId1 = Id1;
-    kId2 = Id2;
+    this.kX = kX;
+    this.kY = kY;
+    this.kRot = kRot;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
   }
@@ -48,7 +64,7 @@ public class AimAndRangeCmd extends Command
   public void initialize() 
   {
       // Switch to pipeline 1
-    LimelightHelpers.setPipelineIndex(limelightName, 1);
+    LimelightHelpers.setPipelineIndex(limelightName, 0);
 
     // Set variables
     finish = false;
@@ -58,40 +74,26 @@ public class AimAndRangeCmd extends Command
   @Override
   public void execute() 
   {
-    // Get raw AprilTag/Fiducial data
-    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(limelightName);
-    
-    // Variables
-    boolean alvoValido = LimelightHelpers.getTV(limelightName);
-   // double distToRobot = 0.1;    // Distance to robot
-    RawFiducial bestDetection = null;
 
-    // Iterate through all fiducial to find the best one
-    for (RawFiducial fiducial : fiducials) 
-    {
-        if ((fiducial.id == kId1 || fiducial.id == kId2) && alvoValido && fiducial.ta > 0.5)   
-        {
-          
-            
-            bestDetection = fiducial;
-        }
-    }
+    robotPosition();
+    // Get raw AprilTag/Fiducial data
     
 
    // Check if a valid detection was found
-   if (bestDetection != null && !finish) 
+   if (!finish) 
    {
     
-    // Get the angular velocity needed to aim at the target
-        double angularVelocity = AimingUtils.aimAtTarget(limelightName);
+    double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(targetPosition.getY(), kY);
+    // try to drive forward until the target area reaches our desired area
+    //double drive_cmd = MathUtil.clamp(pidDrive.calculate(distanceToTarget, kDistanceSetpoint),-kMaxSpeed2Drive,kMaxSpeed2Drive);
+    double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(targetPosition.getX(), kX);
 
-        // Get the forward speed needed to range to the target
-        double forwardSpeed = AimingUtils.rangeToTarget(limelightName);
+   double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(targetPosition.getRotation().getDegrees(), kRot);
+    // Drive the swerve subsystem with the calculated speeds
+    swerveDrive.driveToTarget(() -> drive_cmd, () -> steer_cmd, () -> rot_cmd, () -> true);
+  
 
-        // Drive the swerve subsystem with the calculated speeds
-        swerveDrive.driveRobotOriented(()->forwardSpeed,()-> 0.0, ()->angularVelocity,()->true);
-
-        robotPosition();
+        
     }
     else
     {
@@ -106,15 +108,15 @@ public class AimAndRangeCmd extends Command
    * Method to get the robot's current position
    * @return robotPosition
    */
-  public Translation2d robotPosition()
+  public Pose2d robotPosition()
   {
 
     // Get the current robot pose from the pose estimator
     Pose2d currentPose = swerveDrive.getPoseEstimator();
 
     // Get the robot's current position
-    Translation2d robotPosition = currentPose.getTranslation();
-    targetPosition = robotPosition;
+    //Translation2d robotPosition = currentPose.getTranslation();
+    targetPosition = currentPose;
     return targetPosition;
   }
  /* 
@@ -146,9 +148,9 @@ public class AimAndRangeCmd extends Command
   {
     // Optionally, add a condition to end the command
         // For example, you can check if the robot is close enough to the target
-        double distanceToTarget = AimingUtils.estimateDistanceToTargetFromPose(swerveDrive, targetPosition);
+        Pose2d distanceToTarget = AimingUtils.estimateDistanceToTargetFromPose(swerveDrive, targetPosition);
         
-        return finish || distanceToTarget < 0.1; // Example threshold distance in meters
+        return finish || (distanceToTarget.getX() < 0.1 && distanceToTarget.getY() < 0.1 && distanceToTarget.getRotation().getDegrees() < 5); // Example threshold distance in meters
   }
 
 }

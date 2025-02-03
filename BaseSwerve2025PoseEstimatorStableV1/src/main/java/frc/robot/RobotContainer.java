@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.Utils.SelectScore;
 import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.lift.LiftCommandAuto;
@@ -82,7 +83,7 @@ public class RobotContainer
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
-  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( 0, 0);
+  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( 0, 0, 0);
   
   //PathFindingCommand
   public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
@@ -154,9 +155,6 @@ public class RobotContainer
 
     //Instantiate subsystems
     //swerveDrive 
-
-    
-
     // Add the path to the auto chooser
    
     
@@ -164,6 +162,10 @@ public class RobotContainer
     driverJoystick= new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
      //Add to choices to smart dashboard
     SmartDashboard.putData("Autonomous", chooserAuto);
+
+    System.out.println("Touch X: " + SelectScore.poseToScore(touchScreenInterface).getX());
+    System.out.println("Touch Y: " + SelectScore.poseToScore(touchScreenInterface).getY());
+    System.out.println("Touch Rot: " + SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees());
     
     //Default option
     /*chooserAuto.setDefaultOption("Autonomous 1", autoMundoSenai);
@@ -222,14 +224,18 @@ public class RobotContainer
     // driverJoystick.b().onTrue(new InstantCommand(swerveDrive::robotMaxSpeed)); 
               
     //find path
-     driverJoystick.y().onTrue(pathAfterFind);
-     driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
+     //driverJoystick.y().onTrue(pathAfterFind);
+     //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
 
      //drive to goal
-     driverJoystick.a().whileTrue(new AimAndRangeCmd(1, 2));
-     driverJoystick.b().whileTrue(trackAlgaeCmd);
+     driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
+     driverJoystick.y().whileTrue(trackAlgaeCmd);
 
-
+     //driverJoystick.b().whileTrue(new PathFindingCommand(swerveDrive, 1, SelectScore.poseToScore(touchScreenInterface).getX(),
+     //        SelectScore.poseToScore(touchScreenInterface).getY(), SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees()));
+     
+     
+     
      //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFindRed.endCommand()));
      
 

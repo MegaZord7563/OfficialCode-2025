@@ -2,6 +2,7 @@
 package frc.robot.Limelight;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
@@ -9,7 +10,7 @@ public class AimingUtils
 {
 
     // Constants for aiming and ranging to the target
-    private static final double kP = 0.1; // Proportional control constant
+    private static final double kP = 1.0; // Proportional control constant
     private static final double kMaxAngularSpeed = 1.0; // Maximum angular speed in radians per second
     private static final double kMaxSpeed = 1.0; // Maximum forward speed in meters per second
 
@@ -28,7 +29,7 @@ public class AimingUtils
         targetingAngularVelocity *= kMaxAngularSpeed;
 
         // Invert since tx is positive when the target is to the right of the crosshair
-        targetingAngularVelocity *= -1.0;
+        targetingAngularVelocity *= 1.0;
 
         return targetingAngularVelocity;
     }
@@ -48,7 +49,7 @@ public class AimingUtils
         targetingForwardSpeed *= kMaxSpeed;
 
         // Invert since ty is positive when the target is above the crosshair
-        targetingForwardSpeed *= -1.0;
+        targetingForwardSpeed *= 1.0;
 
         return targetingForwardSpeed;
     }
@@ -62,9 +63,9 @@ public class AimingUtils
     public static double estimateDistanceToTarget(String limeligthName) 
     {
         // Constants for distance calculation
-        double targetHeight = 2.5; // Height of the target in meters
-        double limelightHeight = 1.0; // Height of the Limelight in meters
-        double limelightAngle = 30.0; // Mounting angle of the Limelight in degrees
+        double targetHeight = 0.15; // Height of the target in meters
+        double limelightHeight = 0.1; // Height of the Limelight in meters
+        double limelightAngle = 0.0; // Mounting angle of the Limelight in degrees
 
         // Get the vertical offset from crosshair to target (ty)
         double ty = LimelightHelpers.getTY(limeligthName);
@@ -85,18 +86,20 @@ public class AimingUtils
      * @param targetPosition
      * @return
      */
-    public static double estimateDistanceToTargetFromPose(SwerveSubsystem swerveSubsystem, Translation2d targetPosition) 
+    public static Pose2d estimateDistanceToTargetFromPose(SwerveSubsystem swerveSubsystem, Pose2d targetPosition) 
     {
         // Get the current robot pose from the pose estimator
         Pose2d currentPose = swerveSubsystem.getPoseEstimator();
 
         // Get the robot's current position
-        Translation2d robotPosition = currentPose.getTranslation();
 
         // Calculate the distance to the target
-        double distanceToTarget = robotPosition.getDistance(targetPosition);
+        double distanceToX = Math.abs(targetPosition.getX() - currentPose.getX());
+        double distanceToY = Math.abs(targetPosition.getY() - currentPose.getY());
+        double distanceToRot = Math.abs(targetPosition.getRotation().getDegrees() - currentPose.getRotation().getDegrees());
 
-        return distanceToTarget;
+        return new Pose2d(distanceToX,distanceToY,Rotation2d.fromDegrees(distanceToRot));
+        //return distanceToX, distanceToY, distanceToRot;
     }
 
     /**

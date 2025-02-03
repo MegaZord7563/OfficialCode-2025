@@ -163,6 +163,7 @@ public class SwerveModule extends SubsystemBase
     config.encoder
     .positionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad)
     .velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
+    //.velocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
     
     config.closedLoop

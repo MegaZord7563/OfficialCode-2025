@@ -346,6 +346,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public void addPoseVision()
   {
+   
     
     boolean update=false;
 
@@ -734,7 +735,68 @@ public void stopModules ()
     
   }
 
-  
 
+
+  /**
+   * Method drive to target
+   * The use of these parameters as suppliers to dynamically provide speed and field orientation values.
+   * Suppliers are especially useful in cases where you need to calculate values dynamically based on factors that can change over time.
+   * The Supplier interface gives you a powerful mechanism to make your FRC robot code more flexible and adaptable. 
+   * Suppliers are incredibly useful in command-based FRC programming because they allow you to:
+   * Decouple Logic: You can separate the logic for calculating drive parameters (speeds, orientation) 
+   * from the actual drive command. This makes your code cleaner and more maintainable.
+   * Dynamic Values: You can easily update the speed and orientation values on-the-fly based on real-time conditions, 
+   * such as sensor feedback or joystick input.
+   * 
+   * @param xSpdFunction Speed of the robot in the x direction (forward).
+   * @param ySpdFunction Speed of the robot in the y direction (sideways).
+   * @param turningSpdFunction Angular rate of the robot. rad/s
+   * @param fieldOrientedFunction Boolean indicating if speeds are relative to the field or to therobot. 
+   *                              
+   **/
+
+  public void driveToTarget( Supplier<Double> xSpdFunction, 
+                                  Supplier<Double> ySpdFunction,
+                                  Supplier<Double> turningSpdFunction, 
+                                  Supplier<Boolean> fieldOrientedFunction)
+  {
+    
+    // 1. Get real-time joystick inputs
+    double xSpeed = xSpdFunction.get();
+    double ySpeed = ySpdFunction.get();  
+    double turningSpeed = turningSpdFunction.get();
+    boolean fieldOriented = fieldOrientedFunction.get();
+
+    // 2. Apply deadband
+    xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+    ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+    turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+
+    // 3. Make the driving smoother
+    xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    turningSpeed = turningLimiter.calculate(turningSpeed)* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+
+    // 4. Construct desired chassis speeds
+
+    var swerveModuleStates =  DriveConstants.
+                              kDriveKinematics.
+                              toSwerveModuleStates
+                              (fieldOriented ? 
+                                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
+                                                                      ySpeed, 
+                                                                      turningSpeed, 
+                                                                      gyro.getRotation2d()) 
+                                : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
+                              );//Do this if fielOrientation is false 
+
+    
+    // 5. Convert chassis speeds to individual module states
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+    // 6. Output each module states to wheels
+    this.setModuleStates(swerveModuleStates);//*/  
+
+    
+  }
 
 }
