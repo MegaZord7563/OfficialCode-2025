@@ -327,7 +327,7 @@ import edu.wpi.first.math.util.Units;
     {
       //Coral
      
-      public static final int kCoralMotorId = 18;
+      public static final int kCoralMotorId = 3;
 
       //Coral SparkMax
       public static final IdleMode kCoralIdleMode = IdleMode.kBrake;
