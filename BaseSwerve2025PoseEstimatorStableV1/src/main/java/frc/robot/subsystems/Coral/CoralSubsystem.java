@@ -106,9 +106,9 @@ public class CoralSubsystem extends SubsystemBase
    * Set the coral motor speed
    * @param CoralMotorSpeed
    */
-  public void startCoral(double targetSpeed)
+  public void runCoral(double targetSpeed)
   {
-    
+     // Set the lift motor speed
       coralPidController.setReference(targetSpeed, ControlType.kVelocity);
     
     

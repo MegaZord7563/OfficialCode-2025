@@ -24,12 +24,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.Limelight.LimelightHelpers;
-import frc.robot.Utils.SelectScore;
+
 import frc.robot.Utils.TouchScreenInterface;
+import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.lift.LiftCommandAuto;
 import frc.robot.commands.pathPlanner.PathAfterFind;
 import frc.robot.commands.pathPlanner.PathFindingCommand;
+import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
 import frc.robot.commands.swerve.TrackAlgae;
 import frc.robot.subsystems.Algae.AlgaSubsystem;
@@ -81,6 +83,9 @@ public class RobotContainer
   public static LiftCommand liftCmd = new LiftCommand();
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
 
+  //Coral Commands
+  public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
+
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( 0, 0, 0);
@@ -122,13 +127,18 @@ public class RobotContainer
   
     // Add commands to the subsystem
     
-    //Lift Commands
-    liftCmd.addRequirements(liftSubsystem);
-    liftAuto.addRequirements(liftSubsystem);
 
     //Swerve Commands
     trackAlgaeCmd.addRequirements(swerveDrive);
     aimAndRangeCmd.addRequirements(swerveDrive);
+
+
+    //Lift Commands
+    liftCmd.addRequirements(liftSubsystem);
+    liftAuto.addRequirements(liftSubsystem);
+
+    //Coral Commands
+    articulador1Cmd.addRequirements(articuladorCoralSubsystem);
    
       
     // Build an auto chooser. This will use Commands.none() as the default option.
@@ -142,7 +152,7 @@ public class RobotContainer
     
    
     
-    //autoLift.event("Lift").onTrue(new LiftCommandAuto());
+    
 
     //Add options to the chooser
     chooserAuto.addOption("NovoAuto", autoPath);
@@ -227,7 +237,7 @@ public class RobotContainer
      driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
      driverJoystick.y().whileTrue(trackAlgaeCmd);
 
-     driverJoystick.b().whileTrue(liftCmd);
+     driverJoystick.b().whileTrue(new ScoreLevel());
 
      //driverJoystick.b().whileTrue(new PathFindingCommand(swerveDrive, 1, SelectScore.poseToScore(touchScreenInterface).getX(),
      //        SelectScore.poseToScore(touchScreenInterface).getY(), SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees()));

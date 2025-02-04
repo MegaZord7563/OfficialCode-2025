@@ -1,6 +1,6 @@
 package frc.robot.commands.lift;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 //WPI Imports
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -9,24 +9,21 @@ import frc.robot.RobotContainer;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
-
-
-
 public class LiftCommand extends Command
 {
-     // Instantiate the object
-   
+   // Declare the boolean variables   
     private boolean l1 = false;
     private boolean l2 = false;
     private boolean l3 = false;
     private boolean l4 = false;
 
-
+  // Create the subsystem
     private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
 
   /** Creates a new AngleCmd. */
   public LiftCommand() 
   {
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(liftSubsystem);
   }
 
@@ -34,12 +31,15 @@ public class LiftCommand extends Command
   @Override
   public void initialize() 
   {
+    // Print the initialization of the command
     System.out.println("Lift Command Initialized");
    
+    // Set the button values to false
     l1=false;
     l2=false;
     l3=false;
     l4=false;
+    // Reset the encoder
     liftSubsystem.resetLiftEncoder();
   }
 
@@ -47,15 +47,13 @@ public class LiftCommand extends Command
   @Override
   public void execute() 
   {
+    // Get the button values
     l1 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL1);
     l2 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL2);
     l3 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL3);
     l4 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL4);
-    //l1 = SmartDashboard.getBoolean("L1 LEVEL", false);
-    //l2 = SmartDashboard.getBoolean("L2 LEVEL", false);
-    //l3 = SmartDashboard.getBoolean("L3 LEVEL", false);
-    //l4 = SmartDashboard.getBoolean("L4 LEVEL", false);
-
+    
+    // Move the lift
     if (l1)
     {
       System.out.println("L1 SELECTED");
@@ -78,15 +76,17 @@ public class LiftCommand extends Command
     }
 
 
-    //liftSubsystem.moveLift(300, false);
+    
   }    
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) 
   {
+    // Stop the lift
     liftSubsystem.stopLift();
-    System.out.println("Lift Command Finished");
+    // Print the end of the command
+    System.out.println("Lift Command Done!");
   }
 
   // Returns true when the command should end.

@@ -147,7 +147,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    * Set the coral encoder position
    * @param position
    */
-  public void resetCoralEncoder()
+  public void resetArtCoralEncoder()
   {
     coralEncoder.setPosition(0);
     
