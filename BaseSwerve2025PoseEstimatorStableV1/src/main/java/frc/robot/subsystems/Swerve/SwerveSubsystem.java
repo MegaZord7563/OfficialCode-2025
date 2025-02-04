@@ -259,9 +259,11 @@ public class SwerveSubsystem extends SubsystemBase
     //SmartDashboard.putNumber("MatchTime", DriverStation.getMatchTime());
     
 
-    if(deploy){
+    if(deploy)
+    {
       countDeploy++;
-      if(countDeploy == 20){
+      if(countDeploy == 20)
+      {
         deploy = false;
       }
       System.out.println("Deploy1");
@@ -559,6 +561,14 @@ public void stopModules ()
     throttleSlow = true;
     throttleFast = false;
     throttleMax=false;
+    
+    for (int i = 0; i < 3; i++) 
+    {
+      System.out.println("Speed up velocity - 30%");
+      
+    }
+   
+
   }
 
   /**
@@ -570,6 +580,12 @@ public void stopModules ()
     throttleSlow = false;
     throttleFast = true;
     throttleMax=false;
+
+    for (int i = 0; i < 3; i++) 
+    {
+      System.out.println("Speed up velocity - 50%");
+      
+    }
   }
 
   /**
@@ -582,6 +598,12 @@ public void stopModules ()
     throttleSlow=false;
     throttleFast=false;
     throttleMax=true;
+
+    for (int i = 0; i < 3; i++) 
+    {
+      System.out.println("Velocity 80% Max");
+      
+    }
   }
 
 
@@ -665,22 +687,19 @@ public void stopModules ()
     //Selects speed
     if (throttleSlow)
     {
-      
       throttle =0.3;
-      System.out.println("Slow down velocity - 30%");
-      
+
     }
     else if (throttleFast)
     {
-      
+    
       throttle =0.5;
-      System.out.println("Speed up velocity - 50%");
-
+      
     }
     else if (throttleMax) 
     { 
-      throttle = 0.7;
-      System.out.println("Velocity 70% ");
+      throttle = 0.8;
+      
     }
 
     // 2. Apply deadband

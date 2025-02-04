@@ -20,7 +20,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 //WPILIB Imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SubsystemsConstants.AlgaIntakeConstants;
-import frc.robot.Constants.SubsystemsConstants.CoralIntakeConstants;
+
 
 //Robot Imports
 
@@ -47,7 +47,7 @@ public class AlgaSubsystem extends SubsystemBase
   public AlgaSubsystem() 
   {
     // Create the  motor
-    algaMotor = new SparkMax(CoralIntakeConstants.kCoralMotorId, MotorType.kBrushless);
+    algaMotor = new SparkMax(AlgaIntakeConstants.kAlgaMotorId, MotorType.kBrushless);
     
 
     // Create the  encoder

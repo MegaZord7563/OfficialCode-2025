@@ -293,6 +293,11 @@ import edu.wpi.first.math.util.Units;
       public static final int kLiftLeftMotorId = 24;
       //public static final int kLiftRightMotorId = 23;
 
+      public static final double  kLiftGearRatio = 1.0/60.0;
+      public static final double kLiftPulleyRatio = 42.0/20.0;
+      public static final double kLiftTuboDiam = 0.0381;
+    
+
       //Lift SparkMax
       public static final IdleMode kLiftIdleMode = IdleMode.kBrake;
       public static final int kLiftCurrentLimit = 40;
@@ -301,9 +306,8 @@ import edu.wpi.first.math.util.Units;
       public static final double kLiftEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       //Lift Encoder
-      public static final double kLiftPositionConversionFactor = 1;
-      public static final double kLiftVelocityConversionFactor = 1;
-
+      public static final double kLiftPositionConversionFactor = kLiftGearRatio* Math.PI * kLiftPulleyRatio * kLiftTuboDiam; // rotation to meters
+      public static final double kLiftVelocityConversionFactor = kLiftPositionConversionFactor/60; //meters/sec (2 * Math.PI) / 60.0; // radians per second
       //Lift PID
       public static final double kPLiftUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kILiftUp = 0;
@@ -323,13 +327,13 @@ import edu.wpi.first.math.util.Units;
     {
       //Coral
      
-      public static final int kCoralMotorId = 3;
+      public static final int kCoralMotorId = 18;
 
       //Coral SparkMax
       public static final IdleMode kCoralIdleMode = IdleMode.kBrake;
       public static final int kCoralCurrentLimit = 20;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
-      public static final double kCoralEncoderPositionPIDMinInput =0 ;
+      public static final double kCoralEncoderPositionPIDMinInput = 0 ;
       public static final double kCoralEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       //CoralEncoder

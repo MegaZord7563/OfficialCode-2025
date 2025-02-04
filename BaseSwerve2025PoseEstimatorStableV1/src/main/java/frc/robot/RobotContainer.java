@@ -69,7 +69,7 @@ public class RobotContainer
   public static ArticuladorAlgaeSubsystem articuladorAlgaeSubsystem = new ArticuladorAlgaeSubsystem();
   
   //Coral Subsystem
-  //public static CoralSubsystem coralSubsystem = new CoralSubsystem();
+  public static CoralSubsystem coralSubsystem = new CoralSubsystem();
   public static ArticuladorCoralSubsystem articuladorCoralSubsystem = new ArticuladorCoralSubsystem();
   public static RampSubsystem rampSubsystem = new RampSubsystem();
 
@@ -219,9 +219,9 @@ public class RobotContainer
      //throttle1.onTrue(new InstantCommand(swerveDrive::robotSlower)); 
 
      
-     driverJoystick.leftBumper().onTrue(new InstantCommand(swerveDrive::robotSlower)); 
-     driverJoystick.rightBumper().onTrue(new InstantCommand(swerveDrive::robotFast)); 
-    // driverJoystick.b().onTrue(new InstantCommand(swerveDrive::robotMaxSpeed)); 
+     driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
+     driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
+     driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
               
     //find path
      //driverJoystick.y().onTrue(pathAfterFind);
@@ -231,13 +231,17 @@ public class RobotContainer
      driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
      driverJoystick.y().whileTrue(trackAlgaeCmd);
 
+     driverJoystick.b().whileTrue(liftCmd);
+
      //driverJoystick.b().whileTrue(new PathFindingCommand(swerveDrive, 1, SelectScore.poseToScore(touchScreenInterface).getX(),
      //        SelectScore.poseToScore(touchScreenInterface).getY(), SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees()));
      
      
      
      //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFindRed.endCommand()));
-     
+   
+
+    
 
    
   }
