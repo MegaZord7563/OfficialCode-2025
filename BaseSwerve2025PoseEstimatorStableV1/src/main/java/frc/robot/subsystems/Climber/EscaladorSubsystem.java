@@ -89,7 +89,7 @@ public class EscaladorSubsystem extends SubsystemBase
     
     //01/28/2025 MNL - Validated
     /* Gear Ratio Config */
-    globalConfig.Feedback.SensorToMechanismRatio = 1; 
+    globalConfig.Feedback.SensorToMechanismRatio = EscaladorConstants.kGearRatio; 
     globalConfig.ClosedLoopGeneral.ContinuousWrap = false;//keep default = FALSE - MUST NOT TOUCH IT
     /* Closed Loop Ramping */
     globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = EscaladorConstants.kClosedLoopRamp;

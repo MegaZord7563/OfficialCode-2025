@@ -289,10 +289,11 @@ import edu.wpi.first.math.util.Units;
     //Lift Constants
     public static final class LiftConstants
     {
-      //Lift
+      //Lift Motor ports
       public static final int kLiftLeftMotorId = 24;
       //public static final int kLiftRightMotorId = 23;
 
+      //Lift Constants gear box
       public static final double  kLiftGearRatio = 1.0/60.0;
       public static final double kLiftPulleyRatio = 42.0/20.0;
       public static final double kLiftTuboDiam = 0.0381;
@@ -325,9 +326,14 @@ import edu.wpi.first.math.util.Units;
 
     public static final class CoralIntakeConstants
     {
-      //Coral
-     
+      
+      //Coral Motor ports
       public static final int kCoralMotorId = 3;
+
+      // TO DO: This must be tuned to specific robot
+      public static final double  kGearRatio = 1.0/60.0;
+      public static final double kWheelDiameter = 0.2;
+      
 
       //Coral SparkMax
       public static final IdleMode kCoralIdleMode = IdleMode.kBrake;
@@ -336,11 +342,11 @@ import edu.wpi.first.math.util.Units;
       public static final double kCoralEncoderPositionPIDMinInput = 0 ;
       public static final double kCoralEncoderPositionPIDMaxInput= 2 * Math.PI;
 
-      //CoralEncoder
-      public static final double kCoralPositionConversionFactor = 1;
-      public static final double kCoralVelocityConversionFactor = 1;
+      //CoralEncoder - TO DO: This must be tuned to specific robot
+      public static final double kCoralPositionConversionFactor = Math.PI* kGearRatio * kWheelDiameter;//rotation to Meters;
+      public static final double kCoralVelocityConversionFactor = kCoralPositionConversionFactor/60.0; //rotation to m/s
 
-      //Coral PID
+      //Coral PID TO DO: This must be tuned to specific robot
       public static final double kP = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kI = 0;
       public static final double kD = 0;
@@ -352,8 +358,13 @@ import edu.wpi.first.math.util.Units;
 
     public static final class AlgaIntakeConstants
     {
-      //Alga
-      public static final int kAlgaMotorId =23 ; //20
+      //Alga Motor ports
+      public static final int kMotorId =23 ; 
+
+      // TO DO: This must be tuned to specific robot
+      public static final double  kGearRatio = 1.0/60.0;
+      public static final double kWheelDiameter = 0.2;
+      
       
       //Alga SparkMax
       public static final IdleMode kAlgaIdleMode = IdleMode.kBrake;
@@ -362,9 +373,9 @@ import edu.wpi.first.math.util.Units;
       public static final double kAlgaEncoderPositionPIDMinInput =0 ;
       public static final double kAlgaEncoderPositionPIDMaxInput= 2 * Math.PI;
 
-      //Alga Encoder
-      public static final double kAlgaPositionConversionFactor = 1;
-      public static final double kAlgaVelocityConversionFactor = 1;
+      //Alga Encoder - TO DO: This must be tuned to specific robot
+      public static final double kAlgaPositionConversionFactor =Math.PI* kGearRatio * kWheelDiameter;//rotation to Meters
+      public static final double kAlgaVelocityConversionFactor = kAlgaPositionConversionFactor /60.0;//rotation to m/s
 
       //Alga PID
       public static final double kP = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
@@ -381,6 +392,11 @@ import edu.wpi.first.math.util.Units;
     {
       //ArticuladorAlgae
       public static final int kArticuladorAlgaeMotorId = 22;
+
+      // TO DO: This must be tuned to specific robot
+      public static final double  kGearRatio = 1.0/60.0;
+      public static final double kWheelDiameter = 0.2;
+      
       
 
       //ArticuladorAlgae SparkMax
@@ -391,10 +407,10 @@ import edu.wpi.first.math.util.Units;
       public static final double kArticuladorAlgaeEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       //ArticuladorAlgae Encoder
-      public static final double KGearRatio = 1.0/20.0; // 
-      public static final double kWheelDiameter = 0.013; //meters
-      public static final double kArticuladorAlgaePositionConversionFactor = Math.PI* KGearRatio * kWheelDiameter; //rotation to Meters
-      public static final double kArticuladorAlgaeVelocityConversionFactor = KGearRatio* (2.0 * Math.PI); //rotation to Rad/s
+      
+      //TO DO: This must be tuned to specific robot
+      public static final double kArticuladorAlgaePositionConversionFactor = Math.PI* kGearRatio * kWheelDiameter; //rotation to Meters
+      public static final double kArticuladorAlgaeVelocityConversionFactor = kArticuladorAlgaePositionConversionFactor/60.0; //rotation to m/s
 
       //ArticuladorAlgae PID Up
       public static final double kPArticuladorAlgaeUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
@@ -415,8 +431,13 @@ import edu.wpi.first.math.util.Units;
     //ArticuladorCoral Constants - SparkMax
     public static final class ArticuladorCoralConstants
     {
-      //ArticuladorCoral
+      //ArticuladorCoral Motor ports
       public static final int kArticuladorCoralMotorId = 21;
+
+
+      // TO DO: This must be tuned to specific robot
+      public static final double kGearRatio = 1.0/20.0; // 
+      public static final double kWheelDiameter = 0.013; //meters
       
 
       //ArticuladorCoral SparkMax
@@ -427,10 +448,9 @@ import edu.wpi.first.math.util.Units;
       public static final double kArticuladorCoralEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       //ArticuladorCoral Encoder
-      public static final double KGearRatio = 1.0/20.0; // 
-      public static final double kWheelDiameter = 0.013; //meters
-      public static final double kArticuladorCoralPositionConversionFactor = Math.PI* KGearRatio * kWheelDiameter; //rotation to Meters
-      public static final double kArticuladorCoralVelocityConversionFactor = KGearRatio* (2.0 * Math.PI); //rotation to Rad/s
+      
+      public static final double kArticuladorCoralPositionConversionFactor = Math.PI* kGearRatio * kWheelDiameter; //rotation to Meters
+      public static final double kArticuladorCoralVelocityConversionFactor = kArticuladorCoralPositionConversionFactor/60.0; //rotation to m/s
 
       //ArticuladorCoral PID Up
       public static final double kPArticuladorCoralUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
@@ -453,6 +473,10 @@ import edu.wpi.first.math.util.Units;
     {
       //Ramp
       public static final int kRampMotorId = 17;
+
+      //  TO DO: This must be tuned to specific robot
+      public static final double kGearRatio = 1.0/60.0; // 
+      public static final double kWheelDiameter = 0.013; //meters
       
 
       //Ramp SparkMax
@@ -463,10 +487,9 @@ import edu.wpi.first.math.util.Units;
       public static final double kRampEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       //Ramp Encoder
-      public static final double KGearRatio = 1.0/60.0; // 
-      public static final double kWheelDiameter = 0.013; //meters
-      public static final double kRampPositionConversionFactor = Math.PI* KGearRatio * kWheelDiameter; //rotation to Meters
-    
+      //TO DO: This must be tuned to specific robot
+      public static final double kRampPositionConversionFactor = Math.PI* kGearRatio * kWheelDiameter; //rotation to Meters
+      public static final double kRampVelocityConversionFactor = kRampPositionConversionFactor/60.0; //rotation to m/s
 
       //Ramp PID Up
       public static final double kPRampUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
@@ -481,6 +504,8 @@ import edu.wpi.first.math.util.Units;
       public static final double kIRampDown = 0;
       public static final double kDRampDown = 0.7;
       public static final double kRampDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+
+      
       
     } 
 
@@ -488,9 +513,15 @@ import edu.wpi.first.math.util.Units;
 
     public static final class EscaladorConstants
     {
+      //Escalador Motor ports
       public static final int kMotor1Id = 19;
       public static final int kMotor2Id = 25;
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
+
+      //  TO DO: This must be tuned to specific robot
+      public static final double kGearRatio = 1.0/20.0; // 
+      public static final double kWheelDiameter = 0.013; //meters
+
 
       public static final double KS = 0.1;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
       public static final double KV = 0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
