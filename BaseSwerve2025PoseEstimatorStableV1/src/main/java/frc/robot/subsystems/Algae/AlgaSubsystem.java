@@ -47,7 +47,7 @@ public class AlgaSubsystem extends SubsystemBase
   public AlgaSubsystem() 
   {
     // Create the  motor
-    algaMotor = new SparkMax(AlgaIntakeConstants.kAlgaMotorId, MotorType.kBrushless);
+    algaMotor = new SparkMax(AlgaIntakeConstants.kMotorId, MotorType.kBrushless);
     
 
     // Create the  encoder

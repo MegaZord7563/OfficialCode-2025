@@ -74,7 +74,8 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
   
     // Configure the coral encoder 
     config.encoder
-    .positionConversionFactor(ArticuladorCoralConstants.kArticuladorCoralPositionConversionFactor);
+    .positionConversionFactor(ArticuladorCoralConstants.kArticuladorCoralPositionConversionFactor)
+    .velocityConversionFactor(ArticuladorCoralConstants.kArticuladorCoralVelocityConversionFactor);
     
 
     config.closedLoop
@@ -84,9 +85,9 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
     // slot, as it will default to slot 0.
     .pidf(ArticuladorCoralConstants.kPArticuladorCoralUp, 
-    ArticuladorCoralConstants.kIArticuladorCoralUp, 
-    ArticuladorCoralConstants.kDArticuladorCoralUp, 
-    ArticuladorCoralConstants.kArticuladorCoralUpFF);          
+          ArticuladorCoralConstants.kIArticuladorCoralUp, 
+          ArticuladorCoralConstants.kDArticuladorCoralUp, 
+          ArticuladorCoralConstants.kArticuladorCoralUpFF);          
 
     // Configure the coral motor - like burn flash
     coralMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
@@ -100,24 +101,25 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
   public void periodic() 
   {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Coral Position", getCoralPosition());
+    SmartDashboard.putNumber("Articulardor Coral Position", getArtCoralPosition());
+    SmartDashboard.putNumber("Articulador Coral Velocity", coralEncoder.getVelocity());
   }
 
   /**
-   * Set the coral motor speed
-   * @param coralMotorSpeed
+   * Set the artic coral motor speed
+   * @param targetPosition
    */
-  public void moveCoral(double targetPosition)
+  public void moveArtCoral(double targetPosition)
   {
     
-      System.out.println("Coral Position Control Enabled");
+      System.out.println(" Artic Coral Position Control Enabled");
       /*coralPidController.setReference(targetPosition, 
                                             ControlType.kPosition,
                                             ClosedLoopSlot.kSlot1);
      */  
       coralPidController.setReference(targetPosition, 
                                             ControlType.kPosition);
-      System.out.println("Current Position: " + coralEncoder.getPosition());
+      System.out.println("Artic Coral Current Position: " + coralEncoder.getPosition());
     
     
   }
@@ -126,7 +128,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    * Stop the coral motor
    * @ Stop the coral motor
    */
-  public void stopCoral()
+  public void stopArtCoral()
   {
     coralPidController.setReference(0, ControlType.kDutyCycle);
     
@@ -136,7 +138,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    * Get coral position
    * @return
    */
-  public double getCoralPosition()
+  public double getArtCoralPosition()
   {
     return coralEncoder.getPosition();
   }

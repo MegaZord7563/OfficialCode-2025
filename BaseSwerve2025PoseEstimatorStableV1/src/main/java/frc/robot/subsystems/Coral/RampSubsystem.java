@@ -71,7 +71,8 @@ public class RampSubsystem extends SubsystemBase
 
     // Configure the ramp encoder 
     config.encoder
-    .positionConversionFactor(RampConstants.kRampPositionConversionFactor);
+    .positionConversionFactor(RampConstants.kRampPositionConversionFactor)
+    .velocityConversionFactor(RampConstants.kRampVelocityConversionFactor);
 
     config.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)

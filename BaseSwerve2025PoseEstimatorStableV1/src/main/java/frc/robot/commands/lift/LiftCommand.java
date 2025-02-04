@@ -14,7 +14,7 @@ import frc.robot.subsystems.lift.LiftSubsystem;
 public class LiftCommand extends Command
 {
      // Instantiate the object
-    private boolean finish =false;
+   
     private boolean l1 = false;
     private boolean l2 = false;
     private boolean l3 = false;
@@ -34,7 +34,7 @@ public class LiftCommand extends Command
   public void initialize() 
   {
     System.out.println("Lift Command Initialized");
-    finish =false;
+   
     l1=false;
     l2=false;
     l3=false;
