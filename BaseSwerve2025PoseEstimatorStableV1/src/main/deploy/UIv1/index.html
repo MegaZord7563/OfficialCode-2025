@@ -78,14 +78,6 @@
     <script type="text/javascript">
     "use strict";
 
-    let previousButtonReef = null;
-    let buttonClickedReef = false;
-    let previousButtonLevel = null;
-    let buttonClickedLevel = false;
-    const purple = "#6200ea";
-    const green = "#4CAF50";
-    const gray = "#a1a4a1";
-
     // This is the function that will be called when the page is loaded
     $(document).ready(function(){
 
@@ -106,10 +98,18 @@
     }); 
 
 
-    
+    let previousButtonReef = null;
+    let buttonClickedReef = false;
+    let previousButtonLevel = null;
+    let buttonClickedLevel = false;
+    const purple = "#6200ea";
+    const green = "#4CAF50";
+    const gray = "#a1a4a1";
+
     function selectReef(position) {
         // If a button was previously clicked, change its color back to gray
         if(previousButtonReef != null){
+            NetworkTables.putValue('/SmartDashboard/' + previousButtonReef.id + 'ButtonValue',false);
             previousButtonReef.style.backgroundColor = gray;
         }
         // Set the value of the button to true
@@ -126,6 +126,7 @@
         // If a button was previously clicked, change its color back to gray
         if(previousButtonLevel != null){
             previousButtonLevel.style.backgroundColor = gray;
+            NetworkTables.putValue('/SmartDashboard/' + previousButtonLevel.id + 'ButtonValue',false);
         }
         // Set the value of the button to true
         NetworkTables.putValue('/SmartDashboard/' + level + 'ButtonValue',true);

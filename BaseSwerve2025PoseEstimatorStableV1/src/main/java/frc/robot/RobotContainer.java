@@ -163,10 +163,6 @@ public class RobotContainer
      //Add to choices to smart dashboard
     SmartDashboard.putData("Autonomous", chooserAuto);
 
-    System.out.println("Touch X: " + SelectScore.poseToScore(touchScreenInterface).getX());
-    System.out.println("Touch Y: " + SelectScore.poseToScore(touchScreenInterface).getY());
-    System.out.println("Touch Rot: " + SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees());
-    
     //Default option
     /*chooserAuto.setDefaultOption("Autonomous 1", autoMundoSenai);
     chooserAuto.addOption("Autonomous 2", autoQuadrado);*/

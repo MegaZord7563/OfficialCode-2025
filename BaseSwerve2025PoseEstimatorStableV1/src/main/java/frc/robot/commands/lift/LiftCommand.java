@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 //Robot imports
 import frc.robot.RobotContainer;
+import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 
@@ -46,10 +47,14 @@ public class LiftCommand extends Command
   @Override
   public void execute() 
   {
-    l1 = SmartDashboard.getBoolean("L1 LEVEL", false);
-    l2 = SmartDashboard.getBoolean("L2 LEVEL", false);
-    l3 = SmartDashboard.getBoolean("L3 LEVEL", false);
-    l4 = SmartDashboard.getBoolean("L4 LEVEL", false);
+    l1 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL1);
+    l2 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL2);
+    l3 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL3);
+    l4 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL4);
+    //l1 = SmartDashboard.getBoolean("L1 LEVEL", false);
+    //l2 = SmartDashboard.getBoolean("L2 LEVEL", false);
+    //l3 = SmartDashboard.getBoolean("L3 LEVEL", false);
+    //l4 = SmartDashboard.getBoolean("L4 LEVEL", false);
 
     if (l1)
     {

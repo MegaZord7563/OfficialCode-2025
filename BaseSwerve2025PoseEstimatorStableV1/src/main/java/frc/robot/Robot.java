@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.Utils.SelectScore;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -70,6 +71,11 @@ public class Robot extends TimedRobot
     SmartDashboard.putNumber("Match time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Batery Voltage", RobotController.getBatteryVoltage());
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+    
+    //System.out.println("Touch X: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getX());
+    //System.out.println("Touch Y: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getY());
+    //System.out.println("Touch Rot: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getRotation().getDegrees());
+    
 
  
   }
