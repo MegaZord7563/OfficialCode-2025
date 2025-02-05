@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 //Robot imports
 import frc.robot.RobotContainer;
+import frc.robot.Constants.SubsystemsConstants.CoralIntakeConstants;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.Coral.CoralSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 
@@ -31,6 +33,7 @@ public class ScoreLevel extends SequentialCommandGroup
   //Declare subsystems
   public static final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
   public static final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
+  public static final CoralSubsystem coralSubsystem = RobotContainer.coralSubsystem;  
 
 
   /** Creates a new ScoreLevel. */
@@ -45,7 +48,10 @@ public class ScoreLevel extends SequentialCommandGroup
         liftCmd,
         new WaitCommand(0.5),
         articulador1Cmd,
-        new WaitCommand(0.20),
+        new WaitCommand(0.50),
+        new InstantCommand(() -> coralSubsystem.runMotor(10 )),
+        new WaitCommand(2.0),
+        new InstantCommand(() -> coralSubsystem.runMotor(0.0 )),
         new InstantCommand(()->aCoralSubsystem.runMotor(0.0)),
         new WaitCommand(0.20),
         new InstantCommand(()->liftSubsystem.runMotor(0.0,true))

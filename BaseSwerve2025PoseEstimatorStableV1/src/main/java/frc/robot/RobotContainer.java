@@ -64,7 +64,7 @@ public class RobotContainer
   public static  LiftSubsystem liftSubsystem = new LiftSubsystem();
   
   //Climber Subsystem
-  public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
+  //public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
   
   //Alga Subsystem
   public static AlgaSubsystem algaSubsystem = new AlgaSubsystem();
@@ -240,8 +240,11 @@ public class RobotContainer
      //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
 
      //drive to goal
-     driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
+     //driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
      driverJoystick.y().whileTrue(trackAlgaeCmd);
+
+     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(50)));
+     driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
 
      driverJoystick.b().whileTrue(scoreLevel);
 

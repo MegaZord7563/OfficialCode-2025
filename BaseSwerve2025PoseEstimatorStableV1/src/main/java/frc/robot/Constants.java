@@ -328,31 +328,43 @@ import edu.wpi.first.math.util.Units;
     {
       
       //Coral Motor ports
-      public static final int kCoralMotorId = 3;
+      public static final int kCoralMotorId = 19;//3;
 
       // TO DO: This must be tuned to specific robot
       public static final double  kGearRatio = 1.0/60.0;
       public static final double kWheelDiameter = 0.2;
       
 
-      //Coral SparkMax
-      public static final IdleMode kCoralIdleMode = IdleMode.kBrake;
-      public static final int kCoralCurrentLimit = 20;
-      public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
-      public static final double kCoralEncoderPositionPIDMinInput = 0 ;
-      public static final double kCoralEncoderPositionPIDMaxInput= 2 * Math.PI;
+      public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
 
-      //CoralEncoder - TO DO: This must be tuned to specific robot
-      public static final double kCoralPositionConversionFactor = Math.PI* kGearRatio * kWheelDiameter;//rotation to Meters;
-      public static final double kCoralVelocityConversionFactor = kCoralPositionConversionFactor/60.0; //rotation to m/s
+      
+      public static final double KS = 0.1;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
+      public static final double KV = 0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
+      public static final double KA = 0.11;  //0.27;
 
-      //Coral PID TO DO: This must be tuned to specific robot
-      public static final double kP = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kI = 0;
-      public static final double kD = 0;
-      public static final double kFF = 1.0/473.0; // = input = 0 to position control and 1.0/473.0 to velocity control
-      public static final double kMinOutput = -1;
+      //TO DO: This must be tuned to specific robot
+      public static final double kP =1.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kI =0.0;
+      public static final double kD=0.0;
+      
+      public static final double kFF = 1.0/6000.0;
+      public static final double kMinOutput= -1;
       public static final double kMaxOutput = 1;
+
+      public static final double kP1 = 2.4;
+      public static final double kI1 =0.0;
+      public static final double kD1=0.0;
+
+
+      /* Current Limiting */
+     //TalonFX
+      public static final int kCurrentLimit = 70; //supply current
+      public static final int kCurrentThreshold = 120; //stator current
+      public static final double kCurrentThresholdTime = 0.1;
+      public static final boolean kEnableCurrentLimit = true;
+      public static final double kClosedLoopRamp=0.25;
+      public static boolean kInverted = false;
+
 
     }
 

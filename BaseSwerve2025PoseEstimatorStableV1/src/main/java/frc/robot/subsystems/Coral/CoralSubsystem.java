@@ -4,27 +4,26 @@
 
 package frc.robot.subsystems.Coral;
 
-
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+//CTRE Imports
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-//REV Imports
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Unit;
 
 //WPILIB Imports
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.SubsystemsConstants.CoralIntakeConstants;
 
 //Robot Imports
+import frc.robot.Constants.SubsystemsConstants.CoralIntakeConstants;
+
+
 
 
 /** Add your docs here. */
@@ -36,20 +35,20 @@ public class CoralSubsystem extends SubsystemBase
 
   private final TalonFX coralMotor;
 
+  // The distance sensor
+  //private Rev2mDistanceSensor distOnboard; //i2c port
+ 
+
   /* Start at motion 0, use slot 2 */
-   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
+   //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
 
-  //private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(1);
+  private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
-  //
   //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
   
-  
-  
-
   // The lift encoder
   //private final RelativeEncoder coralEncoder;
   
@@ -58,30 +57,111 @@ public class CoralSubsystem extends SubsystemBase
  // private SparkClosedLoopController coralPidController;
   
 
-
   /** Creates a new LiftSubsytem. */
   public CoralSubsystem() 
   {
     // Create the  motor
-    coralMotor = new SparkMax(CoralIntakeConstants.kCoralMotorId, MotorType.kBrushless);
+    coralMotor = new TalonFX (CoralIntakeConstants.kCoralMotorId,"rio");
+
+    /**
+     * Before measurements can be read from the sensor, setAutomaticMode(true)
+     * must be called. This starts a background thread which will periodically
+     * poll all enabled sensors and store their measured range.
+     */
+    // Create the distance sensor
+    //distOnboard.setAutomaticMode(true);
+
+    // Set the distance sensor units
+    //distOnboard.setDistanceUnits(Unit.kMillimeters);
     
 
     // Create the  encoder
-    coralEncoder = coralMotor.getEncoder();
+    //coralEncoder = coralMotor.getEncoder();
     //liftRightEncoder = liftRightMotor.getEncoder();
 
     //Create PID controller
-    coralPidController = coralMotor.getClosedLoopController();
+    //coralPidController = coralMotor.getClosedLoopController();
     
 
     //Calls motors config
-    motorsConfig();
+   initializeMotors();
     
 
     
   }
 
-  
+  /**
+   * @see https://v6.docs.ctr-electronics.com/en/stable/docs/hardware-reference/talonfx/improving-performance-with-current-limits.html
+   * Tunning TalonFx PIDController
+   * @see https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/device-specific/talonfx/basic-pid-control.html
+   * Config drive motors
+   * @category TalonFx settings for drive motors
+   * 
+   */
+  private void initializeMotors()
+  { 
+    //
+    TalonFXConfiguration globalConfig = new TalonFXConfiguration();
+
+    coralMotor.clearStickyFaults();
+    //Factory Default
+    coralMotor.getConfigurator().apply(new TalonFXConfiguration());      
+    
+    coralMotor.setNeutralMode(CoralIntakeConstants.kNeutralMode);
+   
+    
+    /* Configure a stator limit of 20 amps */
+   
+    CurrentLimitsConfigs currentLimitConfigs = globalConfig.CurrentLimits;
+    currentLimitConfigs.StatorCurrentLimit = CoralIntakeConstants.kCurrentThreshold;
+    currentLimitConfigs.StatorCurrentLimitEnable = CoralIntakeConstants.kEnableCurrentLimit; 
+    
+    
+    /* Gear Ratio Config */
+    globalConfig.Feedback.SensorToMechanismRatio = 1;//CoralIntakeConstants.kGearRatio; 
+    globalConfig.ClosedLoopGeneral.ContinuousWrap = true;//keep default = FALSE - MUST NOT TOUCH IT
+    /* Closed Loop Ramping */
+    globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = CoralIntakeConstants.kClosedLoopRamp;
+    
+    /* User can optionally change the configs or leave it alone to perform a factory default */
+    globalConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    
+               
+    // Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
+    globalConfig.Slot0.kS = CoralIntakeConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
+    globalConfig.Slot0.kV = CoralIntakeConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
+    globalConfig.Slot0.kP = CoralIntakeConstants.kP; //0.11; // An error of 1 rps results in 0.11 V output
+    globalConfig.Slot0.kI = CoralIntakeConstants.kI; //0; // no output for integrated error
+    globalConfig.Slot0.kD = CoralIntakeConstants.kD; //0; // no output for error derivative
+    // Peak output of 10 volts
+    //globalConfig.Voltage.withPeakForwardVoltage(Volts.of(12))
+                        //.withPeakReverseVoltage(Volts.of(-12));
+
+    
+     
+    /* Retry config apply up to 5 times, report if failure */
+    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) 
+    {
+      status = coralMotor.getConfigurator().apply(globalConfig);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) 
+    {
+      System.out.println("Could not apply escalador configs, error code: " + status.toString());
+    }
+     
+
+    //Enable safety
+    //escaladorLeaderMotor.setSafetyEnabled(true);
+
+    /* And initialize encoder position to 0 */
+    resetEncoder();
+    
+
+  }
+
+  /*// 
   public void motorsConfig()
   {
     globalConfig.closedLoop
@@ -109,7 +189,7 @@ public class CoralSubsystem extends SubsystemBase
     // Configure the lift motor - like burn flash
     coralMotor.configure(globalConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
     
-  }
+  }*/
 
   
 
@@ -117,6 +197,17 @@ public class CoralSubsystem extends SubsystemBase
   public void periodic() 
   {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Coral Velocity m/s", getVelocity());
+
+    /**
+     * Range returned from the distance sensor is valid if isRangeValid()
+     * returns true.
+     */
+    /*if(distOnboard.isRangeValid()) {
+      SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
+      SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
+    }*/
+
   }
 
   /**
@@ -126,28 +217,29 @@ public class CoralSubsystem extends SubsystemBase
   public void runMotor(double targetSpeed)
   {
      // Set the lift motor speed
-      coralPidController.setReference(targetSpeed, ControlType.kVelocity);
-    
+      coralMotor.setControl( m_velocityVoltage.withVelocity(targetSpeed));
+
+      System.out.println("Current Velocity: " + coralMotor.getVelocity().getValue());
     
   }
 
   /**
-   * Stop the lift motor
+   * Stop the intake/outake
    * 
    */
   public void stopMotor()
   {
-    coralMotor.set(0);
+    coralMotor.setControl(m_brake);
     
   }
 
   /**
    * 
-   * @return encoder value
+   * @return velocity m/s
    */
   public double getVelocity()
   {
-    return coralEncoder.getVelocity();
+    return coralMotor.getVelocity().getValueAsDouble();
   }
 
   /**
@@ -155,7 +247,7 @@ public class CoralSubsystem extends SubsystemBase
    */
   public void resetEncoder()
   {
-    coralEncoder.setPosition(0);
+    coralMotor.setPosition(0);
 
   }
  
