@@ -173,8 +173,8 @@ public class EscaladorSubsystem extends SubsystemBase
   {
     escaladorLeaderMotor.getPosition().getValueAsDouble();
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Escalador Velocity", getEscaladorVelocity());
-    SmartDashboard.putNumber("Escalador Position", getEscaladorPosition());
+    SmartDashboard.putNumber("Escalador Velocity", getVelocity());
+    SmartDashboard.putNumber("Escalador Position", getPosition());
   }
 
   /**
@@ -223,7 +223,7 @@ public class EscaladorSubsystem extends SubsystemBase
    * 
    * @return position in rotations as double
    */
-  public double getEscaladorPosition()
+  public double getPosition()
   {
     return escaladorLeaderMotor.getPosition().getValueAsDouble();
   }
@@ -232,7 +232,7 @@ public class EscaladorSubsystem extends SubsystemBase
    * 
    * @return velocity in rotations/sec
    */
-  public double getEscaladorVelocity()
+  public double getVelocity()
   {
     return escaladorLeaderMotor.getVelocity().getValueAsDouble();
   }

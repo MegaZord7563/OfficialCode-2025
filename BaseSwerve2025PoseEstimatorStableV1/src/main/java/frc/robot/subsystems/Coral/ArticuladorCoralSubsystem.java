@@ -101,7 +101,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
   public void periodic() 
   {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Articulardor Coral Position", getArtCoralPosition());
+    SmartDashboard.putNumber("Articulardor Coral Position", getPosition());
     SmartDashboard.putNumber("Articulador Coral Velocity", coralEncoder.getVelocity());
   }
 
@@ -109,7 +109,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    * Set the artic coral motor speed
    * @param targetPosition
    */
-  public void moveArtCoral(double targetPosition)
+  public void runMotor(double targetPosition)
   {
     
       System.out.println(" Artic Coral Position Control Enabled");
@@ -128,7 +128,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    * Stop the coral motor
    * @ Stop the coral motor
    */
-  public void stopArtCoral()
+  public void stopMotor()
   {
     coralPidController.setReference(0, ControlType.kDutyCycle);
     
@@ -138,7 +138,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    * Get coral position
    * @return
    */
-  public double getArtCoralPosition()
+  public double getPosition()
   {
     return coralEncoder.getPosition();
   }
@@ -147,7 +147,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    * Set the coral encoder position
    * @param position
    */
-  public void resetArtCoralEncoder()
+  public void resetEncoder()
   {
     coralEncoder.setPosition(0);
     

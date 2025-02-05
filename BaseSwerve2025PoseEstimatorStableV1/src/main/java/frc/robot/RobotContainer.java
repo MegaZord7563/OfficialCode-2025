@@ -61,7 +61,7 @@ public class RobotContainer
   public static SwerveSubsystem swerveDrive = new SwerveSubsystem();
   
   //Lift Subsystem
-  public static LiftSubsystem liftSubsystem = new LiftSubsystem();
+  public static  LiftSubsystem liftSubsystem = new LiftSubsystem();
   
   //Climber Subsystem
   public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
@@ -80,11 +80,14 @@ public class RobotContainer
 
 
   //Lift Commands
-  public static LiftCommand liftCmd = new LiftCommand();
+  public  static LiftCommand liftCmd; //= new LiftCommand();
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
 
+  public static ScoreLevel scoreLevel; //= new ScoreLevel();
+
+
   //Coral Commands
-  public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
+  public static Articulador1Cmd articulador1Cmd;// = new Articulador1Cmd();
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
@@ -120,6 +123,9 @@ public class RobotContainer
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
+    liftCmd = new LiftCommand();
+    articulador1Cmd = new Articulador1Cmd();
+    scoreLevel = new ScoreLevel();
 
      // First of All - Register Named Commands
     NamedCommands.registerCommand("lift", liftAuto);
@@ -237,7 +243,7 @@ public class RobotContainer
      driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
      driverJoystick.y().whileTrue(trackAlgaeCmd);
 
-     driverJoystick.b().whileTrue(new ScoreLevel());
+     driverJoystick.b().whileTrue(scoreLevel);
 
      //driverJoystick.b().whileTrue(new PathFindingCommand(swerveDrive, 1, SelectScore.poseToScore(touchScreenInterface).getX(),
      //        SelectScore.poseToScore(touchScreenInterface).getY(), SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees()));

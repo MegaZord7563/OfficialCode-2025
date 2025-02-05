@@ -155,20 +155,23 @@ public class LiftSubsystem extends SubsystemBase
   public void periodic() 
   {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Lift Position", getLiftPosition());
+    SmartDashboard.putNumber("Lift Position", getPosition());
     SmartDashboard.putNumber( "Lift Velocity rad/s",liftLeaderEncoder.getVelocity());
   }
 
-  /**
-   * Set the lift motor speed
-   * @param LiftMotorSpeed
-   */
-  public void moveLift(double targetPosition, boolean direction)
+ /**
+  * lift position and direction
+  * @param targetPosition
+  * @param direction
+  */
+  public void runMotor(double targetPosition, boolean direction)
   {
+    
     if (direction)
     {
       System.out.println("Switching to Position Control UP");
-      liftLeaderPidController.setReference(targetPosition, ControlType.kPosition);
+      liftLeaderPidController.setReference(targetPosition,  ControlType.kMAXMotionPositionControl,
+                                                            ClosedLoopSlot.kSlot2);
     }
     else
     {
@@ -187,30 +190,32 @@ public class LiftSubsystem extends SubsystemBase
    * Stop the lift motor
    * @
    */
-  public void stopLift()
+  public void stopMotor()
   {
-    liftLeaderPidController.setReference(0, ControlType.kDutyCycle);
+    liftLeaderPidController.setReference(0, ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot2);
     
   }
 
   /**
-   * Get lift position
+   * 
    * @return
    */
-  public double getLiftPosition()
+  public double getPosition()
   {
     return liftLeaderEncoder.getPosition();
   }
  
   /**
-   * Set the lift encoder position
-   * @param position
+   * 
+   * @ reset encoder
    */
-  public void resetLiftEncoder()
+  public void resetEncoder()
   {
     liftLeaderEncoder.setPosition(0);
     
   }
+
+  
 
   
 }

@@ -126,7 +126,7 @@ public class AlgaSubsystem extends SubsystemBase
     
   }
 
-  public double getCoralSpeed()
+  public double getVelocity()
   {
     return algaEncoder.getVelocity();
   }

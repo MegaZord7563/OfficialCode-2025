@@ -4,10 +4,18 @@
 
 package frc.robot.commands.score;
 
+//WPI Imports
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+//Robot imports
+import frc.robot.RobotContainer;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.lift.LiftCommand;
+import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.lift.LiftSubsystem;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,18 +24,31 @@ import frc.robot.commands.lift.LiftCommand;
 public class ScoreLevel extends SequentialCommandGroup 
 {
 
-    
-    
+  //Declare commands
+  public static final LiftCommand liftCmd = RobotContainer.liftCmd;
+  public static final Articulador1Cmd articulador1Cmd = RobotContainer.articulador1Cmd;
+
+  //Declare subsystems
+  public static final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
+  public static final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
+
 
   /** Creates a new ScoreLevel. */
   public ScoreLevel() 
   {
+   
+    
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-        new LiftCommand(),
-        new WaitCommand(1),
-        new Articulador1Cmd()
+    addCommands
+    (
+        liftCmd,
+        new WaitCommand(0.5),
+        articulador1Cmd,
+        new WaitCommand(0.20),
+        new InstantCommand(()->aCoralSubsystem.runMotor(0.0)),
+        new WaitCommand(0.20),
+        new InstantCommand(()->liftSubsystem.runMotor(0.0,true))
     );
 
   }

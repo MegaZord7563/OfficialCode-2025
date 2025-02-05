@@ -21,6 +21,9 @@ public class Articulador1Cmd extends Command
     private boolean l2 = false;
     private boolean l3 = false;
     private boolean l4 = false;
+    private boolean finish = false;
+
+    private double encoderPosition = 0;
 
 
     // Create the subsystem
@@ -45,15 +48,18 @@ public class Articulador1Cmd extends Command
     l2=false;
     l3=false;
     l4=false;
+    finish =false;
 
     // Reset the encoder
-    aCoralSubsystem.resetArtCoralEncoder();
+    //aCoralSubsystem.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() 
   {
+
+    encoderPosition = aCoralSubsystem.getPosition();
     // Get the button values
     l1 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL1);
     l2 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL2);
@@ -65,25 +71,29 @@ public class Articulador1Cmd extends Command
     if (l1)
     {
       System.out.println("L1 SELECTED");
-      aCoralSubsystem.moveArtCoral(0.2);
+      aCoralSubsystem.runMotor(0.2);
+      if (encoderPosition >=0.195) finish=true;
     }
     // Move the articulator
     if (l2)
     {
       System.out.println("L2 SELECTED");
-      aCoralSubsystem.moveArtCoral(0.4);
+      aCoralSubsystem.runMotor(0.4);
+      if (encoderPosition >=0.192) finish=true;
     }
     //  Move the articulator
     if (l3)
     {
       System.out.println("L3 SELECTED");
-      aCoralSubsystem.moveArtCoral(0.4);
+      aCoralSubsystem.runMotor(0.4);
+      if (encoderPosition >=0.392) finish=true;
     }
     //  Move the articulator
     if (l4)
     {
       System.out.println("L4 SELECTED");
-      aCoralSubsystem.moveArtCoral(0.6);
+      aCoralSubsystem.runMotor(0.6);
+      if (encoderPosition >=0.595) finish=true;
       
     }
 
@@ -95,7 +105,7 @@ public class Articulador1Cmd extends Command
   public void end(boolean interrupted) 
   {
     // Stop the articulator
-    aCoralSubsystem.stopArtCoral();
+    //aCoralSubsystem.stopMotor();
     // Print the end of the command
     System.out.println("Articulador 1 Command Done");
   }
@@ -104,7 +114,7 @@ public class Articulador1Cmd extends Command
   @Override
   public boolean isFinished() 
   {
-    return false;
+    return finish;
   }
 
 }

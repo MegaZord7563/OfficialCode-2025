@@ -16,6 +16,9 @@ public class LiftCommand extends Command
     private boolean l2 = false;
     private boolean l3 = false;
     private boolean l4 = false;
+    private boolean finish = false;
+
+    private double encoderPosition = 0;
 
   // Create the subsystem
     private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
@@ -33,6 +36,8 @@ public class LiftCommand extends Command
   {
     // Print the initialization of the command
     System.out.println("Lift Command Initialized");
+
+    finish = false;
    
     // Set the button values to false
     l1=false;
@@ -40,13 +45,14 @@ public class LiftCommand extends Command
     l3=false;
     l4=false;
     // Reset the encoder
-    liftSubsystem.resetLiftEncoder();
+    //liftSubsystem.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() 
   {
+    encoderPosition = liftSubsystem.getPosition();
     // Get the button values
     l1 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL1);
     l2 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL2);
@@ -57,22 +63,28 @@ public class LiftCommand extends Command
     if (l1)
     {
       System.out.println("L1 SELECTED");
-      liftSubsystem.moveLift(0.5, false);
+      liftSubsystem.runMotor(0.5, false);
+      if (encoderPosition >=0.492) finish=true;
+      //{finish =true;}
     }
     if (l2)
     {
       System.out.println("L2 SELECTED");
-      liftSubsystem.moveLift(0.8, false);
+      liftSubsystem.runMotor(0.8, false);
+      if (encoderPosition >=0.792) finish=true;
+     
     }
     if (l3)
     {
       System.out.println("L3 SELECTED");
-      liftSubsystem.moveLift(1.0, false);
+      liftSubsystem.runMotor(1.0, false);
+      if (encoderPosition >=0.992) finish=true;
     }
     if (l4)
     {
       System.out.println("L4 SELECTED");
-      liftSubsystem.moveLift(1.2, false);
+      liftSubsystem.runMotor(1.2, false);
+      if (encoderPosition >=1.195) finish=true;
     }
 
 
@@ -84,7 +96,7 @@ public class LiftCommand extends Command
   public void end(boolean interrupted) 
   {
     // Stop the lift
-    liftSubsystem.stopLift();
+    //liftSubsystem.stopMotor();
     // Print the end of the command
     System.out.println("Lift Command Done!");
   }
@@ -93,7 +105,7 @@ public class LiftCommand extends Command
   @Override
   public boolean isFinished() 
   {
-    return false;
+    return finish;
   }
 
 }

@@ -5,6 +5,9 @@
 package frc.robot.subsystems.Coral;
 
 
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.hardware.TalonFX;
 //REV Imports
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -28,17 +31,31 @@ import frc.robot.Constants.SubsystemsConstants.CoralIntakeConstants;
 public class CoralSubsystem extends SubsystemBase 
 {
   // The lift motor
-  private final SparkMax coralMotor;
-  private SparkMaxConfig globalConfig = new SparkMaxConfig();
+  //private final SparkMax coralMotor;
+  //private SparkMaxConfig globalConfig = new SparkMaxConfig();
+
+  private final TalonFX coralMotor;
+
+  /* Start at motion 0, use slot 2 */
+   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
+
+  //private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(1);
+
+  //
+  //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+
+  /* Keep a brake request so we can disable the motor */
+  private final NeutralOut m_brake = new NeutralOut();
+  
   
   
 
   // The lift encoder
-  private final RelativeEncoder coralEncoder;
+  //private final RelativeEncoder coralEncoder;
   
 
   // The lift PID controller
-  private SparkClosedLoopController coralPidController;
+ // private SparkClosedLoopController coralPidController;
   
 
 
@@ -106,7 +123,7 @@ public class CoralSubsystem extends SubsystemBase
    * Set the coral motor speed
    * @param CoralMotorSpeed
    */
-  public void runCoral(double targetSpeed)
+  public void runMotor(double targetSpeed)
   {
      // Set the lift motor speed
       coralPidController.setReference(targetSpeed, ControlType.kVelocity);
@@ -124,9 +141,22 @@ public class CoralSubsystem extends SubsystemBase
     
   }
 
-  public double getCoralSpeed()
+  /**
+   * 
+   * @return encoder value
+   */
+  public double getVelocity()
   {
     return coralEncoder.getVelocity();
+  }
+
+  /**
+   * @ reset encoder
+   */
+  public void resetEncoder()
+  {
+    coralEncoder.setPosition(0);
+
   }
  
   

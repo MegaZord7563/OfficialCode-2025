@@ -101,7 +101,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
   public void periodic() 
   {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Algae Position", getAlgaePosition());
+    SmartDashboard.putNumber("Algae Position", getPosition());
   }
 
   /**
@@ -136,7 +136,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
    * Get algae position
    * @return
    */
-  public double getAlgaePosition()
+  public double getPosition()
   {
     return algaeEncoder.getPosition();
   }
@@ -145,7 +145,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
    * Set the algae encoder position
    * @param position
    */
-  public void resetAlgaeEncoder()
+  public void resetEncoder()
   {
     algaeEncoder.setPosition(0);
     

@@ -8,7 +8,8 @@ import frc.robot.subsystems.lift.LiftSubsystem;
 
 
 
-public class LiftCommandAuto extends Command{
+public class LiftCommandAuto extends Command
+{
      // Instantiate the object
      private boolean finish =false;
 
@@ -23,7 +24,7 @@ public class LiftCommandAuto extends Command{
   @Override
   public void initialize() {
     System.out.println("Lift Command Initialized");
-    liftSubsystem.resetLiftEncoder();
+    liftSubsystem.resetEncoder();
     finish = false;
   }
 
@@ -31,9 +32,10 @@ public class LiftCommandAuto extends Command{
   @Override
   public void execute() 
   {
-    liftSubsystem.moveLift(200, false);
+    liftSubsystem.runMotor(200, false);
     
-    new Thread(() -> {
+    new Thread(() -> 
+    {
       try {
         
           Thread.sleep(5000); //avoid to block the rest of our code from running
@@ -45,8 +47,9 @@ public class LiftCommandAuto extends Command{
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    liftSubsystem.stopLift();
+  public void end(boolean interrupted) 
+  {
+    liftSubsystem.stopMotor();
     System.out.println("Lift Command Finished");
   }
 

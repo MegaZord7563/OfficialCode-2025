@@ -98,14 +98,14 @@ public class RampSubsystem extends SubsystemBase
   public void periodic() 
   {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Ramp Position", getRampPosition());
+    SmartDashboard.putNumber("Ramp Position", getPosition());
   }
 
   /**
    * Set the ramp motor speed
    * @param rampMotorSpeed
    */
-  public void moveRamp(double targetPosition)
+  public void runMotor(double targetPosition)
   {
     
       System.out.println("Ramp Position Control Enabled");
@@ -124,7 +124,7 @@ public class RampSubsystem extends SubsystemBase
    * Stop the ramp motor
    * @ Stop the ramp motor
    */
-  public void stopRamp()
+  public void stopMotor()
   {
     rampPidController.setReference(0, ControlType.kDutyCycle);
     
@@ -134,16 +134,16 @@ public class RampSubsystem extends SubsystemBase
    * Get ramp position
    * @return
    */
-  public double getRampPosition()
+  public double getPosition()
   {
     return rampEncoder.getPosition();
   }
  
   /**
-   * Set the ramp encoder position
-   * @param position
+   * 
+   * @ reset encoder
    */
-  public void resetRampEncoder()
+  public void resetEncoder()
   {
     rampEncoder.setPosition(0);
     

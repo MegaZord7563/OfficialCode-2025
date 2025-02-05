@@ -310,7 +310,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kLiftPositionConversionFactor = kLiftGearRatio* Math.PI * kLiftPulleyRatio * kLiftTuboDiam; // rotation to meters
       public static final double kLiftVelocityConversionFactor = kLiftPositionConversionFactor/60; //meters/sec (2 * Math.PI) / 60.0; // radians per second
       //Lift PID
-      public static final double kPLiftUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kPLiftUp = 1.0;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kILiftUp = 0;
       public static final double kDLiftUp = 0;
       public static final double kLiftUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
@@ -449,11 +449,11 @@ import edu.wpi.first.math.util.Units;
 
       //ArticuladorCoral Encoder
       
-      public static final double kArticuladorCoralPositionConversionFactor = Math.PI* kGearRatio * kWheelDiameter; //rotation to Meters
+      public static final double kArticuladorCoralPositionConversionFactor =Math.PI* kGearRatio * kWheelDiameter; //rotation to Meters
       public static final double kArticuladorCoralVelocityConversionFactor = kArticuladorCoralPositionConversionFactor/60.0; //rotation to m/s
 
       //ArticuladorCoral PID Up
-      public static final double kPArticuladorCoralUp = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kPArticuladorCoralUp = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kIArticuladorCoralUp = 0;
       public static final double kDArticuladorCoralUp = 0;
       public static final double kArticuladorCoralUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
