@@ -38,7 +38,15 @@ public class CoralSubsystem extends SubsystemBase
   private final TalonFX coralMotor;
 
   // The distance sensor
-  private Rev2mDistanceSensor distOnboard; //i2c port
+  /**
+   * pin-out
+   * red = V+ 3.3V
+   * black = GND
+   * white = connect to SCL MXP port
+   * blue = connect to SDA MXP port
+   * 
+   */
+  private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
  
 
   /* Start at motion 0, use slot 2 */
@@ -64,7 +72,7 @@ public class CoralSubsystem extends SubsystemBase
   {
     // Create the  motor
     coralMotor = new TalonFX (CoralIntakeConstants.kCoralMotorId,"rio");
-    distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
+  
 
     /**
      * Before measurements can be read from the sensor, setAutomaticMode(true)
@@ -77,11 +85,11 @@ public class CoralSubsystem extends SubsystemBase
     // Set the distance sensor units
     distOnboard.setDistanceUnits(Unit.kMillimeters);
     distOnboard.setMeasurementPeriod(0.2);
+    
+    //
     distOnboard.setEnabled(true);
     distOnboard.setRangeProfile(RangeProfile.kDefault);
-   
-    
-
+  
     // Create the  encoder
     //coralEncoder = coralMotor.getEncoder();
     //liftRightEncoder = liftRightMotor.getEncoder();
@@ -198,6 +206,15 @@ public class CoralSubsystem extends SubsystemBase
     
   }*/
 
+  /**
+     * Get the distance measured by the sensor.
+     * 
+     * @return The distance in millimeters.
+     */
+  public double getDistance() 
+  {
+    return distOnboard.getRange();
+  }
   
 
   @Override
@@ -210,13 +227,34 @@ public class CoralSubsystem extends SubsystemBase
      * Range returned from the distance sensor is valid if isRangeValid()
      * returns true.
      */
-    if(distOnboard.isRangeValid()) 
+    
+    boolean isValid = distOnboard.isRangeValid();
+
+    SmartDashboard.putBoolean("Range Valid", isValid);
+
+    if(isValid) 
     {
+      double distance = distOnboard.getRange();
       SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
       SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
+      // Check if the distance is within the operational range
+      if (distance >= 50 && distance <= 2000) 
+      {
+        SmartDashboard.putString("Operational Range", "Within Range");
+    
+      } 
+      else 
+      {
+        SmartDashboard.putString("Operational Range", "Out of Range");
+    
+      }
+      
     }
-    SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
-      SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
+    else 
+    {
+      SmartDashboard.putString("Operational Range", "Invalid Measurement");
+    }
+    
 
   }
 
