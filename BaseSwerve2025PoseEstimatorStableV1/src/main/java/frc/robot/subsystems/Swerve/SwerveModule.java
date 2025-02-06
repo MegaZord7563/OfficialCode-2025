@@ -13,10 +13,12 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.RelativeEncoder;
 //REV imports
@@ -60,8 +62,12 @@ public class SwerveModule extends SubsystemBase
   // create a velocity closed-loop request, voltage output, slot 0 configs
   private final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
+  /* Keep a brake request so we can disable the motor */
+  private final NeutralOut m_brake = new NeutralOut();
+
   //Declare motor encoders
   private final RelativeEncoder turningEncoder;
+  
   
   
 
@@ -145,17 +151,19 @@ public class SwerveModule extends SubsystemBase
    * @see https://docs.revrobotics.com/brushless/revlib/revlib-overview/migrating-to-revlib-2025
    * 
    */
-  canCoderConfigs();
+   canCoderConfigs();
 
+   
     config
     .idleMode(ModuleConstants.kTurningMotorIdleMode)
     .smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
-    configDriveMotor();
+    initializeDriveMotor();
 
     config.encoder
     .positionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad)
     .velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
+    //.velocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
     
     config.closedLoop
@@ -179,16 +187,16 @@ public class SwerveModule extends SubsystemBase
     turningMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     //Metodos geters
-    boolean isInverted = turningMotor.configAccessor.getInverted();
+    /*boolean isInverted = turningMotor.configAccessor.getInverted();
     double positionFactor = turningMotor.configAccessor.encoder.getPositionConversionFactor();
-    double velocityFactor = turningMotor.configAccessor.encoder.getVelocityConversionFactor();
+    double velocityFactor = turningMotor.configAccessor.encoder.getVelocityConversionFactor();*/
 
 
 
     
 
    
-    drivingPidControllerGains();
+    //drivingPidControllerGains();MNL 01/28/2025
 
     //5. Initialize chassi offset value   
 
@@ -254,29 +262,30 @@ public class SwerveModule extends SubsystemBase
     correctedDesiredState.speedMetersPerSecond = state.speedMetersPerSecond;
     correctedDesiredState.angle = state.angle.plus(Rotation2d.fromRadians(m_chassisAngularOffset));
 
-    // Optimize the reference state to avoid spinning further than 90 degrees.
-    SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
-                                              new Rotation2d(turningEncoder.getPosition()));
+    /**SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
+                                              new Rotation2d(turningEncoder.getPosition()));*/
+    
 
+  //01/23/2025 MNL precisa testar a correção
+   correctedDesiredState.optimize(new Rotation2d(turningEncoder.getPosition()));
+    
+  // set velocity to 8 rps, add 0.5 V to overcome gravity
+  /*  
+  double driveVelocityRPS = Conversions.MPSToRPS(optimizedDesiredState.speedMetersPerSecond, 
+                                                ModuleConstants.kWheelCircumferenceMeters,
+                                                ModuleConstants.kDriveMotorGearRatio);*/
   
-      //It scales the velocity down using the robot's max speed
-      // set velocity to 8 rps, add 0.5 V to overcome gravity
-      
-    double driveVelocityRPS = Conversions.MPSToRPS(optimizedDesiredState.speedMetersPerSecond, 
-                                                  ModuleConstants.kWheelCircumferenceMeters,
-                                                  ModuleConstants.kDriveMotorGearRatio);
-    
-    driveMotor.setControl(m_request.withVelocity(driveVelocityRPS)); 
-    //driveMotor.setControl(m_request.withVelocity(1.0).withFeedForward(0.5)); 
-    // driveMotor.setControl(m_request.withDu(1.0)); 
-    
+  //
+  double driveVelocityRPS = Conversions.MPSToRPS(correctedDesiredState.speedMetersPerSecond, 
+                                                ModuleConstants.kWheelCircumferenceMeters,
+                                                ModuleConstants.kDriveMotorGearRatio);
 
-    //pid controller calculate its position
-    turningPidController.setReference(optimizedDesiredState.angle.getRadians(), ControlType.kPosition, ModuleConstants.pidSparkSlot);
-    
-    
-
-    m_desiredState = state;
+  driveMotor.setControl(m_request.withVelocity(driveVelocityRPS)); 
+  turningPidController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition, ModuleConstants.pidSparkSlot);  
+     
+  //turningPidController.setReference(optimizedDesiredState.angle.getRadians(), ControlType.kPosition, ModuleConstants.pidSparkSlot);
+  
+   m_desiredState = state;
   }
 
   
@@ -287,7 +296,7 @@ public class SwerveModule extends SubsystemBase
    * @category TalonFx settings for drive motors
    */
 
-  private void configDriveMotor()
+  private void initializeDriveMotor()
   { 
     driveMotor.clearStickyFaults();
     //Factory Default
@@ -308,13 +317,29 @@ public class SwerveModule extends SubsystemBase
     toConfigure.ClosedLoopGeneral.ContinuousWrap = true;
     /* Closed Loop Ramping */
     toConfigure.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ModuleConstants.kDriveClosedLoopRamp;
+    //MNL 01/28/2025
+    toConfigure.Slot0.kS = ModuleConstants.driveKS; //0.1; // Add 0.1 V output to overcome static friction
+    toConfigure.Slot0.kV = ModuleConstants.driveKV; //0.12; // A velocity target of 1 rps results in 0.12 V output
+    toConfigure.Slot0.kP = ModuleConstants.kPdriving; //0.11; // An error of 1 rps results in 0.11 V output
+    toConfigure.Slot0.kI = ModuleConstants.kIdriving; //0; // no output for integrated error
+    toConfigure.Slot0.kD = ModuleConstants.kDdriving; //0; // no output for error derivative
     
+    //MNL 01/28/2025
+    /* Retry config apply up to 5 times, report if failure */
+    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) 
+    {
+      status = driveMotor.getConfigurator().apply(toConfigure);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) 
+    {
+      System.out.println("Could not apply swerve module configs, error code: " + status.toString());
+    }
     
-        
-    driveMotor.getConfigurator().apply(toConfigure);
 
     /* And initialize encoder position to 0 */
-    driveMotor.getConfigurator().setPosition(0);
+    driveMotor.setPosition(0);
 
     
 
@@ -355,7 +380,7 @@ public class SwerveModule extends SubsystemBase
   /**
    * Tunning TalonFx PIDController
    * @see https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/device-specific/talonfx/basic-pid-control.html
-   * 
+   * MNL 01/28/2025 comentado para testar
    */
   public void drivingPidControllerGains()
   {
@@ -524,10 +549,12 @@ public class SwerveModule extends SubsystemBase
     return driveMotor.getMotorVoltage().getValueAsDouble();
   }
   
-  
+  /**
+   * 
+   */
   public void stopMotors() 
   {
-      driveMotor.set(0);
+      driveMotor.setControl(m_brake);
       turningMotor.set(0);
       
   }

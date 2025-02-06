@@ -5,36 +5,44 @@
 package frc.robot;
 
 
-import java.io.IOException;
-import org.json.simple.parser.ParseException;
 
+//Java Imports
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.FileVersionException;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+
+//WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-//WPI Imports
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.PathPlannerConstants;
-//LOCAL Imports
+
+//Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
-import frc.robot.commands.AutoMundoSenai;
-import frc.robot.commands.AutoQuadrado;
-import frc.robot.commands.PathFindingCommand;
-import frc.robot.subsystems.Limelight.LimelightHelpers;
+import frc.robot.Limelight.LimelightHelpers;
+
+import frc.robot.Utils.TouchScreenInterface;
+import frc.robot.commands.coral.Articulador1Cmd;
+import frc.robot.commands.lift.LiftCommand;
+import frc.robot.commands.lift.LiftCommandAuto;
+import frc.robot.commands.pathPlanner.PathAfterFind;
+import frc.robot.commands.pathPlanner.PathFindingCommand;
+import frc.robot.commands.score.HomingPosition;
+import frc.robot.commands.score.ScoreLevel;
+import frc.robot.commands.swerve.AimAndRangeCmd;
+import frc.robot.commands.swerve.TrackAlgae;
+import frc.robot.subsystems.Algae.AlgaSubsystem;
+import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
+import frc.robot.subsystems.Climber.EscaladorSubsystem;
+import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.Coral.CoralSubsystem;
+import frc.robot.subsystems.Coral.RampSubsystem;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
+import frc.robot.subsystems.lift.LiftSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -45,25 +53,66 @@ import frc.robot.subsystems.Swerve.SwerveSubsystem;
 public class RobotContainer 
 {
   // The robot's subsystems and commands are defined here...
-  //public static LimelightHelpers limelightHelpers = new LimelightHelpers();
+  
+  //Subsystems
+  //Put all subsystems here
+  public static LimelightHelpers limelightHelpers = new LimelightHelpers();
+  
+  //Swerve Drive
   public static SwerveSubsystem swerveDrive = new SwerveSubsystem();
-  public static AutoMundoSenai autoMundoSenai = new AutoMundoSenai();
-  public static AutoQuadrado autoQuadrado = new AutoQuadrado();
+  
+  //Lift Subsystem
+  public static  LiftSubsystem liftSubsystem = new LiftSubsystem();
+  
+  //Climber Subsystem
+  //public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
+  
+  //Alga Subsystem
+  public static AlgaSubsystem algaSubsystem = new AlgaSubsystem();
+  public static ArticuladorAlgaeSubsystem articuladorAlgaeSubsystem = new ArticuladorAlgaeSubsystem();
+  
+  //Coral Subsystem
+  public static CoralSubsystem coralSubsystem = new CoralSubsystem();
+  public static ArticuladorCoralSubsystem articuladorCoralSubsystem = new ArticuladorCoralSubsystem();
+  public static RampSubsystem rampSubsystem = new RampSubsystem();
+
+  public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
+  
+
+
+  //Lift Commands
+  public  static LiftCommand liftCmd =new LiftCommand();
+  public static LiftCommandAuto liftAuto = new LiftCommandAuto();
+
+  
+  //Coral Commands
+  public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
+
+  //Sequential Commamds
+  public static ScoreLevel scoreLevel = new ScoreLevel();
+  public static HomingPosition homingPosition = new HomingPosition();
+
+  //Swerve commands
+  public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
+  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( 0, 0, 0);
+  
+  //PathFindingCommand
   public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
-  1, 0.7, 2.83, 0);
+                                                    1, 0.7, 2.83, 0);
 
   public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 
-  1, 2.198, 4.921, 180);
+                                                    1, 2.198, 4.921, 180);
+
+  public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
+  public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //public static XboxController driverJoystick;
+  //Controllers
   public static CommandXboxController driverJoystick;
   
-  private static Command pathFindingCommand;
-
-  private static PathPlannerPath pathToFollow;
-  private static Command findToPath;
+  
   /**
   * Declare class SendableChoser()  
   *  Pop up selection of option on the SmartDashBoard   
@@ -77,64 +126,76 @@ public class RobotContainer
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
+    //liftCmd = new LiftCommand();
+    //articulador1Cmd = new Articulador1Cmd();
+    //scoreLevel = new ScoreLevel();
 
+     // First of All - Register Named Commands
+    NamedCommands.registerCommand("lift", liftAuto);
+    
+  
+    // Add commands to the subsystem
+    
+
+    //Swerve Commands
+    trackAlgaeCmd.addRequirements(swerveDrive);
+    aimAndRangeCmd.addRequirements(swerveDrive);
+
+
+    //Lift Commands
+    liftCmd.addRequirements(liftSubsystem);
+    liftAuto.addRequirements(liftSubsystem);
+
+    //Coral Commands
+    articulador1Cmd.addRequirements(articuladorCoralSubsystem);
+   
+      
     // Build an auto chooser. This will use Commands.none() as the default option.
     chooserAuto = AutoBuilder.buildAutoChooser();
     
+    //Instantiate PathPlannerAuto
     PathPlannerAuto autoPath = new PathPlannerAuto("FirstPathAutoNovo");
     PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
+    PathPlannerAuto autoField = new PathPlannerAuto("NewFieldAuto");
+    PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
+    
+   
+    
+    
 
+    //Add options to the chooser
     chooserAuto.addOption("NovoAuto", autoPath);
 
     chooserAuto.addOption("AutoTest", autoTest);
 
+    chooserAuto.addOption("NewFieldAuto", autoField);
+
+    chooserAuto.addOption("AutoLift", autoLift);
+
     //Instantiate subsystems
     //swerveDrive 
-
-    //Instantiate commands
-    Pose2d targetPose = new Pose2d(0.7, 2.83, Rotation2d.fromDegrees(0));
-
-    // Create the constraints to use while pathfinding
-    PathConstraints constraints = new PathConstraints(
-            1.0, PathPlannerConstants.maxAccelerationPath,
-            PathPlannerConstants.maxAngularVelocityRadPerSec, PathPlannerConstants.maxAngularAccelerationRadPerSecSq);
-      
-    // Since AutoBuilder is configured, we can use it to build pathfinding commands
-    pathFindingCommand = AutoBuilder.pathfindToPose(
-            targetPose,
-            constraints,
-            0.0// Goal end velocity in meters/sec
-    );
-
-
-    try {
-      pathToFollow = PathPlannerPath.fromPathFile("PathAfterFind");
-    } catch (FileVersionException | IOException | ParseException e) {
-      e.printStackTrace();
-    }
-
-    findToPath = AutoBuilder.pathfindThenFollowPath(pathToFollow, constraints);
-
-    autoMundoSenai.addRequirements(swerveDrive);
-    autoQuadrado.addRequirements(swerveDrive);
+    // Add the path to the auto chooser
+   
     
     // Instantiate Xbox Controller
     driverJoystick= new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
      //Add to choices to smart dashboard
     SmartDashboard.putData("Autonomous", chooserAuto);
-    
+
     //Default option
     /*chooserAuto.setDefaultOption("Autonomous 1", autoMundoSenai);
     chooserAuto.addOption("Autonomous 2", autoQuadrado);*/
    
 
+    // Configure the button bindings
     configureBindings();
 
     //*******set default command to drive with joystick************/
      //The left stick controls translation of the robot.
      // Turning is controlled by the X axis of the right stick.
-
     
+  
+    //Runnable command
     swerveDrive.setDefaultCommand
                                   (new RunCommand
                                     (()-> swerveDrive.driveRobotOriented
@@ -146,12 +207,8 @@ public class RobotContainer
                                       swerveDrive
                                     )
                                   ); 
-                                                  
-
-    if(driverJoystick.getHID().getYButton()){
-      System.out.println("Y Pressed Container");
-    }
-
+                                                 
+    
   }
 
   /**
@@ -168,43 +225,42 @@ public class RobotContainer
     //X positions of the Wheels 
     //new JoystickButton(driverJoystick, Button.kX.value).whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
     //driverJoystick.x().whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
-    
-    ///*Zeroing NavX2 It changes robot heading*/
-     //JoystickButton robotChangeHeading = new JoystickButton (driverJoystick,XboxController.Button.kStart.value); 
-     //robotChangeHeading.onTrue(new InstantCommand(swerveDrive::zeroHeading)); //reset gyroscope  
-
-     driverJoystick.start().onTrue(new InstantCommand(swerveDrive::zeroHeading));
+         
+     //driverJoystick.start().onTrue(new InstantCommand(swerveDrive::zeroHeading));
      
 
      ///*Changes robot speed - slowing down
      //JoystickButton throttle1 = new JoystickButton (driverJoystick,XboxController.Button.kLeftBumper.value); 
      //throttle1.onTrue(new InstantCommand(swerveDrive::robotSlower)); 
 
-     //driverJoystick.y().whileTrue(new InstantCommand(swerveDrive::addPoseVision));
-     driverJoystick.leftBumper().onTrue(new InstantCommand(swerveDrive::robotSlower)); 
-     driverJoystick.rightBumper().onTrue(new InstantCommand(swerveDrive::robotFast)); 
-    // driverJoystick.b().onTrue(new InstantCommand(swerveDrive::robotMaxSpeed)); 
      
-     //driverJoystick.a().whileTrue(new RunCommand(() -> pathFindingCommand.schedule()));
+     driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
+     driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
+     driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
+              
+    //find path
+     //driverJoystick.y().onTrue(pathAfterFind);
+     //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
 
-     driverJoystick.b().onTrue(pathFindingCmd);
-     driverJoystick.b().onFalse(new InstantCommand(()-> pathFindingCmd.endCommand()));
+     //drive to goal
+     //driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
+     driverJoystick.y().whileTrue(trackAlgaeCmd);
 
-     driverJoystick.x().onTrue(pathFindingCmd2);
-     driverJoystick.x().onFalse(new InstantCommand(()-> pathFindingCmd2.endCommand()));
+     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(50)));
+     driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
 
-     //driverJoystick.y().whileTrue(new InstantCommand(() -> findToPath.schedule()));
+     driverJoystick.b().whileTrue(scoreLevel);
+     driverJoystick.start().whileTrue(homingPosition);
+
+     //driverJoystick.b().whileTrue(new PathFindingCommand(swerveDrive, 1, SelectScore.poseToScore(touchScreenInterface).getX(),
+     //        SelectScore.poseToScore(touchScreenInterface).getY(), SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees()));
      
-        
-     ///*Changes robot speed - speeding up
-     /*JoystickButton throttle2 = new JoystickButton (driverJoystick,XboxController.Button.kRightBumper.value); 
-     throttle2.onTrue(new InstantCommand(swerveDrive::robotFast)); 
-
-     JoystickButton throttleMax = new JoystickButton (driverJoystick,XboxController.Button.kB.value); 
-     throttleMax.onTrue(new InstantCommand(swerveDrive::robotMaxSpeed)); */
      
      
+     //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFindRed.endCommand()));
+   
 
+    
 
    
   }

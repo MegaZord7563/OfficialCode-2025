@@ -4,17 +4,17 @@
 
 package frc.robot.subsystems.Swerve;
 
+
 //JAVA Imports
 import java.util.function.Supplier;
 
-//NavX imports
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+
+//CTRE imports
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Pigeon2Configurator;
-import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.hardware.DeviceIdentifier;
 import com.ctre.phoenix6.hardware.Pigeon2;
+
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 
@@ -28,20 +28,25 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
+
 import edu.wpi.first.wpilibj.DriverStation;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 
-//LOCAL Imports
+//Robot Imports
 import frc.robot.Constants;
 import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.Limelight.LimelightHelpers;
+
 
 
 
@@ -51,6 +56,7 @@ public class SwerveSubsystem extends SubsystemBase
   /**************************
    * Create 4 Swerve Modules*
    **************************/
+
   public final SwerveModule frontLeftModule = 
   new SwerveModule
                   (
@@ -95,14 +101,18 @@ public class SwerveSubsystem extends SubsystemBase
    * ******************/
   //private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
-  Pigeon2 gyro = new Pigeon2(30, "rio");
-              
+  //Create Pigeon2 gyro
+  Pigeon2 gyro = new Pigeon2(DriveConstants.kPigeonPort, "rio");
+       
+  // Create a slew rate limiter to limit the rate of change of the commanded robot velocity
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
   private final SlewRateLimiter yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
   private final SlewRateLimiter turningLimiter= new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
 
+  
   ChassisSpeeds chassisSpeeds;
-
+  //private final Field2d field2d;
+  //Array of modules
   SwerveModule[] modules = {frontLeftModule,frontRightModule,backLeftModule,backRightModule};
 
   /** Creates a new SwerveSubsystem. */
@@ -111,14 +121,46 @@ public class SwerveSubsystem extends SubsystemBase
   private boolean throttleMax=false;
   private boolean isBlue = false;
 
+  //PathPlanner Config
   RobotConfig config;
+
+  //Select alliance heading - default is blue
+  private double allianceHeading = 0;
+
+      
+  boolean deploy = true;
+  int countDeploy = 0;
 
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
   below are robot specific, and should be tuned. */
-  private final SwerveDrivePoseEstimator m_poseEstimator =
+  
+  // Create a new SwerveDrivePoseEstimator
+  private final SwerveDrivePoseEstimator m_poseEstimator;
+
+  // Create a NetworkTable publisher to publish the pose to NetworkTables
+  StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault()
+  .getStructTopic("MyPose", Pose2d.struct).publish();
+                
+
+  
+  public SwerveSubsystem() 
+  {
+
+    //field2d = new Field2d();
+    //SmartDashboard.putData("Field", field2d);
+
+    //Robot Front is allways towards to red wall
+    var alliance2 = DriverStation.getAlliance();
+    if (alliance2.get() == DriverStation.Alliance.Red) 
+    {
+      allianceHeading = 180;
+    }
+
+    //Initialize pose estimator ALWAYS towards to red wall
+    m_poseEstimator =
                 new SwerveDrivePoseEstimator(
                     DriveConstants.kDriveKinematics,
-                    gyro.getRotation2d(),
+                    Rotation2d.fromDegrees(allianceHeading),//gyro.getRotation2d(),
                     new SwerveModulePosition[] {
                       frontLeftModule.getPosition(),
                       frontRightModule.getPosition(),
@@ -128,14 +170,14 @@ public class SwerveSubsystem extends SubsystemBase
                     new Pose2d(),
                     VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
                     VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
-
-  public SwerveSubsystem() 
-  {
     
+    //camera pose set up - to initialize cameras according to its assembling on the robot
+    //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,-0.13,0,0.685,0,0,0);
 
     /* delay 1 s and then reset gyro */
-    //*
+    /*
     new Thread(() -> {
+
                       try 
                       {
                           Thread.sleep(1000); //avoid to block the rest of our code from running
@@ -145,7 +187,8 @@ public class SwerveSubsystem extends SubsystemBase
                       {
                       }
                     	}).start();
-
+//*/
+    //initialize Pigeon2 gyro
     initializePigeon2(gyro.getConfigurator());
          //gyro.setAngleAdjustment(180);  
          
@@ -157,7 +200,7 @@ public class SwerveSubsystem extends SubsystemBase
   
 
   
-  
+  // Initialize the PathPlanner config and AutoBuilder
     try{ 
 
       config = RobotConfig.fromGUISettings();
@@ -192,7 +235,6 @@ public class SwerveSubsystem extends SubsystemBase
     }
 
 
-    
 
   
 
@@ -207,13 +249,27 @@ public class SwerveSubsystem extends SubsystemBase
     this.addPoseVision();
     
 
+    // Output the pose to SmartDashboard
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
     SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
-    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightName)[5]);
+    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
+    //SmartDashboard.putNumber("MatchTime", DriverStation.getMatchTime());
     
-    System.out.println("Deploy1");
+
+    if(deploy)
+    {
+      countDeploy++;
+      if(countDeploy == 20)
+      {
+        deploy = false;
+      }
+      System.out.println("Deploy1");
+    }
+
+    // Publish the pose to NetworkTables
+    publisher.set(getPoseEstimator());
 /* 
 
     for (int i = 0; i < modules.length; i++) 
@@ -232,19 +288,40 @@ public class SwerveSubsystem extends SubsystemBase
 
        }
 
-    }
+    }*/
     
 
-    // Output Module States to SmartDashboard
+    //Output Module States to SmartDashboard
     SwerveModuleState[] moduleStates = getModuleStates();
     for (int i = 0; i < moduleStates.length; i++) 
     {
       SmartDashboard.putNumber("Module " + i + " /Speed (m/s)", moduleStates[i].speedMetersPerSecond);
-      SmartDashboard.putNumber("Module " + i + " /Angle (rad)", moduleStates[i].angle.getRadians());
+      //SmartDashboard.putNumber("Module " + i + " /Angle (rad)", moduleStates[i].angle.getRadians());
 
       
-    }*/
+    }
 
+    //field2d.setRobotPose(getPoseEstimator());
+   /* SmartDashboard.putData("Swerve Drive", new Sendable() {
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("SwerveDrive");
+
+    builder.addDoubleProperty("Front Left Angle", () -> frontLeftModule.getTurningPosition(), null);
+    builder.addDoubleProperty("Front Left Velocity", () -> frontLeftModule.getDriveVelocityMPS(), null);
+
+    builder.addDoubleProperty("Front Right Angle", () -> frontRightModule.getTurningPosition(), null);
+    builder.addDoubleProperty("Front Right Velocity", () -> frontRightModule.getDriveVelocityMPS(), null);
+
+    builder.addDoubleProperty("Back Left Angle", () -> backLeftModule.getTurningPosition(), null);
+    builder.addDoubleProperty("Back Left Velocity", () -> backLeftModule.getDriveVelocityMPS(), null);
+
+    builder.addDoubleProperty("Back Right Angle", () -> backRightModule.getTurningPosition(), null);
+    builder.addDoubleProperty("Back Right Velocity", () -> backRightModule.getDriveVelocityMPS(), null);
+
+    builder.addDoubleProperty("Robot Angle", () -> gyro.getRotation2d().getDegrees(), null);
+    }
+  });*/
 
   }
 
@@ -252,7 +329,7 @@ public class SwerveSubsystem extends SubsystemBase
   /** Updates the field relative position of the robot. */
   public void updatePoseEstimator() 
   {
-    
+    // Update the pose estimator with the latest sensor measurements
     m_poseEstimator.update(
         gyro.getRotation2d(),
         new SwerveModulePosition[]
@@ -270,6 +347,8 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public void addPoseVision()
   {
+   
+    
     boolean update=false;
 
     boolean useMegaTag2 = true; //set to false to use MegaTag1
@@ -284,15 +363,16 @@ public class SwerveSubsystem extends SubsystemBase
   
 
 
+    
     if(useMegaTag2 == false)
     {
       if (isBlue)
       {
-        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.limelightName);
+        mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(DriveConstants.limelightFront);
       }
       else 
       {
-         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed(DriveConstants.limelightName);
+         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed(DriveConstants.limelightFront);
       }
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
@@ -333,13 +413,14 @@ public class SwerveSubsystem extends SubsystemBase
     else if (useMegaTag2 == true)
     {
       
-      // Set the robot's orientation using the current estimated position's rotation degrees 
-      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
+      // Set the robot's orientation using the current estimated position's rotation degrees for each camera.
+      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightBack, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(DriveConstants.limelightFront, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(),0, 0, 0, 0, 0);
       
       //Pose estimates are obtained from both cameras.
-      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-nova");
+      LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightFront);
       
-      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+      LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightBack);
       
       if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
@@ -349,6 +430,7 @@ public class SwerveSubsystem extends SubsystemBase
        * The tagCount variable represents the number of vision tags (fiducial markers) 
        * detected by the Limelight camera.
        * */ 
+      
       if(frontLimelight.tagCount == 0  && rearLimelight.tagCount == 0)
       {
         doRejectUpdate = true;
@@ -478,6 +560,14 @@ public void stopModules ()
     throttleSlow = true;
     throttleFast = false;
     throttleMax=false;
+    
+    for (int i = 0; i < 3; i++) 
+    {
+      System.out.println("Speed up velocity - 30%");
+      
+    }
+   
+
   }
 
   /**
@@ -489,6 +579,12 @@ public void stopModules ()
     throttleSlow = false;
     throttleFast = true;
     throttleMax=false;
+
+    for (int i = 0; i < 3; i++) 
+    {
+      System.out.println("Speed up velocity - 50%");
+      
+    }
   }
 
   /**
@@ -501,6 +597,12 @@ public void stopModules ()
     throttleSlow=false;
     throttleFast=false;
     throttleMax=true;
+
+    for (int i = 0; i < 3; i++) 
+    {
+      System.out.println("Velocity 80% Max");
+      
+    }
   }
 
 
@@ -584,22 +686,19 @@ public void stopModules ()
     //Selects speed
     if (throttleSlow)
     {
-      
       throttle =0.3;
-      System.out.println("Slow down velocity - 30%");
-      
+
     }
     else if (throttleFast)
     {
-      
+    
       throttle =0.5;
-      System.out.println("Speed up velocity - 50%");
-
+      
     }
     else if (throttleMax) 
     { 
-      throttle = 0.7;
-      System.out.println("Velocity 70% ");
+      throttle = 0.8;
+      
     }
 
     // 2. Apply deadband
@@ -649,11 +748,73 @@ public void stopModules ()
     
    
     /* And initialize yaw to 0 */
+    //MUST NOT TOUCH
+    cfg.setYaw(0); 
     
-    cfg.setYaw(0);
   }
 
-  
 
+
+  /**
+   * Method drive to target
+   * The use of these parameters as suppliers to dynamically provide speed and field orientation values.
+   * Suppliers are especially useful in cases where you need to calculate values dynamically based on factors that can change over time.
+   * The Supplier interface gives you a powerful mechanism to make your FRC robot code more flexible and adaptable. 
+   * Suppliers are incredibly useful in command-based FRC programming because they allow you to:
+   * Decouple Logic: You can separate the logic for calculating drive parameters (speeds, orientation) 
+   * from the actual drive command. This makes your code cleaner and more maintainable.
+   * Dynamic Values: You can easily update the speed and orientation values on-the-fly based on real-time conditions, 
+   * such as sensor feedback or joystick input.
+   * 
+   * @param xSpdFunction Speed of the robot in the x direction (forward).
+   * @param ySpdFunction Speed of the robot in the y direction (sideways).
+   * @param turningSpdFunction Angular rate of the robot. rad/s
+   * @param fieldOrientedFunction Boolean indicating if speeds are relative to the field or to therobot. 
+   *                              
+   **/
+
+  public void driveToTarget( Supplier<Double> xSpdFunction, 
+                                  Supplier<Double> ySpdFunction,
+                                  Supplier<Double> turningSpdFunction, 
+                                  Supplier<Boolean> fieldOrientedFunction)
+  {
+    
+    // 1. Get real-time joystick inputs
+    double xSpeed = xSpdFunction.get();
+    double ySpeed = ySpdFunction.get();  
+    double turningSpeed = turningSpdFunction.get();
+    boolean fieldOriented = fieldOrientedFunction.get();
+
+    // 2. Apply deadband
+    xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+    ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+    turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+
+    // 3. Make the driving smoother
+    xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    turningSpeed = turningLimiter.calculate(turningSpeed)* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+
+    // 4. Construct desired chassis speeds
+
+    var swerveModuleStates =  DriveConstants.
+                              kDriveKinematics.
+                              toSwerveModuleStates
+                              (fieldOriented ? 
+                                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
+                                                                      ySpeed, 
+                                                                      turningSpeed, 
+                                                                      gyro.getRotation2d()) 
+                                : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
+                              );//Do this if fielOrientation is false 
+
+    
+    // 5. Convert chassis speeds to individual module states
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+    // 6. Output each module states to wheels
+    this.setModuleStates(swerveModuleStates);//*/  
+
+    
+  }
 
 }

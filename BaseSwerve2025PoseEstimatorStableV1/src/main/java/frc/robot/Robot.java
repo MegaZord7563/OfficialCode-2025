@@ -4,10 +4,17 @@
 
 package frc.robot;
 
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.PathFindingCommand;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Limelight.LimelightHelpers;
+
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -15,21 +22,38 @@ import frc.robot.commands.PathFindingCommand;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot 
+{
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
-  public void robotInit() {
+  public void robotInit() 
+  {
+    
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    //RobotContainer.swerveDrive.zeroHeading();
+    
+    /*
+    for (int port = 5800; port <= 5809; port++) {
+      PortForwarder.add(port, "limelight-front.local", port);
+    }
+
+    for (int port = 5800; port <= 5809; port++) {
+      PortForwarder.add(port+10, "limelight-back.local", port);
+    }*/
+
     m_robotContainer = new RobotContainer();
+    
+    RobotContainer.liftSubsystem.resetEncoder();
+    RobotContainer.articuladorAlgaeSubsystem.resetEncoder();
   }
 
   /**
@@ -40,17 +64,36 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {
+  public void robotPeriodic() 
+  {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    SmartDashboard.putNumber("Match time", DriverStation.getMatchTime());
+    SmartDashboard.putNumber("Batery Voltage", RobotController.getBatteryVoltage());
+    SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+    
+    //System.out.println("Touch X: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getX());
+    //System.out.println("Touch Y: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getY());
+    //System.out.println("Touch Rot: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getRotation().getDegrees());
+    
+
+ 
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() 
+  {
+    //01/25/2025 MNL
+    //This is a test to see if we can get the limelight values when the robot is disabled
+    LimelightHelpers.getLatestResults(DriveConstants.limelightFront);
+    LimelightHelpers.getLatestResults(DriveConstants.limelightBack);
+
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -81,6 +124,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    
+    
   }
 
   /** This function is called periodically during operator control. */
