@@ -1,6 +1,7 @@
 package frc.robot.commands.coral;	
 
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPI Imports
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -22,8 +23,17 @@ public class Articulador1Cmd extends Command
     private boolean l3 = false;
     private boolean l4 = false;
     private boolean finish = false;
-
+    
     private double encoderPosition = 0;
+
+    private double tolerance = 0.05;//5%
+
+    //setpoint in meters
+   
+    private double l1Setpoint = 0.2;
+    private double l2Setpoint = 0.4;
+    private double l3Setpoint = 0.4;
+    private double l4Setpoint = 0.6;
 
 
     // Create the subsystem
@@ -71,34 +81,39 @@ public class Articulador1Cmd extends Command
     if (l1)
     {
       System.out.println("L1 SELECTED");
-      aCoralSubsystem.runMotor(0.2);
-      if (encoderPosition >=0.195) finish=true;
+      aCoralSubsystem.runMotor(l1Setpoint);
+      if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
     }
     // Move the articulator
     if (l2)
     {
       System.out.println("L2 SELECTED");
-      aCoralSubsystem.runMotor(0.4);
-      if (encoderPosition >=0.192) finish=true;
+      aCoralSubsystem.runMotor(l2Setpoint);
+      if (l2Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l2Setpoint * (1+tolerance)) finish=true;
     }
     //  Move the articulator
     if (l3)
     {
       System.out.println("L3 SELECTED");
-      aCoralSubsystem.runMotor(0.4);
-      if (encoderPosition >=0.392) finish=true;
+      aCoralSubsystem.runMotor(l3Setpoint);
+      if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
     }
     //  Move the articulator
     if (l4)
     {
       System.out.println("L4 SELECTED");
-      aCoralSubsystem.runMotor(0.6);
-      if (encoderPosition >=0.595) finish=true;
+      aCoralSubsystem.runMotor(l4Setpoint);
+      if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
       
     }
 
+    
 
-  }    
+     if(!l1 && !l2 && !l3 && !l4 )finish=true;
+
+
+    
+  }   
 
   // Called once the command ends or is interrupted.
   @Override

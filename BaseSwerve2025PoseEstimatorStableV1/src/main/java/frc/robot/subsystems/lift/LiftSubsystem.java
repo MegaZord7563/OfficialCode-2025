@@ -62,12 +62,12 @@ public class LiftSubsystem extends SubsystemBase
     //Calls motors config
     initializeMotors();
     liftLeaderEncoder.setPosition(0);
-
+    /* 
     SmartDashboard.putBoolean("L1 LEVEL", false);
     SmartDashboard.putBoolean("L2 LEVEL", false);
     SmartDashboard.putBoolean("L3 LEVEL", false);
-    SmartDashboard.putBoolean("L4 LEVEL", false);
-
+    SmartDashboard.putBoolean("L4 LEVEL", false);*/
+    SmartDashboard.putBoolean("Homing Position", false);
 
     
 

@@ -31,6 +31,7 @@ import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.lift.LiftCommandAuto;
 import frc.robot.commands.pathPlanner.PathAfterFind;
 import frc.robot.commands.pathPlanner.PathFindingCommand;
+import frc.robot.commands.score.HomingPosition;
 import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
 import frc.robot.commands.swerve.TrackAlgae;
@@ -80,14 +81,16 @@ public class RobotContainer
 
 
   //Lift Commands
-  public  static LiftCommand liftCmd; //= new LiftCommand();
+  public  static LiftCommand liftCmd =new LiftCommand();
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
 
-  public static ScoreLevel scoreLevel; //= new ScoreLevel();
-
-
+  
   //Coral Commands
-  public static Articulador1Cmd articulador1Cmd;// = new Articulador1Cmd();
+  public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
+
+  //Sequential Commamds
+  public static ScoreLevel scoreLevel = new ScoreLevel();
+  public static HomingPosition homingPosition = new HomingPosition();
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
@@ -123,9 +126,9 @@ public class RobotContainer
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
-    liftCmd = new LiftCommand();
-    articulador1Cmd = new Articulador1Cmd();
-    scoreLevel = new ScoreLevel();
+    //liftCmd = new LiftCommand();
+    //articulador1Cmd = new Articulador1Cmd();
+    //scoreLevel = new ScoreLevel();
 
      // First of All - Register Named Commands
     NamedCommands.registerCommand("lift", liftAuto);
@@ -247,6 +250,7 @@ public class RobotContainer
      driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
 
      driverJoystick.b().whileTrue(scoreLevel);
+     driverJoystick.start().whileTrue(homingPosition);
 
      //driverJoystick.b().whileTrue(new PathFindingCommand(swerveDrive, 1, SelectScore.poseToScore(touchScreenInterface).getX(),
      //        SelectScore.poseToScore(touchScreenInterface).getY(), SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees()));

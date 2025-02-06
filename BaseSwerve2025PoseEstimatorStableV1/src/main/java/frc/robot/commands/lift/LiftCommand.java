@@ -1,6 +1,7 @@
 package frc.robot.commands.lift;
 
 
+
 //WPI Imports
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -16,12 +17,23 @@ public class LiftCommand extends Command
     private boolean l2 = false;
     private boolean l3 = false;
     private boolean l4 = false;
+   
     private boolean finish = false;
 
+    //Declare doubles
     private double encoderPosition = 0;
+    private double tolerance = 0.05;//5%
+
+    //setpoint in meters
+   
+    private double l1Setpoint = 0.5;
+    private double l2Setpoint = 0.8;
+    private double l3Setpoint = 1.0;
+    private double l4Setpoint = 1.2;
+    
 
   // Create the subsystem
-    private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
+  private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
 
   /** Creates a new AngleCmd. */
   public LiftCommand() 
@@ -44,6 +56,7 @@ public class LiftCommand extends Command
     l2=false;
     l3=false;
     l4=false;
+    
     // Reset the encoder
     //liftSubsystem.resetEncoder();
   }
@@ -58,37 +71,42 @@ public class LiftCommand extends Command
     l2 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL2);
     l3 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL3);
     l4 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL4);
+   
     
     // Move the lift
     if (l1)
     {
       System.out.println("L1 SELECTED");
-      liftSubsystem.runMotor(0.5, false);
-      if (encoderPosition >=0.492) finish=true;
+      liftSubsystem.runMotor(l1Setpoint, false);
+      if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
       //{finish =true;}
     }
     if (l2)
     {
       System.out.println("L2 SELECTED");
-      liftSubsystem.runMotor(0.8, false);
-      if (encoderPosition >=0.792) finish=true;
+      liftSubsystem.runMotor(l2Setpoint, false);
+      if (l2Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l2Setpoint * (1+tolerance)) finish=true;
      
     }
     if (l3)
     {
       System.out.println("L3 SELECTED");
-      liftSubsystem.runMotor(1.0, false);
-      if (encoderPosition >=0.992) finish=true;
+      liftSubsystem.runMotor(l3Setpoint, false);
+      if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
     }
     if (l4)
     {
       System.out.println("L4 SELECTED");
-      liftSubsystem.runMotor(1.2, false);
-      if (encoderPosition >=1.195) finish=true;
+      liftSubsystem.runMotor(l4Setpoint , false);
+      if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
     }
 
-
     
+    
+    
+    
+    if(!l1 && !l2 && !l3 && !l4)finish=true;
+
   }    
 
   // Called once the command ends or is interrupted.
@@ -105,7 +123,7 @@ public class LiftCommand extends Command
   @Override
   public boolean isFinished() 
   {
-    return finish;
+    return finish ;
   }
 
 }

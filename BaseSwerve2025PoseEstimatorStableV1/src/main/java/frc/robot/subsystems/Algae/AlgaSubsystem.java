@@ -59,15 +59,14 @@ public class AlgaSubsystem extends SubsystemBase
     
 
     //Calls motors config
-    motorsConfig();
-    
+    initializeMotors();
 
   }
 
   
 
   
-  public void motorsConfig()
+  public void initializeMotors()
   {
     globalConfig.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder);

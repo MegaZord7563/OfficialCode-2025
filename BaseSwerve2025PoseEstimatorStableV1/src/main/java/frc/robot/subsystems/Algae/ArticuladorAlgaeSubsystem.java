@@ -108,7 +108,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
    * Set the algae motor speed
    * @param algaeMotorSpeed
    */
-  public void moveAlgae(double targetPosition)
+  public void runMotor(double targetPosition)
   {
       System.out.println("Algae Position Control Enabled");
       /*algaePidController.setReference(targetPosition, 
@@ -126,7 +126,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
    * Stop the algae motor
    * @ Stop the algae motor
    */
-  public void stopAlgae()
+  public void stopMotor()
   {
     algaePidController.setReference(0, ControlType.kDutyCycle);
     
