@@ -13,6 +13,8 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 
 //WPILIB Imports
@@ -36,7 +38,7 @@ public class CoralSubsystem extends SubsystemBase
   private final TalonFX coralMotor;
 
   // The distance sensor
-  //private Rev2mDistanceSensor distOnboard; //i2c port
+  private Rev2mDistanceSensor distOnboard; //i2c port
  
 
   /* Start at motion 0, use slot 2 */
@@ -62,6 +64,7 @@ public class CoralSubsystem extends SubsystemBase
   {
     // Create the  motor
     coralMotor = new TalonFX (CoralIntakeConstants.kCoralMotorId,"rio");
+    distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
 
     /**
      * Before measurements can be read from the sensor, setAutomaticMode(true)
@@ -69,10 +72,14 @@ public class CoralSubsystem extends SubsystemBase
      * poll all enabled sensors and store their measured range.
      */
     // Create the distance sensor
-    //distOnboard.setAutomaticMode(true);
+    distOnboard.setAutomaticMode(true);
 
     // Set the distance sensor units
-    //distOnboard.setDistanceUnits(Unit.kMillimeters);
+    distOnboard.setDistanceUnits(Unit.kMillimeters);
+    distOnboard.setMeasurementPeriod(0.2);
+    distOnboard.setEnabled(true);
+    distOnboard.setRangeProfile(RangeProfile.kDefault);
+   
     
 
     // Create the  encoder
@@ -203,10 +210,13 @@ public class CoralSubsystem extends SubsystemBase
      * Range returned from the distance sensor is valid if isRangeValid()
      * returns true.
      */
-    /*if(distOnboard.isRangeValid()) {
+    if(distOnboard.isRangeValid()) 
+    {
       SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
       SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
-    }*/
+    }
+    SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
+      SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
 
   }
 
