@@ -322,6 +322,10 @@ import edu.wpi.first.math.util.Units;
       public static final double kDLiftDown = 0;
       public static final double kLiftDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       
+      //Lift Soft Limits
+      public static final double kLiftSoftLimitMin = -0.1;
+      public static final double kLiftSoftLimitMax = 1.0;
+      
     } 
 
     public static final class CoralIntakeConstants

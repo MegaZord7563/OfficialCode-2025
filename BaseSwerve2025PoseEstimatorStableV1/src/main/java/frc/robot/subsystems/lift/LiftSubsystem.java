@@ -90,6 +90,14 @@ public class LiftSubsystem extends SubsystemBase
     .smartCurrentLimit(LiftConstants.kLiftCurrentLimit)
     .inverted(false);
 
+    // Set the soft limits to stop the motor at -50 and 50 rotations
+    globalConfig.softLimit
+    .forwardSoftLimit(LiftConstants.kLiftSoftLimitMax)
+    .forwardSoftLimitEnabled(true)
+    .reverseSoftLimit(LiftConstants.kLiftSoftLimitMin)
+    .reverseSoftLimitEnabled(true);
+
+
     //Config follower motor
     /*followerConfig
     .apply(globalConfig)
