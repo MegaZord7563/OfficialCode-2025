@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
+import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 
 /** Add your docs here. */
 public class ArticuladorCoralSubsystem extends SubsystemBase 
@@ -71,6 +72,13 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     .idleMode(ArticuladorCoralConstants.kArticuladorCoralIdleMode) //LiftConstants.kLiftIdleMode
     .smartCurrentLimit(ArticuladorCoralConstants.kArticuladorCoralCurrentLimit) //LiftConstants.kLiftCurrentLimit
     .inverted(false);
+
+    // Set the soft limits to stop the motor at -50 and 50 rotations
+    config.softLimit
+    .forwardSoftLimit(ArticuladorCoralConstants.kSoftLimitMax)
+    .forwardSoftLimitEnabled(true)
+    .reverseSoftLimit(ArticuladorCoralConstants.kSoftLimitMin)
+    .reverseSoftLimitEnabled(true);
   
     // Configure the coral encoder 
     config.encoder

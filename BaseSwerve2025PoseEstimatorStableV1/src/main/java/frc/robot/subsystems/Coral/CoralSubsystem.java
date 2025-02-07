@@ -47,7 +47,7 @@ public class CoralSubsystem extends SubsystemBase
    * 
    */
   private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
- 
+  
 
   /* Start at motion 0, use slot 2 */
    //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
@@ -82,11 +82,11 @@ public class CoralSubsystem extends SubsystemBase
     // Create the distance sensor
     distOnboard.setAutomaticMode(true);
 
-    // Set the distance sensor units
+    //// Set the distance sensor units
     distOnboard.setDistanceUnits(Unit.kMillimeters);
     distOnboard.setMeasurementPeriod(0.2);
-    
     //
+    ////
     distOnboard.setEnabled(true);
     distOnboard.setRangeProfile(RangeProfile.kDefault);
   
@@ -215,7 +215,6 @@ public class CoralSubsystem extends SubsystemBase
   {
     return distOnboard.getRange();
   }
-  
 
   @Override
   public void periodic() 
@@ -253,8 +252,7 @@ public class CoralSubsystem extends SubsystemBase
     else 
     {
       SmartDashboard.putString("Operational Range", "Invalid Measurement");
-    }
-    
+    }  
 
   }
 
