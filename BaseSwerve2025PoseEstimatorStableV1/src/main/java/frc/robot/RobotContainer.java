@@ -29,6 +29,7 @@ import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.lift.LiftCommandAuto;
+import frc.robot.commands.lift.LiftManualCmd;
 import frc.robot.commands.pathPlanner.PathAfterFind;
 import frc.robot.commands.pathPlanner.PathFindingCommand;
 import frc.robot.commands.score.HomingPosition;
@@ -54,7 +55,9 @@ public class RobotContainer
 {
   // The robot's subsystems and commands are defined here...
   
-  //Subsystems
+  /**
+   * SUBSYSTEMS
+   */
   //Put all subsystems here
   public static LimelightHelpers limelightHelpers = new LimelightHelpers();
   
@@ -65,7 +68,7 @@ public class RobotContainer
   public static  LiftSubsystem liftSubsystem = new LiftSubsystem();
   
   //Climber Subsystem
-  //public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
+  public static EscaladorSubsystem escaladorSubsystem = new EscaladorSubsystem();
   
   //Alga Subsystem
   public static AlgaSubsystem algaSubsystem = new AlgaSubsystem();
@@ -78,17 +81,22 @@ public class RobotContainer
 
   public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
   
-
+/**
+ * COMMANDS
+ */
 
   //Lift Commands
   public  static LiftCommand liftCmd =new LiftCommand();
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
+  public static LiftManualCmd liftManualCmd = new LiftManualCmd(0);
 
   
   //Coral Commands
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
 
-  //Sequential Commamds
+  /**
+   * SEQUENTIAL COMMANDS
+   */
   public static ScoreLevel scoreLevel = new ScoreLevel();
   public static HomingPosition homingPosition = new HomingPosition();
 
@@ -120,9 +128,6 @@ public class RobotContainer
   SendableChooser<Command> chooserAuto;
  
 
-  
-  
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
@@ -145,6 +150,7 @@ public class RobotContainer
     //Lift Commands
     liftCmd.addRequirements(liftSubsystem);
     liftAuto.addRequirements(liftSubsystem);
+    liftManualCmd.addRequirements(liftSubsystem);
 
     //Coral Commands
     articulador1Cmd.addRequirements(articuladorCoralSubsystem);
@@ -195,6 +201,11 @@ public class RobotContainer
      // Turning is controlled by the X axis of the right stick.
     
   
+    /**
+    * DEFAULT COMMANDS
+    */
+    //liftSubsystem.setDefaultCommand(liftCmd);
+
     //Runnable command
     swerveDrive.setDefaultCommand
                                   (new RunCommand

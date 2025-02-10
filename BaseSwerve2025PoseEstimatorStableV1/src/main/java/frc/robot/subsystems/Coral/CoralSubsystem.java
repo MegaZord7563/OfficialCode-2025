@@ -17,6 +17,7 @@ import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static edu.wpi.first.units.Units.*;
@@ -36,6 +37,7 @@ public class CoralSubsystem extends SubsystemBase
   //private SparkMaxConfig globalConfig = new SparkMaxConfig();
 
   private final TalonFX coralMotor;
+  private final DigitalInput sensor = new DigitalInput(0);
 
   // The distance sensor
   /**
@@ -72,7 +74,7 @@ public class CoralSubsystem extends SubsystemBase
   {
     // Create the  motor
     coralMotor = new TalonFX (CoralIntakeConstants.kCoralMotorId,"rio");
-  
+ 
 
     /**
      * Before measurements can be read from the sensor, setAutomaticMode(true)
@@ -218,7 +220,9 @@ public class CoralSubsystem extends SubsystemBase
 
   @Override
   public void periodic() 
+
   {
+    boolean sensorValue = sensor.get();
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral Velocity m/s", getVelocity());
 
@@ -254,6 +258,14 @@ public class CoralSubsystem extends SubsystemBase
       SmartDashboard.putString("Operational Range", "Invalid Measurement");
     }  
 
+    if (sensorValue)
+    {
+      SmartDashboard.putBoolean("Sensor value", sensorValue);
+    }
+    else
+    {
+      SmartDashboard.putBoolean("Sensor value", sensorValue);
+    }
   }
 
   /**

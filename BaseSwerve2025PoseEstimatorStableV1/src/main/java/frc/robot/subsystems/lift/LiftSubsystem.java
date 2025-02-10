@@ -6,21 +6,21 @@ package frc.robot.subsystems.lift;
 
 
 
-//REV Imports
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPILIB Imports
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static edu.wpi.first.units.Units.*;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
@@ -29,26 +29,40 @@ import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 public class LiftSubsystem extends SubsystemBase 
 {
   // The lift motor
-  private final SparkMax liftLeaderMotor;
-  private SparkMaxConfig globalConfig = new SparkMaxConfig();
+  //private final SparkMax liftLeaderMotor;
+ // private SparkMaxConfig globalConfig = new SparkMaxConfig();
+  private final TalonFX liftMotor;
+
+  /* Start at motion 0, use slot 2 */
+   //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(1);
+
+  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+
+  //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+
+  /* Keep a brake request so we can disable the motor */
+  private final NeutralOut m_brake = new NeutralOut();
+  
   
   //private final SparkMax liftFollowerMotor;
   //private SparkMaxConfig followerConfig = new SparkMaxConfig();
 
   // The lift encoder
-  private final RelativeEncoder liftLeaderEncoder;
+  //private final RelativeEncoder liftLeaderEncoder;
   //private final RelativeEncoder liftFollowerEncoder;
 
   // The lift PID controller
-  private final SparkClosedLoopController liftLeaderPidController;
+  //private final SparkClosedLoopController liftLeaderPidController;
   //private final SparkClosedLoopController liftFollowerPidController;
 
 
   /** Creates a new LiftSubsytem. */
   public LiftSubsystem() 
   {
+    // Create the  motor
+    liftMotor = new TalonFX (LiftConstants.kLiftLeftMotorId,"rio");
     // Create the lift motor
-    liftLeaderMotor = new SparkMax(LiftConstants.kLiftLeftMotorId,MotorType.kBrushless);
+    /*liftLeaderMotor = new SparkMax(LiftConstants.kLiftLeftMotorId,MotorType.kBrushless);
     //liftFollowerMotor = new SparkMax(LiftConstants.kLiftRightMotorId,MotorType.kBrushless);
 
     // Create the lift encoder
@@ -57,16 +71,14 @@ public class LiftSubsystem extends SubsystemBase
 
     //Create PID controller
     liftLeaderPidController = liftLeaderMotor.getClosedLoopController();
-    //liftRightPidController = liftLeftMotor.getClosedLoopController();
+    //liftRightPidController = liftLeftMotor.getClosedLoopController();*/
 
     //Calls motors config
-    initializeMotors();
-    liftLeaderEncoder.setPosition(0);
-    /* 
-    SmartDashboard.putBoolean("L1 LEVEL", false);
-    SmartDashboard.putBoolean("L2 LEVEL", false);
-    SmartDashboard.putBoolean("L3 LEVEL", false);
-    SmartDashboard.putBoolean("L4 LEVEL", false);*/
+    //initializeMotors();
+   
+    
+    
+    // Configure the lift motor
     SmartDashboard.putBoolean("Homing Position", false);
 
     
@@ -74,11 +86,92 @@ public class LiftSubsystem extends SubsystemBase
     
   }
 
+  /**
+   * @see https://v6.docs.ctr-electronics.com/en/stable/docs/hardware-reference/talonfx/improving-performance-with-current-limits.html
+   * Tunning TalonFx PIDController
+   * @see https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/device-specific/talonfx/basic-pid-control.html
+   * Config drive motors
+   * @category TalonFx settings for drive motors
+   * 
+   */
+  public void initializeMotors()
+  { 
+    
+    TalonFXConfiguration globalConfig = new TalonFXConfiguration();
+
+    liftMotor.clearStickyFaults();
+
+    //Factory Default
+    liftMotor.getConfigurator().apply(new TalonFXConfiguration());      
+    
+    liftMotor.setNeutralMode(LiftConstants.kNeutralMode);
+   
+    
+    /* Configure a stator limit of 20 amps */
+   
+    CurrentLimitsConfigs currentLimitConfigs = globalConfig.CurrentLimits;
+    currentLimitConfigs.StatorCurrentLimit = LiftConstants.kCurrentThreshold;
+    currentLimitConfigs.StatorCurrentLimitEnable = LiftConstants.kEnableCurrentLimit; 
+    
+    
+    /* Gear Ratio Config */
+    globalConfig.Feedback.SensorToMechanismRatio = 1;//CoralIntakeConstants.kGearRatio; 
+    globalConfig.ClosedLoopGeneral.ContinuousWrap = false;//keep default = FALSE - MUST NOT TOUCH IT
+    /* Closed Loop Ramping */
+    globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = LiftConstants.kClosedLoopRamp;
+    
+    /* User can optionally change the configs or leave it alone to perform a factory default */
+    globalConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    
+               
+    // Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
+    //globalConfig.Slot0.kS = LiftConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
+    //globalConfig.Slot0.kV = LiftConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
+    globalConfig.Slot0.kP = LiftConstants.kP; //0.11; // An error of 1 rps results in 0.11 V output
+    globalConfig.Slot0.kI = LiftConstants.kI; //0; // no output for integrated error
+    globalConfig.Slot0.kD = LiftConstants.kD; //0; // no output for error derivative*/
+    // Peak output of 10 volts
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(10))
+                        .withPeakReverseVoltage(Volts.of(-10));
+
+    /* Configure Motion Magic */
+    MotionMagicConfigs mm = globalConfig.MotionMagic;
+    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(5)) // 5 (mechanism) rotations per second cruise
+      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(10)) // Take approximately 0.5 seconds to reach max vel
+      // Take approximately 0.1 seconds to reach max accel 
+      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(100));
+
+    globalConfig.Slot1.kP = LiftConstants.kP1; //0.11; // An error of 1 rps results in 0.11 V output
+    globalConfig.Slot1.kI = LiftConstants.kI1; //0; // no output for integrated error
+    globalConfig.Slot1.kD = LiftConstants.kD1; //0; // no output for error derivative*/
+     
+    /* Retry config apply up to 5 times, report if failure */
+    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) 
+    {
+      status = liftMotor.getConfigurator().apply(globalConfig);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) 
+    {
+      System.out.println("Could not apply escalador configs, error code: " + status.toString());
+    }
+     
+
+    //Enable safety
+    //escaladorLeaderMotor.setSafetyEnabled(true);
+
+    /* And initialize encoder position to 0 */
+    resetEncoder();
+    
+
+  }
+
   
   /**
    * @ motors initialization
    */
-  public void initializeMotors()
+  /*public void initializeMotors()
   {
     
     globalConfig.closedLoop
@@ -102,7 +195,7 @@ public class LiftSubsystem extends SubsystemBase
     /*followerConfig
     .apply(globalConfig)
     //.inverted(true)
-    .follow(liftLeaderMotor, true);*/
+    .follow(liftLeaderMotor, true);
     
 
     // Configure the lift encoder 
@@ -155,7 +248,7 @@ public class LiftSubsystem extends SubsystemBase
     liftLeaderMotor.configure(globalConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
    // liftFollowerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
 
-  }
+  }*/
 
   
 
@@ -164,7 +257,7 @@ public class LiftSubsystem extends SubsystemBase
   {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Lift Position", getPosition());
-    SmartDashboard.putNumber( "Lift Velocity rad/s",liftLeaderEncoder.getVelocity());
+    SmartDashboard.putNumber( "Lift Velocity rad/s",liftMotor.getVelocity().getValueAsDouble());
   }
 
  /**
@@ -174,6 +267,17 @@ public class LiftSubsystem extends SubsystemBase
   */
   public void runMotor(double targetPosition, boolean direction)
   {
+
+    // Set the lift motor speed slot0
+      liftMotor.setControl( m_positionVoltage.withPosition(targetPosition));
+
+      //Motion Magic - Set position control is slot 1
+      //liftMotor.setControl(m_mmReq.withPosition(targetPosition).withSlot(1));
+
+      System.out.println("Lift Current Position: " + this.getPosition());
+    
+    
+    /* 
     
     if (direction)
     {
@@ -187,12 +291,12 @@ public class LiftSubsystem extends SubsystemBase
       /*liftLeaderPidController.setReference(targetPosition, 
                                             ControlType.kPosition,
                                             ClosedLoopSlot.kSlot1);
-     */  liftLeaderPidController.setReference(targetPosition, 
+       liftLeaderPidController.setReference(targetPosition, 
                                             ControlType.kMAXMotionPositionControl,
-                                            ClosedLoopSlot.kSlot2);
-    }
-    
+                                            ClosedLoopSlot.kSlot2);*/
   }
+    
+  
 
   /**
    * Stop the lift motor
@@ -200,7 +304,7 @@ public class LiftSubsystem extends SubsystemBase
    */
   public void stopMotor()
   {
-    liftLeaderPidController.setReference(0, ControlType.kMAXMotionPositionControl,ClosedLoopSlot.kSlot2);
+    liftMotor.setControl( m_brake);
     
   }
 
@@ -210,7 +314,7 @@ public class LiftSubsystem extends SubsystemBase
    */
   public double getPosition()
   {
-    return liftLeaderEncoder.getPosition();
+    return liftMotor.getPosition().getValueAsDouble();
   }
  
   /**
@@ -219,12 +323,12 @@ public class LiftSubsystem extends SubsystemBase
    */
   public void resetEncoder()
   {
-    liftLeaderEncoder.setPosition(0);
+    liftMotor.setPosition(0);
     
   }
 
+}
   
 
-  
-}
+
 

@@ -4,7 +4,7 @@
 
 package frc.robot.commands.score;
 
-import edu.wpi.first.wpilibj2.command.Command;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 //WPI Imports
@@ -30,8 +30,7 @@ public class HomingPosition extends SequentialCommandGroup
   private static LiftSubsystem liftSubsystem  = RobotContainer.liftSubsystem;
   private static ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
 
-  private double encoderLift;
-  private double encoderAcoral;
+  
 
   
 
@@ -46,11 +45,11 @@ public class HomingPosition extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands
     (
-      new InstantCommand(liftSubsystem::getPosition),
-      new InstantCommand(aCoralSubsystem::getPosition),
-      new InstantCommand(()->liftSubsystem.runMotor(0,false)),
-      new InstantCommand(()->aCoralSubsystem.runMotor(0))
-      
+      new InstantCommand(()->liftSubsystem.getPosition()),
+      new InstantCommand(()->aCoralSubsystem.getPosition()),
+      new InstantCommand(()->aCoralSubsystem.runMotor(0.0)),
+      new InstantCommand(()->liftSubsystem.runMotor(0.0, false))
+   
     );
     System.out.println("Homing Done!!!");
 
