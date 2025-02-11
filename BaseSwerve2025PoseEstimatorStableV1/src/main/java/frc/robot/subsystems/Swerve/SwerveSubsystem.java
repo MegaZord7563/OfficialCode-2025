@@ -265,7 +265,7 @@ public class SwerveSubsystem extends SubsystemBase
     if(deploy)
     {
       countDeploy++;
-      if(countDeploy == 20)
+      if(countDeploy == 5)
       {
         deploy = false;
       }

@@ -8,7 +8,10 @@ package frc.robot.subsystems.lift;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -36,9 +39,10 @@ public class LiftSubsystem extends SubsystemBase
   private final TalonFX liftMotor;
 
   /* Start at motion 0, use slot 2 */
-   //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(1);
+  private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(0);
+ 
 
-  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+  //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
   //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
@@ -76,14 +80,14 @@ public class LiftSubsystem extends SubsystemBase
     //liftRightPidController = liftLeftMotor.getClosedLoopController();*/
 
     //Calls motors config
-    //initializeMotors();
+    initializeMotors();
    
     
     
     // Configure the lift motor
     SmartDashboard.putBoolean("Homing Position", false);
 
-    
+    resetEncoder();
 
     
   }
@@ -115,38 +119,49 @@ public class LiftSubsystem extends SubsystemBase
     currentLimitConfigs.StatorCurrentLimit = LiftConstants.kCurrentThreshold;
     currentLimitConfigs.StatorCurrentLimitEnable = LiftConstants.kEnableCurrentLimit; 
     
+    /* Configure gear ratio */
+    //FeedbackConfigs fdb = globalConfig.Feedback;
+    //fdb.SensorToMechanismRatio = 12.8; // 12.8 rotor rotations per mechanism rotation
     
     /* Gear Ratio Config */
-    globalConfig.Feedback.SensorToMechanismRatio =1;///LiftConstants.kLiftGearRatio; 
+    globalConfig.Feedback.SensorToMechanismRatio = 1/LiftConstants.kLiftGearRatio; 
     //globalConfig.Feedback.RotorToSensorRatio=1;
-    globalConfig.ClosedLoopGeneral.ContinuousWrap = false;//keep default = FALSE - MUST NOT TOUCH IT
+    //globalConfig.ClosedLoopGeneral.ContinuousWrap = false;//keep default = FALSE - MUST NOT TOUCH IT
     /* Closed Loop Ramping */
     globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = LiftConstants.kClosedLoopRamp;
     
     /* User can optionally change the configs or leave it alone to perform a factory default */
     globalConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     
-               
     // Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
-    //globalConfig.Slot0.kS = LiftConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
-    //globalConfig.Slot0.kV = LiftConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
+    globalConfig.Slot0.kS = LiftConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
+    globalConfig.Slot0.kV = LiftConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
     globalConfig.Slot0.kP = LiftConstants.kP; //0.11; // An error of 1 rps results in 0.11 V output
     globalConfig.Slot0.kI = LiftConstants.kI; //0; // no output for integrated error
-    globalConfig.Slot0.kD = LiftConstants.kD; //0; // no output for error derivative*/
+    globalConfig.Slot0.kD = LiftConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
-    //globalConfig.Voltage.withPeakForwardVoltage(Volts.of(10))
-                        //.withPeakReverseVoltage(Volts.of(-10));
+    //globalConfig.Voltage.withPeakForwardVoltage(Volts.of(12))
 
-    /* Configure Motion Magic */
-    MotionMagicConfigs mm = globalConfig.MotionMagic;
-    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(5)) // 5 (mechanism) rotations per second cruise
-      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(10)) // Take approximately 0.5 seconds to reach max vel
-      // Take approximately 0.1 seconds to reach max accel 
-      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(100));
-
+    
+/* 
+    globalConfig.Slot1.kS =  LiftConstants.KS1; // Add 0.25 V output to overcome static friction
+    globalConfig.Slot1.kV = LiftConstants.KV1; // A velocity target of 1 rps results in 0.12 V output
+    globalConfig.Slot1.kA = LiftConstants.KA1; // An acceleration of 1 rps/s requires 0.01 V output
     globalConfig.Slot1.kP = LiftConstants.kP1; //0.11; // An error of 1 rps results in 0.11 V output
     globalConfig.Slot1.kI = LiftConstants.kI1; //0; // no output for integrated error
     globalConfig.Slot1.kD = LiftConstants.kD1; //0; // no output for error derivative*/
+    
+    
+    /* Configure Motion Magic */
+    MotionMagicConfigs mm = globalConfig.MotionMagic;
+    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(100)) //// Target cruise velocity of 80 rps
+      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(50)) // Target acceleration of 160 rps/s (0.5 seconds)
+      // Take approximately 0.1 seconds to reach max accel 
+      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500));// Target jerk of 1600 rps/s/s (0.1 seconds)
+
+   
+               
+    
      
     /* Retry config apply up to 5 times, report if failure */
     StatusCode status = StatusCode.StatusCodeNotInitialized;
@@ -165,7 +180,7 @@ public class LiftSubsystem extends SubsystemBase
     //escaladorLeaderMotor.setSafetyEnabled(true);
 
     /* And initialize encoder position to 0 */
-    resetEncoder();
+    
     
 
   }
@@ -280,7 +295,7 @@ public class LiftSubsystem extends SubsystemBase
   {
 
     // Set the lift motor speed slot0
-      liftMotor.setControl( m_positionVoltage.withPosition(targetPosition));
+      liftMotor.setControl( m_mmReq.withPosition(targetPosition).withSlot(0));
 
       //Motion Magic - Set position control is slot 1
       //liftMotor.setControl(m_mmReq.withPosition(targetPosition).withSlot(1));
@@ -326,7 +341,7 @@ public class LiftSubsystem extends SubsystemBase
   public double getPosition()
   {
     
-    return liftMotor.getPosition().getValueAsDouble()*LiftConstants.kLiftGearRatio;
+    return liftMotor.getPosition().getValueAsDouble();
   }
  
   /**

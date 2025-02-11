@@ -257,7 +257,7 @@ public class RobotContainer
      //driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
      driverJoystick.y().whileTrue(trackAlgaeCmd);
 
-     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(50)));
+     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(10)));
      driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
 
      driverJoystick.b().whileTrue(scoreLevel);

@@ -46,15 +46,15 @@ public class ScoreLevel extends SequentialCommandGroup
     addCommands
     (
         liftCmd,
-        new WaitCommand(0.5),
-        articulador1Cmd,
-        new WaitCommand(0.50),
-        new InstantCommand(() -> coralSubsystem.runMotor(50 )),
+        //new WaitCommand(0.5),
+        articulador1Cmd
+        /*new WaitCommand(0.50),
+        new InstantCommand(() -> coralSubsystem.runMotor(10.0 )),
         new WaitCommand(2.0),
-        new InstantCommand(() -> coralSubsystem.runMotor(0.0 )),
+        //new InstantCommand(() -> coralSubsystem.runMotor(0.0 )),
         new InstantCommand(()->aCoralSubsystem.runMotor(0.0)),
         new WaitCommand(0.20),
-        new InstantCommand(()->liftSubsystem.runMotor(0.0,true))
+        new InstantCommand(()->liftSubsystem.runMotor(0.0,false))*/
     );
 
   }

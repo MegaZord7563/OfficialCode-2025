@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 //WPI Imports
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
-
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 //Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
@@ -48,6 +47,7 @@ public class HomingPosition extends SequentialCommandGroup
       new InstantCommand(()->liftSubsystem.getPosition()),
       new InstantCommand(()->aCoralSubsystem.getPosition()),
       new InstantCommand(()->aCoralSubsystem.runMotor(0.0)),
+      //new WaitCommand(2.0),
       new InstantCommand(()->liftSubsystem.runMotor(0.0, false))
    
     );

@@ -136,10 +136,10 @@ public class CoralSubsystem extends SubsystemBase
     
     
     /* Gear Ratio Config */
-    globalConfig.Feedback.SensorToMechanismRatio = CoralIntakeConstants.kGearRatio; 
-    globalConfig.ClosedLoopGeneral.ContinuousWrap = true;//keep default = FALSE - MUST NOT TOUCH IT
+    //globalConfig.Feedback.SensorToMechanismRatio = CoralIntakeConstants.kGearRatio; 
+    //globalConfig.ClosedLoopGeneral.ContinuousWrap = true;//keep default = FALSE - MUST NOT TOUCH IT
     /* Closed Loop Ramping */
-    globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = CoralIntakeConstants.kClosedLoopRamp;
+    //globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = CoralIntakeConstants.kClosedLoopRamp;
     
     /* User can optionally change the configs or leave it alone to perform a factory default */
     globalConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -153,7 +153,7 @@ public class CoralSubsystem extends SubsystemBase
     globalConfig.Slot0.kD = CoralIntakeConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
     globalConfig.Voltage.withPeakForwardVoltage(Volts.of(8))
-                        .withPeakReverseVoltage(Volts.of(-8));
+                        .withPeakReverseVoltage(Volts.of(8));
 
     
      
@@ -276,7 +276,7 @@ public class CoralSubsystem extends SubsystemBase
   public void runMotor(double targetSpeed)
   {
      // Set the lift motor speed
-      coralMotor.setControl( m_positionVoltage.withVelocity(targetSpeed));
+      coralMotor.setControl( m_positionVoltage.withPosition(targetSpeed));
 
       System.out.println("Current Positiom: " + coralMotor.getPosition().getValue());
     

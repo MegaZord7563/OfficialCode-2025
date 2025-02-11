@@ -33,10 +33,10 @@ public class LiftCommand extends Command
     private double l3SetpointClear  = 1.0;///LiftConstants.kLiftGearRatio;
     private double l4SetpointClear  = 1.2;///LiftConstants.kLiftGearRatio;
 
-    private double l1Setpoint = l1SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l2Setpoint = l2SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l3Setpoint = l3SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l4Setpoint = l4SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l1Setpoint = 0.5; //l1SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l2Setpoint = 0.8; //l2SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l3Setpoint = 1.0; //l3SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l4Setpoint = 1.2; //l4SetpointClear/LiftConstants.kLiftGearRatio;
 
     
     
@@ -88,27 +88,27 @@ public class LiftCommand extends Command
       System.out.println("L1 SELECTED");
       liftSubsystem.runMotor(l1Setpoint, false);
       
-      if (l1SetpointClear * (1-tolerance) < encoderPosition && encoderPosition < l1SetpointClear * (1+tolerance)) finish=true;
+      if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
       //{finish =true;}
     }
     if (l2)
     {
       System.out.println("L2 SELECTED");
       liftSubsystem.runMotor(l2Setpoint, false);
-      if (l2SetpointClear * (1-tolerance) < encoderPosition && encoderPosition < l2SetpointClear * (1+tolerance)) finish=true;
+      if (l2Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l2Setpoint * (1+tolerance)) finish=true;
      
     }
     if (l3)
     {
       System.out.println("L3 SELECTED");
       liftSubsystem.runMotor(l3Setpoint, false);
-      if (l3SetpointClear * (1-tolerance) < encoderPosition && encoderPosition < l3SetpointClear * (1+tolerance)) finish=true;
+      if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
     }
     if (l4)
     {
       System.out.println("L4 SELECTED");
       liftSubsystem.runMotor(l4Setpoint , false);
-      if (l4SetpointClear * (1-tolerance) < encoderPosition && encoderPosition < l4SetpointClear * (1+tolerance)) finish=true;
+      if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
     }
 
     

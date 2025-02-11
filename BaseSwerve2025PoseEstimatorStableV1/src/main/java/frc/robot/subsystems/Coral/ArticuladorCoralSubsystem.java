@@ -6,8 +6,10 @@ package frc.robot.subsystems.Coral;
 
 
 
+import com.ctre.phoenix6.configs.Slot1Configs;
 //REV Imports
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -92,10 +94,33 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
     // slot, as it will default to slot 0.
-    .pidf(ArticuladorCoralConstants.kPArticuladorCoralUp, 
-          ArticuladorCoralConstants.kIArticuladorCoralUp, 
-          ArticuladorCoralConstants.kDArticuladorCoralUp, 
-          ArticuladorCoralConstants.kArticuladorCoralUpFF);          
+    .pidf(ArticuladorCoralConstants.kPslot0, 
+          ArticuladorCoralConstants.kIslot0, 
+          ArticuladorCoralConstants.kDslot0, 
+          ArticuladorCoralConstants.kFFslot0)
+    
+    .pidf(ArticuladorCoralConstants.kPslot1,
+          ArticuladorCoralConstants.kIslot1, 
+          ArticuladorCoralConstants.kDslot1, 
+          ArticuladorCoralConstants.kFFslot1,ClosedLoopSlot.kSlot1)
+
+    .pidf(ArticuladorCoralConstants.kPslot2,
+          ArticuladorCoralConstants.kIslot2, 
+          ArticuladorCoralConstants.kDslot2, 
+          ArticuladorCoralConstants.kFFslot2,ClosedLoopSlot.kSlot2);   
+          
+    config.closedLoop.maxMotion
+    // Set MAXMotion parameters for position control. We need to pass
+    // a closed loop slot to the maxMotion method to set the parameters for that slot.
+    // In this case, we are setting the parameters for slot 2.
+    .maxVelocity(10000, ClosedLoopSlot.kSlot1)
+    .maxAcceleration(12000, ClosedLoopSlot.kSlot1)
+    .allowedClosedLoopError(0.5, ClosedLoopSlot.kSlot1)
+    
+    // Set MAXMotion parameters for velocity control in slot 2
+    .maxAcceleration(500, ClosedLoopSlot.kSlot2)
+    .maxVelocity(1000, ClosedLoopSlot.kSlot2)
+    .allowedClosedLoopError(0.5, ClosedLoopSlot.kSlot2);
 
     // Configure the coral motor - like burn flash
     coralMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
@@ -125,8 +150,12 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
                                             ControlType.kPosition,
                                             ClosedLoopSlot.kSlot1);
      */  
+      /*coralPidController.setReference(targetPosition, 
+                                            ControlType.kPosition);*/
+
       coralPidController.setReference(targetPosition, 
-                                            ControlType.kPosition);
+                                      ControlType.kMAXMotionPositionControl,
+                                      ClosedLoopSlot.kSlot1);
       System.out.println("Artic Coral Current Position: " + coralEncoder.getPosition());
     
     
