@@ -28,12 +28,12 @@ public class Articulador1Cmd extends Command
 
     private double tolerance = 0.05;//5%
 
-    //setpoint in meters
+    //setpoint in grades
    
-    private double l1Setpoint = 0.2;
-    private double l2Setpoint = 0.4;
-    private double l3Setpoint = 0.4;
-    private double l4Setpoint = 0.6;
+    private double l1Setpoint = 60.0;
+    private double l2Setpoint = 45.0;
+    private double l3Setpoint = 45.0;
+    private double l4Setpoint = 45.0;
 
 
     // Create the subsystem

@@ -76,6 +76,7 @@ public class Robot extends TimedRobot
     SmartDashboard.putNumber("Batery Voltage", RobotController.getBatteryVoltage());
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     
+    
     //System.out.println("Touch X: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getX());
     //System.out.println("Touch Y: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getY());
     //System.out.println("Touch Rot: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getRotation().getDegrees());

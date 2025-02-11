@@ -9,6 +9,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -54,9 +55,9 @@ public class CoralSubsystem extends SubsystemBase
   /* Start at motion 0, use slot 2 */
    //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
 
-  private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
+ // private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
-  //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
@@ -135,24 +136,24 @@ public class CoralSubsystem extends SubsystemBase
     
     
     /* Gear Ratio Config */
-    globalConfig.Feedback.SensorToMechanismRatio = 1;//CoralIntakeConstants.kGearRatio; 
+    globalConfig.Feedback.SensorToMechanismRatio = CoralIntakeConstants.kGearRatio; 
     globalConfig.ClosedLoopGeneral.ContinuousWrap = true;//keep default = FALSE - MUST NOT TOUCH IT
     /* Closed Loop Ramping */
     globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = CoralIntakeConstants.kClosedLoopRamp;
     
     /* User can optionally change the configs or leave it alone to perform a factory default */
-    globalConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    globalConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     
                
     // Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
-    globalConfig.Slot0.kS = CoralIntakeConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
-    globalConfig.Slot0.kV = CoralIntakeConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
+    //globalConfig.Slot0.kS = CoralIntakeConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
+    //globalConfig.Slot0.kV = CoralIntakeConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
     globalConfig.Slot0.kP = CoralIntakeConstants.kP; //0.11; // An error of 1 rps results in 0.11 V output
     globalConfig.Slot0.kI = CoralIntakeConstants.kI; //0; // no output for integrated error
     globalConfig.Slot0.kD = CoralIntakeConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
-    //globalConfig.Voltage.withPeakForwardVoltage(Volts.of(12))
-                        //.withPeakReverseVoltage(Volts.of(-12));
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(8))
+                        .withPeakReverseVoltage(Volts.of(-8));
 
     
      
@@ -275,9 +276,9 @@ public class CoralSubsystem extends SubsystemBase
   public void runMotor(double targetSpeed)
   {
      // Set the lift motor speed
-      coralMotor.setControl( m_velocityVoltage.withVelocity(targetSpeed));
+      coralMotor.setControl( m_positionVoltage.withVelocity(targetSpeed));
 
-      System.out.println("Current Velocity: " + coralMotor.getVelocity().getValue());
+      System.out.println("Current Positiom: " + coralMotor.getPosition().getValue());
     
   }
 

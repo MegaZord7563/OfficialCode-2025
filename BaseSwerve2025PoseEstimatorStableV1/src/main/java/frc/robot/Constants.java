@@ -294,9 +294,11 @@ import edu.wpi.first.math.util.Units;
       //public static final int kLiftRightMotorId = 23;
 
       //Lift Constants gear box
-      public static final double  kLiftGearRatio = 1.0/3.0;
-      public static final double kLiftPulleyRatio = 42.0/20.0;
+      public static final double kLiftPulleyRatio = 20.0/42.0;
+     
+      //public static final double kLiftPulleyRatio = 42.0/20.0;
       public static final double kLiftTuboDiam = 0.0381;
+      public static final double  kLiftGearRatio = 1.0/3.0*kLiftPulleyRatio*kLiftTuboDiam*Math.PI;
 
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
 
@@ -306,7 +308,7 @@ import edu.wpi.first.math.util.Units;
       public static final double KA = 0.11;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP =1.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP =2.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -486,8 +488,8 @@ import edu.wpi.first.math.util.Units;
 
 
       // TO DO: This must be tuned to specific robot
-      public static final double kGearRatio = 1.0/3.0; // 
-      public static final double kPulleyRatio = 89/28;
+      public static final double kGearRatio = (1.0/3.0)*(20.0/68.0); // 
+      public static final double kPulleyRatio = 20.0/42.0;
       public static final double kWheelDiameter = 0.013; //meters
       
 
@@ -500,11 +502,11 @@ import edu.wpi.first.math.util.Units;
 
       //ArticuladorCoral Encoder
       
-      public static final double kArticuladorCoralPositionConversionFactor =Math.PI* kGearRatio *kPulleyRatio; //rotation to Meters
+      public static final double kArticuladorCoralPositionConversionFactor =Math.PI* kGearRatio *kPulleyRatio*100; //rotation to graus
       public static final double kArticuladorCoralVelocityConversionFactor = kArticuladorCoralPositionConversionFactor/60.0; //rotation to m/s
 
       //ArticuladorCoral PID Up
-      public static final double kPArticuladorCoralUp = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kPArticuladorCoralUp = 0.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kIArticuladorCoralUp = 0;
       public static final double kDArticuladorCoralUp = 0;
       public static final double kArticuladorCoralUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
@@ -519,7 +521,7 @@ import edu.wpi.first.math.util.Units;
 
 
     public static final double kSoftLimitMin = 0;
-    public static final double kSoftLimitMax = 0;
+    public static final double kSoftLimitMax = 91;
       
     } 
 

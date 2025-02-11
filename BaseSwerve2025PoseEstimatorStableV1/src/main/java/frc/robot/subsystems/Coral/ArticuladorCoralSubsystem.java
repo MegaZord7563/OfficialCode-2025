@@ -76,9 +76,9 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     // Set the soft limits to stop the motor at -50 and 50 rotations
     config.softLimit
     .forwardSoftLimit(ArticuladorCoralConstants.kSoftLimitMax)
-    .forwardSoftLimitEnabled(true)
+    .forwardSoftLimitEnabled(false)
     .reverseSoftLimit(ArticuladorCoralConstants.kSoftLimitMin)
-    .reverseSoftLimitEnabled(true);
+    .reverseSoftLimitEnabled(false);
   
     // Configure the coral encoder 
     config.encoder
@@ -138,7 +138,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
    */
   public void stopMotor()
   {
-    coralPidController.setReference(0, ControlType.kDutyCycle);
+    coralPidController.setReference(0, ControlType.kPosition);
     
   }
 

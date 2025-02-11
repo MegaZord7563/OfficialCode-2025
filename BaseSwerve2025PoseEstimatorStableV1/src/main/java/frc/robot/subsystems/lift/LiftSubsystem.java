@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static edu.wpi.first.units.Units.*;
 
+import frc.robot.Constants.ModuleConstants;
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
+import frc.robot.Utils.Conversions;
 
 /** Add your docs here. */
 public class LiftSubsystem extends SubsystemBase 
@@ -97,7 +99,7 @@ public class LiftSubsystem extends SubsystemBase
   public void initializeMotors()
   { 
     
-    TalonFXConfiguration globalConfig = new TalonFXConfiguration();
+    
 
     liftMotor.clearStickyFaults();
 
@@ -106,7 +108,7 @@ public class LiftSubsystem extends SubsystemBase
     
     liftMotor.setNeutralMode(LiftConstants.kNeutralMode);
    
-    
+    TalonFXConfiguration globalConfig = new TalonFXConfiguration();
     /* Configure a stator limit of 20 amps */
    
     CurrentLimitsConfigs currentLimitConfigs = globalConfig.CurrentLimits;
@@ -115,7 +117,8 @@ public class LiftSubsystem extends SubsystemBase
     
     
     /* Gear Ratio Config */
-    globalConfig.Feedback.SensorToMechanismRatio = 1;//CoralIntakeConstants.kGearRatio; 
+    globalConfig.Feedback.SensorToMechanismRatio =1;///LiftConstants.kLiftGearRatio; 
+    //globalConfig.Feedback.RotorToSensorRatio=1;
     globalConfig.ClosedLoopGeneral.ContinuousWrap = false;//keep default = FALSE - MUST NOT TOUCH IT
     /* Closed Loop Ramping */
     globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = LiftConstants.kClosedLoopRamp;
@@ -131,8 +134,8 @@ public class LiftSubsystem extends SubsystemBase
     globalConfig.Slot0.kI = LiftConstants.kI; //0; // no output for integrated error
     globalConfig.Slot0.kD = LiftConstants.kD; //0; // no output for error derivative*/
     // Peak output of 10 volts
-    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(10))
-                        .withPeakReverseVoltage(Volts.of(-10));
+    //globalConfig.Voltage.withPeakForwardVoltage(Volts.of(10))
+                        //.withPeakReverseVoltage(Volts.of(-10));
 
     /* Configure Motion Magic */
     MotionMagicConfigs mm = globalConfig.MotionMagic;
@@ -250,6 +253,14 @@ public class LiftSubsystem extends SubsystemBase
 
   }*/
 
+   /**
+   * 
+   * @return driveMotor position as double
+   */
+  public double getPositionMeters() 
+  {
+      return Conversions.rotationsToMeters(liftMotor.getPosition().getValueAsDouble(),LiftConstants.kLiftTuboDiam);
+  }
   
 
   @Override
@@ -314,7 +325,8 @@ public class LiftSubsystem extends SubsystemBase
    */
   public double getPosition()
   {
-    return liftMotor.getPosition().getValueAsDouble();
+    
+    return liftMotor.getPosition().getValueAsDouble()*LiftConstants.kLiftGearRatio;
   }
  
   /**
