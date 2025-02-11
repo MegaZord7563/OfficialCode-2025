@@ -54,7 +54,9 @@ public class Robot extends TimedRobot
     
     RobotContainer.liftSubsystem.resetEncoder();
     RobotContainer.articuladorAlgaeSubsystem.resetEncoder();
+    RobotContainer.escaladorSubsystem.resetEncoder();
   }
+  
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //Java imports
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -88,9 +89,9 @@ public class EscaladorSubsystem extends SubsystemBase
     // Set the soft limits to stop the motor at -50 and 50 rotations
     config.softLimit
     .forwardSoftLimit(EscaladorConstants.kSoftLimitMax)
-    .forwardSoftLimitEnabled(true)
+    .forwardSoftLimitEnabled(false)
     .reverseSoftLimit(EscaladorConstants.kSoftLimitMin)
-    .reverseSoftLimitEnabled(true);
+    .reverseSoftLimitEnabled(false);
   
     // Configure the coral encoder 
     config.encoder
@@ -107,7 +108,20 @@ public class EscaladorSubsystem extends SubsystemBase
     .pidf(EscaladorConstants.kP, 
           EscaladorConstants.kI, 
           EscaladorConstants.kD, 
-          EscaladorConstants.kFF);          
+          EscaladorConstants.kFF);      
+          
+  config.closedLoop.maxMotion
+    // Set MAXMotion parameters for position control. We need to pass
+    // a closed loop slot to the maxMotion method to set the parameters for that slot.
+    // In this case, we are setting the parameters for slot 0.
+    .maxVelocity(5000)
+    .maxAcceleration(1000)
+    .allowedClosedLoopError(0.05)
+    // Set MAXMotion parameters for velocity control in slot 2
+    .maxAcceleration(500, ClosedLoopSlot.kSlot1)
+    .maxVelocity(6000, ClosedLoopSlot.kSlot1)
+    .allowedClosedLoopError(0.01, ClosedLoopSlot.kSlot1);
+    
 
     // Configure the coral motor - like burn flash
     escaladorMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
@@ -132,6 +146,9 @@ public class EscaladorSubsystem extends SubsystemBase
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Escalador Velocity", getVelocity());
     SmartDashboard.putNumber("Escalador Position", getPosition());
+    SmartDashboard.putNumber("EscalatorCurrent", escaladorMotor.getOutputCurrent());
+    SmartDashboard.putNumber("EscalatorVoltage", escaladorMotor.getAppliedOutput());
+    SmartDashboard.putNumber("EscalatorTemperature",escaladorMotor.getMotorTemperature());
   }
 
   /**
@@ -169,6 +186,7 @@ public class EscaladorSubsystem extends SubsystemBase
                                             ClosedLoopSlot.kSlot1);
      */  
       escaladorPidController.setReference(targetSetpoint, ControlType.kPosition);
+
       System.out.println("Escaldor  Current Position: " + getPosition());
 
     
@@ -182,6 +200,10 @@ public class EscaladorSubsystem extends SubsystemBase
   {
     /* Disable the motor instead */
     escaladorPidController.setReference(0.0, ControlType.kPosition);
+  }
+
+  public void setVelocity(double speed){
+    escaladorMotor.set(speed);
   }
 
   /**

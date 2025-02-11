@@ -8,6 +8,7 @@ package frc.robot.subsystems.Algae;
 
 //REV Imports
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.ArticuladorAlgaeConstants;
+import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
 
 /** Add your docs here. */
 public class ArticuladorAlgaeSubsystem extends SubsystemBase 
@@ -76,7 +78,13 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
     config.encoder
     .positionConversionFactor(ArticuladorAlgaeConstants.kArticuladorAlgaePositionConversionFactor);
     
+    config.softLimit
+    .forwardSoftLimit(ArticuladorAlgaeConstants.kSoftLimitMax)
+    .forwardSoftLimitEnabled(true)
+    .reverseSoftLimit(ArticuladorAlgaeConstants.kSoftLimitMin)
+    .reverseSoftLimitEnabled(true);
 
+    
     config.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     // Configure the algae PID controller
@@ -88,6 +96,17 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
           ArticuladorAlgaeConstants.kDArticuladorAlgaeUp, 
           ArticuladorAlgaeConstants.kArticuladorAlgaeUpFF);
               
+
+
+    //Max motion config
+    config.closedLoop.maxMotion
+    // Set MAXMotion parameters for position control. We need to pass
+    // a closed loop slot to the maxMotion method to set the parameters for that slot.
+    // In this case, we are setting the parameters for slot 0.
+    // Set MAXMotion parameters for velocity control in slot 1
+    .maxAcceleration(1000)
+    .maxVelocity(4000)
+    .allowedClosedLoopError(0.5);
     
     // Configure the algae motor - like burn flash
     algaeMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);//
@@ -102,6 +121,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
   {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Algae Position", getPosition());
+    SmartDashboard.putNumber("AlgaeCurrent",algaeMotor.getOutputCurrent());
   }
 
   /**
@@ -116,10 +136,15 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
                                             ClosedLoopSlot.kSlot1);
      */  
       algaePidController.setReference(targetPosition, 
-                                            ControlType.kPosition);
+                                            ControlType.kMAXMotionPositionControl);
+
       System.out.println("Current Position: " + algaeEncoder.getPosition());
     
     
+  }
+
+  public void setVelocity(double speed){
+    algaeMotor.set(speed);
   }
 
   /**

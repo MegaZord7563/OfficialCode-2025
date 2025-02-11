@@ -115,6 +115,10 @@ public class AlgaSubsystem extends SubsystemBase
     
   }
 
+  public void setVelocity(double speed){
+    algaMotor.set(speed);
+  }
+
   /**
    * Stop the lift motor
    * 
