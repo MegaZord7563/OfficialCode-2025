@@ -253,7 +253,7 @@ public class RobotContainer
      driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
      driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
      
-     //driverJoystick.y().whileTrue(trackAlgaeCmd);
+     driverJoystick.y().whileTrue(trackAlgaeCmd);
 
      //driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(50)));
      //driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
