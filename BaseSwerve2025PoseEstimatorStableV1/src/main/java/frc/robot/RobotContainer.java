@@ -11,7 +11,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,11 +19,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
+import frc.robot.Constants.OIConstants.JoystickOperatorConstants;
+import frc.robot.Constants.SubsystemsConstants.AlgaIntakeConstants;
+import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
+import frc.robot.Constants.SubsystemsConstants.RampConstants;
 import frc.robot.Limelight.LimelightHelpers;
-
 import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.lift.LiftCommand;
@@ -120,6 +121,8 @@ public class RobotContainer
   //Controllers
   public static CommandXboxController driverJoystick;
   
+  public static CommandXboxController operatorJoystick;
+  
   
   /**
   * Declare class SendableChoser()  
@@ -185,6 +188,7 @@ public class RobotContainer
     
     // Instantiate Xbox Controller
     driverJoystick= new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
+    operatorJoystick= new CommandXboxController(JoystickOperatorConstants.kOperatorControllerPort);
      //Add to choices to smart dashboard
     SmartDashboard.putData("Autonomous", chooserAuto);
 
@@ -248,20 +252,54 @@ public class RobotContainer
      driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
      driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
      driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
-              
+     
+     //driverJoystick.y().whileTrue(trackAlgaeCmd);
+
+     //driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(50)));
+     //driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
+
+     //driverJoystick.b().whileTrue(scoreLevel);
+
+     operatorJoystick.x().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity)));
+     operatorJoystick.x().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
+
+     operatorJoystick.y().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity * -1)));
+     operatorJoystick.y().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
+
+     operatorJoystick.b().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(AlgaIntakeConstants.pickAlgaePIDPosition)));
+     operatorJoystick.b().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
+
+     operatorJoystick.a().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(AlgaIntakeConstants.startAlgaePIDPosition)));
+     operatorJoystick.a().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
+
+     operatorJoystick.povDown().whileTrue(new InstantCommand(()->algaSubsystem.setVelocity(AlgaIntakeConstants.shooterAlgaeVelocity *-1)));
+     operatorJoystick.povDown().whileFalse(new InstantCommand(()->algaSubsystem.setVelocity(0)));
+
+     operatorJoystick.povUp().whileTrue((new InstantCommand(()->algaSubsystem.setVelocity(AlgaIntakeConstants.shooterAlgaeVelocity))));
+     operatorJoystick.povUp().whileFalse((new InstantCommand(()->algaSubsystem.setVelocity(0))));
+
+     operatorJoystick.povLeft().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity))));
+     operatorJoystick.povLeft().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
+
+     operatorJoystick.povRight().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity*-1))));
+     operatorJoystick.povRight().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
+
+     operatorJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
+     operatorJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
+
+
+     operatorJoystick.back().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.startPosition))));
+     operatorJoystick.start().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.pickPosition))));
+
+    
+     
     //find path
      //driverJoystick.y().onTrue(pathAfterFind);
      //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFind.endCommand()));
 
      //drive to goal
      //driverJoystick.x().whileTrue(new AimAndRangeCmd(1, 2, 3));
-     driverJoystick.y().whileTrue(trackAlgaeCmd);
 
-     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(10)));
-     driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
-
-     driverJoystick.b().whileTrue(scoreLevel);
-     driverJoystick.start().whileTrue(homingPosition);
 
      //driverJoystick.b().whileTrue(new PathFindingCommand(swerveDrive, 1, SelectScore.poseToScore(touchScreenInterface).getX(),
      //        SelectScore.poseToScore(touchScreenInterface).getY(), SelectScore.poseToScore(touchScreenInterface).getRotation().getDegrees()));
