@@ -8,24 +8,20 @@ package frc.robot.subsystems.lift;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.revrobotics.spark.config.SoftLimitConfig;
 
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static edu.wpi.first.units.Units.*;
 
-import frc.robot.Constants.ModuleConstants;
+
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 import frc.robot.Utils.Conversions;
@@ -118,6 +114,14 @@ public class LiftSubsystem extends SubsystemBase
     CurrentLimitsConfigs currentLimitConfigs = globalConfig.CurrentLimits;
     currentLimitConfigs.StatorCurrentLimit = LiftConstants.kCurrentThreshold;
     currentLimitConfigs.StatorCurrentLimitEnable = LiftConstants.kEnableCurrentLimit; 
+
+    
+    /* Configure the soft limits */
+    globalConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    globalConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    globalConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1.45;
+    globalConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0; 
+
     
     /* Configure gear ratio */
     //FeedbackConfigs fdb = globalConfig.Feedback;
@@ -154,17 +158,17 @@ public class LiftSubsystem extends SubsystemBase
     
     /* Configure Motion Magic */
     MotionMagicConfigs mm = globalConfig.MotionMagic;
-    /*mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(100)) //// Target cruise velocity of 80 rps
-      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(50)) // Target acceleration of 160 rps/s (0.5 seconds)
+    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(100/20)) //// Target cruise velocity of 80 rps
+      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(50/20)) // Target acceleration of 160 rps/s (0.5 seconds)
       // Take approximately 0.1 seconds to reach max accel 
-      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
+      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500/20));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
 
   
-    //
-    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(25)) //// Target cruise velocity of 80 rps
+    
+    /*mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(25)) //// Target cruise velocity of 80 rps
     .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(12.5)) // Target acceleration of 160 rps/s (0.5 seconds)
     // Take approximately 0.1 seconds to reach max accel 
-    .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(125));// Target jerk of 1600 rps/s/s (0.1 seconds)
+    .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(125));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
 
    
                
@@ -275,14 +279,7 @@ public class LiftSubsystem extends SubsystemBase
 
   }*/
 
-   /**
-   * 
-   * @return driveMotor position as double
-   */
-  public double getPositionMeters() 
-  {
-      return Conversions.rotationsToMeters(liftMotor.getPosition().getValueAsDouble(),LiftConstants.kLiftTuboDiam);
-  }
+   
   
 
   @Override
@@ -291,6 +288,10 @@ public class LiftSubsystem extends SubsystemBase
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Lift Position", getPosition());
     SmartDashboard.putNumber( "Lift Velocity rad/s",liftMotor.getVelocity().getValueAsDouble());
+
+    SmartDashboard.putNumber("LIFT STATOR CURRENT", liftMotor.getStatorCurrent().getValueAsDouble());
+   
+    
   }
 
  /**
@@ -327,6 +328,19 @@ public class LiftSubsystem extends SubsystemBase
        liftLeaderPidController.setReference(targetPosition, 
                                             ControlType.kMAXMotionPositionControl,
                                             ClosedLoopSlot.kSlot2);*/
+  }
+
+  public void runMotorManual(double targetPosition)
+  {
+
+    // Set the lift motor speed slot0
+      liftMotor.setControl( m_mmReq.withPosition(targetPosition).withSlot(0));
+
+      //Motion Magic - Set position control is slot 1
+      //liftMotor.setControl(m_mmReq.withPosition(targetPosition).withSlot(1));
+
+      System.out.println("Lift Current Position: " + this.getPosition());
+
   }
     
   

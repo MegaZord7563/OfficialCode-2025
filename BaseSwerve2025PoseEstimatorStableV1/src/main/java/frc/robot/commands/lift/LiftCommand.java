@@ -33,10 +33,10 @@ public class LiftCommand extends Command
     private double l3SetpointClear  = 1.0;///LiftConstants.kLiftGearRatio;
     private double l4SetpointClear  = 1.2;///LiftConstants.kLiftGearRatio;
 
-    private double l1Setpoint = 0.5; //l1SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l2Setpoint = 0.8; //l2SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l3Setpoint = 1.0; //l3SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l4Setpoint = 1.2; //l4SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l1Setpoint = 0.08; //l1SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l2Setpoint = 0.45; //l2SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l3Setpoint = 0.85; //l3SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l4Setpoint = 1.43; //l4SetpointClear/LiftConstants.kLiftGearRatio;
 
     
     

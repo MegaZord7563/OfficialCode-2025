@@ -684,7 +684,7 @@ public void stopModules ()
     double ySpeed = ySpdFunction.get();  
     double turningSpeed = turningSpdFunction.get();
     boolean fieldOriented = fieldOrientedFunction.get();
-    double throttle = 1.0;
+    double throttle = 0.3;
        
     
     //Selects speed

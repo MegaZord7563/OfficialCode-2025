@@ -222,6 +222,11 @@ public class RobotContainer
                                       swerveDrive
                                     )
                                   ); 
+    
+    /*liftSubsystem.setDefaultCommand(new RunCommand(()-> liftSubsystem.runMotorManual
+                                                    (   2*driverJoystick.getLeftTriggerAxis()), 
+                                                        liftSubsystem));*/
+
                                                  
     
   }
@@ -247,9 +252,9 @@ public class RobotContainer
       */
 
      //Changes robot speed - speeding up
-     driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
-     driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
-     driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
+     //driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
+     //driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
+     //driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
      
      //set command to homing position
      driverJoystick.start().whileTrue(homingPosition);
@@ -258,7 +263,7 @@ public class RobotContainer
      driverJoystick.y().whileTrue(trackAlgaeCmd);
 
      //set command to shoot coral
-     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(75)));
+     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(30)));
      driverJoystick.x().whileFalse(new InstantCommand(coralSubsystem::resetEncoder));
 
      //set command to score level
@@ -267,10 +272,11 @@ public class RobotContainer
      //lift manual control up and down	
      driverJoystick.povUp().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
      driverJoystick.povUp().whileFalse(new InstantCommand(() -> liftSubsystem.stopMotor()));
-     
      driverJoystick.povDown().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(-0.3)));
      driverJoystick.povDown().whileFalse(new InstantCommand(() -> liftSubsystem.stopMotor()));
      
+     driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
+     driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
 
      /**
       * OPERATOR CONTROLLER BUTTONS
@@ -299,8 +305,8 @@ public class RobotContainer
      operatorJoystick.povRight().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity*-1))));
      operatorJoystick.povRight().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
 
-     operatorJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
-     operatorJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
+     //operatorJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
+     //operatorJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
 
 
      operatorJoystick.back().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.startPosition))));

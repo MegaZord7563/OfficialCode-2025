@@ -297,7 +297,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kLiftPulleyRatio = 20.0/42.0;
      
       //public static final double kLiftPulleyRatio = 42.0/20.0;
-      public static final double kLiftTuboDiam = 0.0381;
+      public static final double kLiftTuboDiam = 0.033;//0.0381;
       public static final double  kLiftGearRatio = 1.0/3.0*kLiftPulleyRatio*kLiftTuboDiam*Math.PI;
 
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
@@ -308,7 +308,7 @@ import edu.wpi.first.math.util.Units;
       public static final double KA = 0.01;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP = 20.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP = 30.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -612,7 +612,7 @@ import edu.wpi.first.math.util.Units;
 
       //Climber SparkMax
       public static final IdleMode kIdleMode = IdleMode.kBrake;
-      public static final int kCurrentLimit = 60;
+      public static final int kCurrentLimit = 75;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kEncoderPositionPIDMinInput =0 ;
       public static final double kEncoderPositionPIDMaxInput= 2 * Math.PI;
@@ -623,7 +623,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kVelocityConversionFactor = kPositionConversionFactor/60.0; //rotation to m/s
 
       //Climber PID 
-      public static final double kP = 4;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kP = 18;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kI= 0;
       public static final double kD = 0;
       public static final double kFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
