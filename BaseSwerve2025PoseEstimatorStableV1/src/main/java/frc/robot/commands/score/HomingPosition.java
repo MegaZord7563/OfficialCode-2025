@@ -6,6 +6,7 @@ package frc.robot.commands.score;
 
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 //WPI Imports
 
@@ -44,13 +45,18 @@ public class HomingPosition extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands
     (
-      new InstantCommand(()->liftSubsystem.getPosition()),
-      new InstantCommand(()->aCoralSubsystem.getPosition()),
-      new InstantCommand(()->aCoralSubsystem.runMotor(0.0)),
-      new WaitCommand(2.0),
-      new InstantCommand(()->liftSubsystem.runMotor(0.0, false))
+      //new InstantCommand(()->liftSubsystem.getPosition()),
+      //new InstantCommand(()->aCoralSubsystem.getPosition()),
+      new RunCommand(()->aCoralSubsystem.runMotor(0.0))
+                                            .beforeStarting(aCoralSubsystem::getPosition), 
+                                            //.andThen(new WaitCommand(2.0)),
+     
+      new RunCommand(()->liftSubsystem.runMotor(0.0, false))
+                                          .beforeStarting(()->liftSubsystem.getPosition())
+                                          .onlyIf(() -> aCoralSubsystem.isHomed().get())
+  )
    
-    );
+  ;
     System.out.println("Homing Done!!!");
 
   }

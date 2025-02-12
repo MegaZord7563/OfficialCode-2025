@@ -6,6 +6,8 @@ package frc.robot.subsystems.Coral;
 
 
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.configs.Slot1Configs;
 //REV Imports
 import com.revrobotics.RelativeEncoder;
@@ -190,5 +192,22 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     
   }
 
-  
+  public Supplier<Boolean> isHomed()
+  {
+    if (coralEncoder.getPosition() < 0.5)
+    {
+      return ()->true;
+    }
+      return ()->false;
+  }
+
+  public boolean isHome()
+  {
+    if (coralEncoder.getPosition() == 0)
+    {
+      return true;
+    }
+      return false;
+
+  }
 }

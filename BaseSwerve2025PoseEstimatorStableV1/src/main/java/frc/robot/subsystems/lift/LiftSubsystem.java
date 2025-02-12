@@ -354,6 +354,15 @@ public class LiftSubsystem extends SubsystemBase
     liftMotor.setControl( m_brake);
     
   }
+   /**
+   * Stop the lift motor
+   * @
+   */
+  public void holdMotor()
+  {
+    liftMotor.setControl( m_mmReq.withPosition(liftMotor.getPosition().getValueAsDouble()).withSlot(0));
+    
+  }
 
   /**
    * Stop the lift motor

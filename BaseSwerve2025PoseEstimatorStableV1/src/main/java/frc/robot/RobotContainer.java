@@ -271,9 +271,9 @@ public class RobotContainer
 
      //lift manual control up and down	
      driverJoystick.povUp().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
-     driverJoystick.povUp().whileFalse(new InstantCommand(() -> liftSubsystem.stopMotor()));
+     driverJoystick.povUp().whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
      driverJoystick.povDown().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(-0.3)));
-     driverJoystick.povDown().whileFalse(new InstantCommand(() -> liftSubsystem.stopMotor()));
+     driverJoystick.povDown().whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
      
      driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
      driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
