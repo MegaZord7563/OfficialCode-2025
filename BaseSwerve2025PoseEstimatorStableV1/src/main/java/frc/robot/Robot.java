@@ -54,7 +54,9 @@ public class Robot extends TimedRobot
     
     RobotContainer.liftSubsystem.resetEncoder();
     RobotContainer.articuladorAlgaeSubsystem.resetEncoder();
+    RobotContainer.escaladorSubsystem.resetEncoder();
   }
+  
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -75,6 +77,7 @@ public class Robot extends TimedRobot
     SmartDashboard.putNumber("Match time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Batery Voltage", RobotController.getBatteryVoltage());
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
+    
     
     //System.out.println("Touch X: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getX());
     //System.out.println("Touch Y: " + SelectScore.poseToScore(RobotContainer.touchScreenInterface).getY());

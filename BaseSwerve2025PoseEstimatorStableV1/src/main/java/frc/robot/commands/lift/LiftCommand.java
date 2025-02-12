@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 //Robot imports
 import frc.robot.RobotContainer;
+import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
@@ -26,10 +27,18 @@ public class LiftCommand extends Command
 
     //setpoint in meters
    
-    private double l1Setpoint = 0.5;
-    private double l2Setpoint = 0.8;
-    private double l3Setpoint = 1.0;
-    private double l4Setpoint = 1.2;
+
+    private double l1SetpointClear = 0.5;///LiftConstants.kLiftGearRatio;
+    private double l2SetpointClear  = 0.8;///LiftConstants.kLiftGearRatio;
+    private double l3SetpointClear  = 1.0;///LiftConstants.kLiftGearRatio;
+    private double l4SetpointClear  = 1.2;///LiftConstants.kLiftGearRatio;
+
+    private double l1Setpoint = 0.5; //l1SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l2Setpoint = 0.8; //l2SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l3Setpoint = 1.0; //l3SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l4Setpoint = 1.2; //l4SetpointClear/LiftConstants.kLiftGearRatio;
+
+    
     
 
   // Create the subsystem
@@ -78,6 +87,7 @@ public class LiftCommand extends Command
     {
       System.out.println("L1 SELECTED");
       liftSubsystem.runMotor(l1Setpoint, false);
+      
       if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
       //{finish =true;}
     }

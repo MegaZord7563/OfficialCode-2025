@@ -255,13 +255,17 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
-    //SmartDashboard.putNumber("MatchTime", DriverStation.getMatchTime());
+    SmartDashboard.putNumber("Pigeon", gyro.getYaw().getValueAsDouble());
+    SmartDashboard.putBoolean("First Gear", throttleSlow);
+    SmartDashboard.putBoolean("Second Gear", throttleFast);
+    SmartDashboard.putBoolean("Third Gear", throttleMax);
+    //SmartDashboard.putNumber("Pigeon", frontLeftModule.getDriveVelocityMPS());
     
 
     if(deploy)
     {
       countDeploy++;
-      if(countDeploy == 20)
+      if(countDeploy == 5)
       {
         deploy = false;
       }

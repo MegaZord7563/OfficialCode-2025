@@ -9,6 +9,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,6 +18,7 @@ import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static edu.wpi.first.units.Units.*;
@@ -36,6 +38,7 @@ public class CoralSubsystem extends SubsystemBase
   //private SparkMaxConfig globalConfig = new SparkMaxConfig();
 
   private final TalonFX coralMotor;
+  private final DigitalInput sensor = new DigitalInput(0);
 
   // The distance sensor
   /**
@@ -47,14 +50,14 @@ public class CoralSubsystem extends SubsystemBase
    * 
    */
   private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
- 
+  
 
   /* Start at motion 0, use slot 2 */
    //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
 
-  private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
+ // private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
-  //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
+  private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
@@ -72,7 +75,7 @@ public class CoralSubsystem extends SubsystemBase
   {
     // Create the  motor
     coralMotor = new TalonFX (CoralIntakeConstants.kCoralMotorId,"rio");
-  
+ 
 
     /**
      * Before measurements can be read from the sensor, setAutomaticMode(true)
@@ -82,11 +85,11 @@ public class CoralSubsystem extends SubsystemBase
     // Create the distance sensor
     distOnboard.setAutomaticMode(true);
 
-    // Set the distance sensor units
+    //// Set the distance sensor units
     distOnboard.setDistanceUnits(Unit.kMillimeters);
     distOnboard.setMeasurementPeriod(0.2);
-    
     //
+    ////
     distOnboard.setEnabled(true);
     distOnboard.setRangeProfile(RangeProfile.kDefault);
   
@@ -133,24 +136,24 @@ public class CoralSubsystem extends SubsystemBase
     
     
     /* Gear Ratio Config */
-    globalConfig.Feedback.SensorToMechanismRatio = 1;//CoralIntakeConstants.kGearRatio; 
-    globalConfig.ClosedLoopGeneral.ContinuousWrap = true;//keep default = FALSE - MUST NOT TOUCH IT
+    //globalConfig.Feedback.SensorToMechanismRatio = CoralIntakeConstants.kGearRatio; 
+    //globalConfig.ClosedLoopGeneral.ContinuousWrap = true;//keep default = FALSE - MUST NOT TOUCH IT
     /* Closed Loop Ramping */
-    globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = CoralIntakeConstants.kClosedLoopRamp;
+    //globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = CoralIntakeConstants.kClosedLoopRamp;
     
     /* User can optionally change the configs or leave it alone to perform a factory default */
-    globalConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    globalConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     
                
     // Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
-    globalConfig.Slot0.kS = CoralIntakeConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
-    globalConfig.Slot0.kV = CoralIntakeConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
+    //globalConfig.Slot0.kS = CoralIntakeConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
+    //globalConfig.Slot0.kV = CoralIntakeConstants.KV; //0.12; // A velocity target of 1 rps results in 0.12 V output
     globalConfig.Slot0.kP = CoralIntakeConstants.kP; //0.11; // An error of 1 rps results in 0.11 V output
     globalConfig.Slot0.kI = CoralIntakeConstants.kI; //0; // no output for integrated error
     globalConfig.Slot0.kD = CoralIntakeConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
-    //globalConfig.Voltage.withPeakForwardVoltage(Volts.of(12))
-                        //.withPeakReverseVoltage(Volts.of(-12));
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(8))
+                        .withPeakReverseVoltage(Volts.of(8));
 
     
      
@@ -215,11 +218,12 @@ public class CoralSubsystem extends SubsystemBase
   {
     return distOnboard.getRange();
   }
-  
 
   @Override
   public void periodic() 
+
   {
+    boolean sensorValue = sensor.get();
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral Velocity m/s", getVelocity());
 
@@ -253,9 +257,16 @@ public class CoralSubsystem extends SubsystemBase
     else 
     {
       SmartDashboard.putString("Operational Range", "Invalid Measurement");
-    }
-    
+    }  
 
+    if (sensorValue)
+    {
+      SmartDashboard.putBoolean("Sensor value", sensorValue);
+    }
+    else
+    {
+      SmartDashboard.putBoolean("Sensor value", sensorValue);
+    }
   }
 
   /**
@@ -265,9 +276,9 @@ public class CoralSubsystem extends SubsystemBase
   public void runMotor(double targetSpeed)
   {
      // Set the lift motor speed
-      coralMotor.setControl( m_velocityVoltage.withVelocity(targetSpeed));
+      coralMotor.setControl( m_positionVoltage.withPosition(targetSpeed));
 
-      System.out.println("Current Velocity: " + coralMotor.getVelocity().getValue());
+      System.out.println("Current Positiom: " + coralMotor.getPosition().getValue());
     
   }
 

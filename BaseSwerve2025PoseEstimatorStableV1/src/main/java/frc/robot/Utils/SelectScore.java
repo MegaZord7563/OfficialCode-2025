@@ -20,40 +20,40 @@ public class SelectScore
         {
             // Red Alliance Values
             if(touch.getButtonValue(VirtualButton.kA)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(13.726,3.861,Rotation2d.fromDegrees(0));
             }
             else if (touch.getButtonValue(VirtualButton.kB)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(13.726,4.190,Rotation2d.fromDegrees(0));
             }
             else if (touch.getButtonValue(VirtualButton.kC)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(13.556,4.603,Rotation2d.fromDegrees(60));
             }
             else if (touch.getButtonValue(VirtualButton.kD)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(13.392,4.887,Rotation2d.fromDegrees(60));
             }
             else if (touch.getButtonValue(VirtualButton.kE)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(12.725,4.887,Rotation2d.fromDegrees(120));
             }
             else if (touch.getButtonValue(VirtualButton.kF)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(12.561,4.603,Rotation2d.fromDegrees(120));
             }
             else if (touch.getButtonValue(VirtualButton.kG)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(12.062,4.190,Rotation2d.fromDegrees(180));
             }
             else if (touch.getButtonValue(VirtualButton.kH)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(12.062,3.861,Rotation2d.fromDegrees(180));
             }
             else if (touch.getButtonValue(VirtualButton.kI)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(12.561,3.448,Rotation2d.fromDegrees(240));
             }
             else if (touch.getButtonValue(VirtualButton.kJ)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(12.725,3.163,Rotation2d.fromDegrees(240));
             }
             else if (touch.getButtonValue(VirtualButton.kK)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(13.392,3.163,Rotation2d.fromDegrees(300));
             }
             else if (touch.getButtonValue(VirtualButton.kL)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(13.556,3.448,Rotation2d.fromDegrees(300));
             }
             else{
                 poseToScore = new Pose2d();
@@ -62,57 +62,46 @@ public class SelectScore
             // Blue Alliance Values
 
             if(touch.getButtonValue(VirtualButton.kA)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(3));
+                poseToScore = new Pose2d(3.657,4.190,Rotation2d.fromDegrees(180));
             }
             else if (touch.getButtonValue(VirtualButton.kB)){
-                poseToScore = new Pose2d(7,8,Rotation2d.fromDegrees(9));
+                poseToScore = new Pose2d(3.657,3.861,Rotation2d.fromDegrees(180));
             }
             else if (touch.getButtonValue(VirtualButton.kC)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(3.991,3.448,Rotation2d.fromDegrees(240));
             }
             else if (touch.getButtonValue(VirtualButton.kD)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(4.156,3.163,Rotation2d.fromDegrees(240));
             }
             else if (touch.getButtonValue(VirtualButton.kE)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(4.822,3.1639,Rotation2d.fromDegrees(300));
             }
             else if (touch.getButtonValue(VirtualButton.kF)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(4.986,3.448,Rotation2d.fromDegrees(300));
             }
             else if (touch.getButtonValue(VirtualButton.kG)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(5.321,3.861,Rotation2d.fromDegrees(0));
             }
             else if (touch.getButtonValue(VirtualButton.kH)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(5.321,4.190,Rotation2d.fromDegrees(0));
             }
             else if (touch.getButtonValue(VirtualButton.kI)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(4.986,4.603,Rotation2d.fromDegrees(60));
             }
             else if (touch.getButtonValue(VirtualButton.kJ)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(4.822,4.887,Rotation2d.fromDegrees(60));
             }
             else if (touch.getButtonValue(VirtualButton.kK)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(4.156,4.887,Rotation2d.fromDegrees(120));
             }
             else if (touch.getButtonValue(VirtualButton.kL)){
-                poseToScore = new Pose2d(1,2,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(3.991,4.603,Rotation2d.fromDegrees(120));
             }
             else{
                 poseToScore = new Pose2d();
             }
         }
 
-
-
-        
-        
         return poseToScore;
     }
-
-    public static int levelToScore(){
-        return 0;
-    }
-
-
-
 }
