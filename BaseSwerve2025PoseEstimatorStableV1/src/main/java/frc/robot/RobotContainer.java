@@ -241,25 +241,40 @@ public class RobotContainer
     //new JoystickButton(driverJoystick, Button.kX.value).whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
     //driverJoystick.x().whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
          
-     //driverJoystick.start().onTrue(new InstantCommand(swerveDrive::zeroHeading));
-     
+    
+     /**
+      * XBOX CONTROLLER BUTTONS
+      */
 
-     ///*Changes robot speed - slowing down
-     //JoystickButton throttle1 = new JoystickButton (driverJoystick,XboxController.Button.kLeftBumper.value); 
-     //throttle1.onTrue(new InstantCommand(swerveDrive::robotSlower)); 
-
-     
+     //Changes robot speed - speeding up
      driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
      driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
      driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
      
+     //set command to homing position
+     driverJoystick.start().whileTrue(homingPosition);
+     
+     //set command to track algae
      driverJoystick.y().whileTrue(trackAlgaeCmd);
 
-     //driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(50)));
-     //driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
+     //set command to shoot coral
+     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(75)));
+     driverJoystick.x().whileFalse(new InstantCommand(coralSubsystem::resetEncoder));
 
-     //driverJoystick.b().whileTrue(scoreLevel);
+     //set command to score level
+     driverJoystick.b().whileTrue(scoreLevel);
 
+     //lift manual control up and down	
+     driverJoystick.povUp().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
+     driverJoystick.povUp().whileFalse(new InstantCommand(() -> liftSubsystem.stopMotor()));
+     
+     driverJoystick.povDown().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(-0.3)));
+     driverJoystick.povDown().whileFalse(new InstantCommand(() -> liftSubsystem.stopMotor()));
+     
+
+     /**
+      * OPERATOR CONTROLLER BUTTONS
+      */
      operatorJoystick.x().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity)));
      operatorJoystick.x().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
 

@@ -154,10 +154,17 @@ public class LiftSubsystem extends SubsystemBase
     
     /* Configure Motion Magic */
     MotionMagicConfigs mm = globalConfig.MotionMagic;
-    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(100)) //// Target cruise velocity of 80 rps
+    /*mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(100)) //// Target cruise velocity of 80 rps
       .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(50)) // Target acceleration of 160 rps/s (0.5 seconds)
       // Take approximately 0.1 seconds to reach max accel 
-      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500));// Target jerk of 1600 rps/s/s (0.1 seconds)
+      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
+
+  
+    //
+    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(25)) //// Target cruise velocity of 80 rps
+    .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(12.5)) // Target acceleration of 160 rps/s (0.5 seconds)
+    // Take approximately 0.1 seconds to reach max accel 
+    .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(125));// Target jerk of 1600 rps/s/s (0.1 seconds)
 
    
                
@@ -331,6 +338,16 @@ public class LiftSubsystem extends SubsystemBase
   public void stopMotor()
   {
     liftMotor.setControl( m_brake);
+    
+  }
+
+  /**
+   * Stop the lift motor
+   * @
+   */
+  public void setSpeed(double speed)
+  {
+    liftMotor.set(speed) ;
     
   }
 
