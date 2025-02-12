@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.Constants.OIConstants.JoystickOperatorConstants;
+import frc.robot.Constants.SubsystemsConstants.AlgaIntakeConstants;
+import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
+import frc.robot.Constants.SubsystemsConstants.RampConstants;
 import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.coral.Articulador1Cmd;
@@ -257,36 +260,36 @@ public class RobotContainer
 
      //driverJoystick.b().whileTrue(scoreLevel);
 
-     operatorJoystick.x().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(0.2)));
+     operatorJoystick.x().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity)));
      operatorJoystick.x().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
 
-     operatorJoystick.y().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(-0.2)));
+     operatorJoystick.y().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity * -1)));
      operatorJoystick.y().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
 
-     operatorJoystick.b().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(3.25)));
+     operatorJoystick.b().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(AlgaIntakeConstants.pickAlgaePIDPosition)));
      operatorJoystick.b().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
 
-     operatorJoystick.a().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(0)));
+     operatorJoystick.a().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(AlgaIntakeConstants.startAlgaePIDPosition)));
      operatorJoystick.a().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
 
-     operatorJoystick.povDown().whileTrue(new InstantCommand(()->algaSubsystem.setVelocity(-0.5)));
+     operatorJoystick.povDown().whileTrue(new InstantCommand(()->algaSubsystem.setVelocity(AlgaIntakeConstants.shooterAlgaeVelocity *-1)));
      operatorJoystick.povDown().whileFalse(new InstantCommand(()->algaSubsystem.setVelocity(0)));
 
-     operatorJoystick.povUp().whileTrue((new InstantCommand(()->algaSubsystem.setVelocity(0.5))));
+     operatorJoystick.povUp().whileTrue((new InstantCommand(()->algaSubsystem.setVelocity(AlgaIntakeConstants.shooterAlgaeVelocity))));
      operatorJoystick.povUp().whileFalse((new InstantCommand(()->algaSubsystem.setVelocity(0))));
 
-     operatorJoystick.povLeft().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(0.8))));
+     operatorJoystick.povLeft().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity))));
      operatorJoystick.povLeft().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
 
-     operatorJoystick.povRight().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(-0.8))));
+     operatorJoystick.povRight().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity*-1))));
      operatorJoystick.povRight().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
 
-     operatorJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(1.06))));
+     operatorJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
      operatorJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
 
 
-     operatorJoystick.back().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(0))));
-     operatorJoystick.start().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(-4))));
+     operatorJoystick.back().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.startPosition))));
+     operatorJoystick.start().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.pickPosition))));
 
     
      

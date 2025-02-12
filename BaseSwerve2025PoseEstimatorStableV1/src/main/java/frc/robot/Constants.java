@@ -424,6 +424,15 @@ import edu.wpi.first.math.util.Units;
       public static final double kAlgaEncoderPositionPIDMinInput =0 ;
       public static final double kAlgaEncoderPositionPIDMaxInput= 2 * Math.PI;
 
+      //AlgaPositions
+      public static final double articulatorVelocity= 0.2;
+      public static final double pickAlgaePIDPosition= 3.25;
+      public static final double startAlgaePIDPosition= 0;
+
+      public static final double shooterAlgaeVelocity= 0.5;
+
+
+
       //Alga Encoder - TO DO: This must be tuned to specific robot
       public static final double kAlgaPositionConversionFactor =Math.PI* kGearRatio *kPulleyRatio *kWheelDiameter;//rotation to Meters
       public static final double kAlgaVelocityConversionFactor = kAlgaPositionConversionFactor /60.0;//rotation to m/s
@@ -567,7 +576,8 @@ import edu.wpi.first.math.util.Units;
       public static final double kRampDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
 
       
-      
+      public static final double startPosition= 0;
+      public static final double pickPosition= -4;
     } 
 
 
@@ -605,6 +615,11 @@ import edu.wpi.first.math.util.Units;
     public static double kSoftLimitMin;
 
       
+    //Escalator
+
+    public static final double escaladorVelocity= 0.8;
+
+    public static final double escaladorClimbPosition= 1.06;
       
 
     /* 
