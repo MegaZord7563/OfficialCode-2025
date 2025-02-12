@@ -6,6 +6,8 @@ package frc.robot.subsystems.Coral;
 
 
 
+import java.util.function.Supplier;
+
 //REV Imports
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -138,7 +140,21 @@ public class RampSubsystem extends SubsystemBase
   {
     return rampEncoder.getPosition();
   }
- 
+
+ public Supplier<Boolean> isOnPosition()
+  {
+    if (rampEncoder.getPosition() <= -3.9)
+    {
+      return ()->true;
+
+    }
+    else 
+    {
+
+      return ()->false;
+
+    }
+  }
   /**
    * 
    * @ reset encoder
