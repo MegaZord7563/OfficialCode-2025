@@ -138,6 +138,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Articulardor Coral Position", getPosition());
     SmartDashboard.putNumber("Articulador Coral Velocity", coralEncoder.getVelocity());
+    SmartDashboard.putBoolean("Articulador Coral Homed", isHomed().get());
   }
 
   /**
@@ -194,11 +195,24 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
 
   public Supplier<Boolean> isHomed()
   {
-    if (coralEncoder.getPosition() < 0.5)
+    if (coralEncoder.getPosition() <=0.5)
     {
       return ()->true;
-    }
+    }else 
+    {
       return ()->false;
+    }
+  }
+
+  public Supplier<Boolean> isOnPosition()
+  {
+    if (coralEncoder.getPosition() <= 44)
+    {
+      return ()->true;
+    }else 
+    {
+      return ()->false;
+    }
   }
 
   

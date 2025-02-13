@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Algae.ArtiAlgaeCmd;
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.Constants.OIConstants.JoystickOperatorConstants;
@@ -27,7 +28,10 @@ import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
 import frc.robot.Constants.SubsystemsConstants.RampConstants;
 import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.TouchScreenInterface;
+import frc.robot.commands.RampCoral;
+import frc.robot.commands.Ramp.RampPickCoralCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
+import frc.robot.commands.coral.CoralPositionCmd;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.lift.LiftCommandAuto;
 import frc.robot.commands.lift.LiftManualCmd;
@@ -75,10 +79,13 @@ public class RobotContainer
   public static AlgaSubsystem algaSubsystem = new AlgaSubsystem();
   public static ArticuladorAlgaeSubsystem articuladorAlgaeSubsystem = new ArticuladorAlgaeSubsystem();
   
+  
   //Coral Subsystem
   public static CoralSubsystem coralSubsystem = new CoralSubsystem();
   public static ArticuladorCoralSubsystem articuladorCoralSubsystem = new ArticuladorCoralSubsystem();
   public static RampSubsystem rampSubsystem = new RampSubsystem();
+
+
 
   public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
   
@@ -94,12 +101,15 @@ public class RobotContainer
   
   //Coral Commands
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
+  public static RampPickCoralCmd rampPickCoralCmd = new RampPickCoralCmd();
+  public static CoralPositionCmd coralPositionCmd = new CoralPositionCmd();
 
   /**
    * SEQUENTIAL COMMANDS
    */
   public static ScoreLevel scoreLevel = new ScoreLevel();
   public static HomingPosition homingPosition = new HomingPosition();
+  public static RampCoral rampCoral = new RampCoral();
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
@@ -223,9 +233,7 @@ public class RobotContainer
                                     )
                                   ); 
     
-    /*liftSubsystem.setDefaultCommand(new RunCommand(()-> liftSubsystem.runMotorManual
-                                                    (   2*driverJoystick.getLeftTriggerAxis()), 
-                                                        liftSubsystem));*/
+    
 
                                                  
     
@@ -312,7 +320,7 @@ public class RobotContainer
      operatorJoystick.back().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.startPosition))));
      operatorJoystick.start().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.pickPosition))));
 
-    
+     operatorJoystick.leftBumper().whileTrue(rampCoral);
      
     //find path
      //driverJoystick.y().onTrue(pathAfterFind);

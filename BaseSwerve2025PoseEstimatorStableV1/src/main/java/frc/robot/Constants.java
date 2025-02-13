@@ -612,7 +612,7 @@ import edu.wpi.first.math.util.Units;
 
       //Climber SparkMax
       public static final IdleMode kIdleMode = IdleMode.kBrake;
-      public static final int kCurrentLimit = 75;
+      public static final int kCurrentLimit = 95;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kEncoderPositionPIDMinInput =0 ;
       public static final double kEncoderPositionPIDMaxInput= 2 * Math.PI;
@@ -623,7 +623,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kVelocityConversionFactor = kPositionConversionFactor/60.0; //rotation to m/s
 
       //Climber PID 
-      public static final double kP = 18;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kP = 25;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kI= 0;
       public static final double kD = 0;
       public static final double kFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
@@ -637,7 +637,7 @@ import edu.wpi.first.math.util.Units;
 
     public static final double escaladorVelocity= 0.8;
 
-    public static final double escaladorClimbPosition= 1.06;
+    public static final double escaladorClimbPosition= 1.11;
       
 
     /* 

@@ -6,6 +6,8 @@ package frc.robot.subsystems.Algae;
 
 
 
+import java.util.function.Supplier;
+
 //REV Imports
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -166,6 +168,23 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
     return algaeEncoder.getPosition();
   }
  
+
+
+
+  public Supplier<Boolean> isHomed()
+  {
+    if (algaeEncoder.getPosition() <=1.35)
+    {
+      return ()->true;
+
+    }
+    else 
+    {
+      return ()->false;
+    }
+    
+  }
+
   /**
    * Set the algae encoder position
    * @param position

@@ -28,12 +28,9 @@ public class LiftCommand extends Command
     //setpoint in meters
    
 
-    private double l1SetpointClear = 0.5;///LiftConstants.kLiftGearRatio;
-    private double l2SetpointClear  = 0.8;///LiftConstants.kLiftGearRatio;
-    private double l3SetpointClear  = 1.0;///LiftConstants.kLiftGearRatio;
-    private double l4SetpointClear  = 1.2;///LiftConstants.kLiftGearRatio;
+    
 
-    private double l1Setpoint = 0.08; //l1SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l1Setpoint = 0.00; //l1SetpointClear/LiftConstants.kLiftGearRatio;
     private double l2Setpoint = 0.45; //l2SetpointClear/LiftConstants.kLiftGearRatio;
     private double l3Setpoint = 0.85; //l3SetpointClear/LiftConstants.kLiftGearRatio;
     private double l4Setpoint = 1.43; //l4SetpointClear/LiftConstants.kLiftGearRatio;
@@ -86,10 +83,10 @@ public class LiftCommand extends Command
     if (l1)
     {
       System.out.println("L1 SELECTED");
-      liftSubsystem.runMotor(l1Setpoint, false);
+      //liftSubsystem.runMotor(l1Setpoint, false);
       
-      if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
-      //{finish =true;}
+      //if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
+      finish =true;
     }
     if (l2)
     {
@@ -116,6 +113,7 @@ public class LiftCommand extends Command
     
     
     if(!l1 && !l2 && !l3 && !l4)finish=true;
+    if(RobotContainer.driverJoystick.start().getAsBoolean())finish=true;
 
   }    
 

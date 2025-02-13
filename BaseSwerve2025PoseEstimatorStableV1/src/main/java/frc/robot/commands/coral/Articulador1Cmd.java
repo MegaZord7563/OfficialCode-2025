@@ -10,10 +10,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 
-
-
-
-
 public class Articulador1Cmd extends Command
 {
      
@@ -110,6 +106,7 @@ public class Articulador1Cmd extends Command
     
 
      if(!l1 && !l2 && !l3 && !l4 )finish=true;
+     if(RobotContainer.driverJoystick.start().getAsBoolean())finish=true;
 
 
     
