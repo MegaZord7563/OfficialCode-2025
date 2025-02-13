@@ -10,7 +10,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.revrobotics.Rev2mDistanceSensor;
@@ -156,8 +156,8 @@ public class CoralSubsystem extends SubsystemBase
     globalConfig.Slot0.kI = CoralIntakeConstants.kI; //0; // no output for integrated error
     globalConfig.Slot0.kD = CoralIntakeConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
-    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(6))
-                        .withPeakReverseVoltage(Volts.of(6));
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(2))
+                        .withPeakReverseVoltage(Volts.of(-2));
 
     
      
@@ -312,6 +312,19 @@ public class CoralSubsystem extends SubsystemBase
   {
     coralMotor.setPosition(0);
 
+  }
+
+  /**
+   * 
+   * @return true if the coral is homed
+   */
+  public Supplier<Boolean> isHomed()
+  {
+    if (coralMotor.getPosition().getValueAsDouble() < 0.05)
+    {
+      return ()->true;
+    }
+      return ()->false;
   }
 
   

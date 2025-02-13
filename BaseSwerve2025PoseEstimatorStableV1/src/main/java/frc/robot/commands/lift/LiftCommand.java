@@ -71,6 +71,7 @@ public class LiftCommand extends Command
   @Override
   public void execute() 
   {
+    // Get the encoder position
     encoderPosition = liftSubsystem.getPosition();
     // Get the button values
     l1 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL1);
@@ -91,7 +92,10 @@ public class LiftCommand extends Command
     if (l2)
     {
       System.out.println("L2 SELECTED");
+      
+      
       liftSubsystem.runMotor(l2Setpoint, false);
+      
       if (l2Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l2Setpoint * (1+tolerance)) finish=true;
      
     }

@@ -384,7 +384,7 @@ import edu.wpi.first.math.util.Units;
       public static final double KA = 0.11;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP =1.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP =2.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -458,16 +458,16 @@ import edu.wpi.first.math.util.Units;
 
       // TO DO: This must be tuned to specific robot
       public static final double  kGearRatio = 1.0/12.0;
-      public static final double kPulleyRatio = 124/44;
-      public static final double kWheelDiameter = 0.2;
+      public static final double kPulleyRatio = 42.0/96.0;
+      
       
       //SoftLimit
       public static final double kSoftLimitMin = 0;
-      public static final double kSoftLimitMax = 3.75;
+      public static final double kSoftLimitMax = 80;
 
       //ArticuladorAlgae SparkMax
       public static final IdleMode kArticuladorAlgaeIdleMode = IdleMode.kBrake;
-      public static final int kArticuladorAlgaeCurrentLimit = 40;
+      public static final int kArticuladorAlgaeCurrentLimit = 60;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kArticuladorAlgaeEncoderPositionPIDMinInput =0 ;
       public static final double kArticuladorAlgaeEncoderPositionPIDMaxInput= 2 * Math.PI;
@@ -475,22 +475,22 @@ import edu.wpi.first.math.util.Units;
       //ArticuladorAlgae Encoder
       
       //TO DO: This must be tuned to specific robot
-      public static final double kArticuladorAlgaePositionConversionFactor = Math.PI* kGearRatio *kPulleyRatio; //rotation to Meters
+      public static final double kArticuladorAlgaePositionConversionFactor = 360*kGearRatio *kPulleyRatio; //rotation to graus
       public static final double kArticuladorAlgaeVelocityConversionFactor = kArticuladorAlgaePositionConversionFactor/60.0; //rotation to m/s
 
       //ArticuladorAlgae PID Up
-      public static final double kPArticuladorAlgaeUp = 0.1;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kIArticuladorAlgaeUp = 0;
-      public static final double kDArticuladorAlgaeUp = 0;
-      public static final double kArticuladorAlgaeUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
-      public static final double kArticuladorAlgaeMinOutput = -1;
-      public static final double kArticuladorAlgaeMaxOutput = 1;
+      public static final double kPslot0 = 0.01;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIslot0 = 0;
+      public static final double kDslot0 = 0;
+      public static final double kFFslot0 = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kMinOutputSlot0 = -1;
+      public static final double kMaxOutputSlot0 = 1;
 
       //ArticuladorAlgae PID Down
-      public static final double kPArticuladorAlgaeDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kIArticuladorAlgaeDown = 0;
-      public static final double kDArticuladorAlgaeDown = 0.7;
-      public static final double kArticuladorAlgaeDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kPslot1 = 0.01;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIslot1 = 0;
+      public static final double kDslot1 = 0;
+      public static final double kFFslot1 = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       
     } 
 
@@ -563,39 +563,42 @@ import edu.wpi.first.math.util.Units;
 
       //  TO DO: This must be tuned to specific robot
       public static final double kGearRatio = 1.0/9.0; // 
-      public static final double kPulleyRatio = 64.0/31.0;
-      public static final double kWheelDiameter = 0.013; //meters
+      public static final double kPulleyRatio = 20.0/42.0;
+      
       
 
       //Ramp SparkMax
       public static final IdleMode kRampIdleMode = IdleMode.kBrake;
-      public static final int kRampCurrentLimit = 40;
+      public static final int kRampCurrentLimit = 60;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kRampEncoderPositionPIDMinInput =0 ;
       public static final double kRampEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       //Ramp Encoder
       //TO DO: This must be tuned to specific robot
-      public static final double kRampPositionConversionFactor = Math.PI* kGearRatio * kPulleyRatio; //rotation to Meters
+      public static final double kRampPositionConversionFactor = 360* kGearRatio * kPulleyRatio; //rotation to Meters
       public static final double kRampVelocityConversionFactor = kRampPositionConversionFactor/60.0; //rotation to m/s
 
       //Ramp PID Up
-      public static final double kPRampUp = 0.075;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kIRampUp = 0;
-      public static final double kDRampUp = 0;
-      public static final double kRampUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
-      public static final double kRampMinOutput = -1;
-      public static final double kRampMaxOutput = 1;
+      public static final double kPslot0 = 0.040;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIslot0  = 0;
+      public static final double kDslot0  = 0;
+      public static final double kFFslot0  = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kMinOutputslot0  = -1;
+      public static final double kMaxOutputslot0  = 1;
 
       //Ramp PID Down
-      public static final double kPRampDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kIRampDown = 0;
-      public static final double kDRampDown = 0.7;
-      public static final double kRampDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kPslot1 = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIslot1 = 0;
+      public static final double kDslot1 = 0.7;
+      public static final double kFFslot1 = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
 
       
       public static final double startPosition= 0;
       public static final double pickPosition= -4;
+
+      public static double kSoftLimitMax = 110;
+      public static double kSoftLimitMin = 0;
     } 
 
 

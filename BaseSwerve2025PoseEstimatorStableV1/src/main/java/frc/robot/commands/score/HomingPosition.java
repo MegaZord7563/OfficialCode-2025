@@ -5,14 +5,12 @@
 package frc.robot.commands.score;
 
 
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+//CommandBase Imports
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 //WPI Imports
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 //Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;

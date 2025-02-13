@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Algae.ArtiAlgaeCmd;
+
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.Constants.OIConstants.JoystickOperatorConstants;
@@ -28,10 +28,11 @@ import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
 import frc.robot.Constants.SubsystemsConstants.RampConstants;
 import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.TouchScreenInterface;
-import frc.robot.commands.RampCoral;
+import frc.robot.commands.Ramp.HomingEndGame;
+import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
-import frc.robot.commands.coral.CoralPositionCmd;
+import frc.robot.commands.coral.CoralStationCmd;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.lift.LiftCommandAuto;
 import frc.robot.commands.lift.LiftManualCmd;
@@ -84,6 +85,9 @@ public class RobotContainer
   public static CoralSubsystem coralSubsystem = new CoralSubsystem();
   public static ArticuladorCoralSubsystem articuladorCoralSubsystem = new ArticuladorCoralSubsystem();
   public static RampSubsystem rampSubsystem = new RampSubsystem();
+  
+  
+  
 
 
 
@@ -101,15 +105,18 @@ public class RobotContainer
   
   //Coral Commands
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
-  public static RampPickCoralCmd rampPickCoralCmd = new RampPickCoralCmd();
-  public static CoralPositionCmd coralPositionCmd = new CoralPositionCmd();
+  public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
+  public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
+ 
 
   /**
    * SEQUENTIAL COMMANDS
    */
   public static ScoreLevel scoreLevel = new ScoreLevel();
   public static HomingPosition homingPosition = new HomingPosition();
-  public static RampCoral rampCoral = new RampCoral();
+  public static InitializeRamp initializeRamp = new InitializeRamp(); 
+  public static HomingEndGame homingEndGame = new HomingEndGame();
+
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
@@ -268,14 +275,21 @@ public class RobotContainer
      driverJoystick.start().whileTrue(homingPosition);
      
      //set command to track algae
-     driverJoystick.y().whileTrue(trackAlgaeCmd);
+     //driverJoystick.y().whileTrue(trackAlgaeCmd);
 
      //set command to shoot coral
-     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(30)));
+     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(20)));
      driverJoystick.x().whileFalse(new InstantCommand(coralSubsystem::resetEncoder));
 
      //set command to score level
-     driverJoystick.b().whileTrue(scoreLevel);
+     driverJoystick.a().whileTrue(scoreLevel);
+     
+     driverJoystick.b().onTrue(coralStationCmd);
+     
+     driverJoystick.y().whileTrue(homingEndGame);
+
+     //driverJoystick.b().whileTrue(new InstantCommand(()->rampSubsystem.runMotor(105)));
+     //driverJoystick.b().whileFalse(new InstantCommand(()->rampSubsystem.runMotor(0)));
 
      //lift manual control up and down	
      driverJoystick.povUp().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));

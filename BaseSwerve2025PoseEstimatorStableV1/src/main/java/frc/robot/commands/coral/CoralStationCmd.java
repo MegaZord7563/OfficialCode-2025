@@ -4,25 +4,30 @@
 
 package frc.robot.commands.coral;
 
-import java.util.function.Supplier;
+
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
+
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class CoralPositionCmd extends Command {
+public class CoralStationCmd extends Command 
+{
   /** Creates a new ArtiAlgaeCmd. */
 
   private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
 
+  // Declare the double variables
   private double encoderPosition = 0;
-  private double setpointPosition = 45;
-  private double setpointRange = 43;
-  private boolean finish;
+  private double setPoint = 55;//em graus
+  private double tolerance = 0.05;//5%
 
-  public CoralPositionCmd() {
+  //declare boolean variables
+  private boolean finish=false;
+
+  public CoralStationCmd() 
+  {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(aCoralSubsystem);
 
@@ -30,32 +35,41 @@ public class CoralPositionCmd extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
+  public void initialize() 
+  {
     System.out.println("Articulador Coral Command Initialized");
+    finish = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void execute() 
+  {
 
+    // Get the encoder position
     encoderPosition = aCoralSubsystem.getPosition();
 
-    aCoralSubsystem.runMotor(setpointPosition);
+    // Run the motor
+    aCoralSubsystem.runMotor(setPoint);
 
-    if (encoderPosition <= setpointRange){finish = true;}
+    // Check if the setpoint is within the tolerance
+    if (setPoint * (1-tolerance) < encoderPosition && encoderPosition < setPoint * (1+tolerance)) finish=true;
   }
 
 
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    System.out.println("Articulador Algae Command Done");
+  public void end(boolean interrupted) 
+  {
+    System.out.println("Articulador Coral Command Done");
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished() 
+  {
         return finish;
   }
+  
 }
