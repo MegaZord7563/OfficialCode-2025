@@ -73,6 +73,12 @@ public class Articulador1Cmd extends Command
     l4 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL4);
     
     
+    SmartDashboard.getBoolean("L1", l1);
+    SmartDashboard.getBoolean("L2", l2);
+    SmartDashboard.getBoolean("L3", l3);
+    SmartDashboard.getBoolean("L4", l4);
+
+
     // Move the articulator
     if (l1)
     {

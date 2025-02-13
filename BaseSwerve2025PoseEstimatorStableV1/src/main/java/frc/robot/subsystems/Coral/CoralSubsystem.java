@@ -43,6 +43,7 @@ public class CoralSubsystem extends SubsystemBase
   private final TalonFX coralMotor;
   private final DigitalInput sensor = new DigitalInput(0);
 
+
   // The distance sensor
   /**
    * pin-out
@@ -79,7 +80,10 @@ public class CoralSubsystem extends SubsystemBase
     // Create the  motor
     coralMotor = new TalonFX (CoralIntakeConstants.kCoralMotorId,"rio");
  
-
+    SmartDashboard.putBoolean("L1", false);
+    SmartDashboard.putBoolean("L2", false);
+    SmartDashboard.putBoolean("L3", false);
+    SmartDashboard.putBoolean("L4", false);
     /**
      * Before measurements can be read from the sensor, setAutomaticMode(true)
      * must be called. This starts a background thread which will periodically
@@ -304,6 +308,7 @@ public class CoralSubsystem extends SubsystemBase
   {
     return coralMotor.getVelocity().getValueAsDouble();
   }
+
 
   /**
    * @ reset encoder
