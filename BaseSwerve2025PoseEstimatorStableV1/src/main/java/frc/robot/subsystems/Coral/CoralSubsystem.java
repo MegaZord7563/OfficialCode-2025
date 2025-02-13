@@ -90,6 +90,7 @@ public class CoralSubsystem extends SubsystemBase
 
     //// Set the distance sensor units
     distOnboard.setDistanceUnits(Unit.kMillimeters);
+    
     distOnboard.setMeasurementPeriod(0.2);
     //
     ////

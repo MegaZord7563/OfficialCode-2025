@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.Supplier;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
@@ -392,6 +393,19 @@ public class LiftSubsystem extends SubsystemBase
   {
     liftMotor.setPosition(0);
     
+  }
+
+  /**
+   * 
+   * @return true if the lift is homed
+   */
+  public Supplier<Boolean> isHomed()
+  {
+    if (liftMotor.getPosition().getValueAsDouble() < 0.05)
+    {
+      return ()->true;
+    }
+      return ()->false;
   }
 
 }

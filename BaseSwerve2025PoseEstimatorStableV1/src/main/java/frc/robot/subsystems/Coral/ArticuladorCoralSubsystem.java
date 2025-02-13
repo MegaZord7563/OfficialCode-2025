@@ -201,13 +201,5 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
       return ()->false;
   }
 
-  public boolean isHome()
-  {
-    if (coralEncoder.getPosition() == 0)
-    {
-      return true;
-    }
-      return false;
-
-  }
+  
 }

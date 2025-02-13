@@ -45,18 +45,15 @@ public class HomingPosition extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands
     (
-      //new InstantCommand(()->liftSubsystem.getPosition()),
-      //new InstantCommand(()->aCoralSubsystem.getPosition()),
+      
       new RunCommand(()->aCoralSubsystem.runMotor(0.0))
-                                            .beforeStarting(aCoralSubsystem::getPosition), 
-                                            //.andThen(new WaitCommand(2.0)),
+                                        .onlyIf(() -> !aCoralSubsystem.isHomed().get())
+                                        .until(() -> aCoralSubsystem.isHomed().get()),
      
       new RunCommand(()->liftSubsystem.runMotor(0.0, false))
-                                          .beforeStarting(()->liftSubsystem.getPosition())
-                                          .onlyIf(() -> aCoralSubsystem.isHomed().get())
-  )
-   
-  ;
+                                      .onlyIf(() -> aCoralSubsystem.isHomed().get())
+                                      .until(()->liftSubsystem.isHomed().get())
+    );
     System.out.println("Homing Done!!!");
 
   }

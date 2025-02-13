@@ -53,6 +53,7 @@ public class Robot extends TimedRobot
     m_robotContainer = new RobotContainer();
     
     RobotContainer.liftSubsystem.resetEncoder();
+    RobotContainer.articuladorCoralSubsystem.resetEncoder();
     RobotContainer.articuladorAlgaeSubsystem.resetEncoder();
     RobotContainer.escaladorSubsystem.resetEncoder();
   }
