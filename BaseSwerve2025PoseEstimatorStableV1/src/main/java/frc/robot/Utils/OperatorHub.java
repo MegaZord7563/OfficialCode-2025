@@ -49,7 +49,8 @@ public class OperatorHub {
     ///////////////////////////////////////////////////////////////////////////////////////
     
     //Mesinha1
-    public boolean getBlackAxisUp(double percent){
+    public boolean getBlackAxisUp(double percent)
+    {
         return mesinha1.getRawAxis(kBlackAxisUp) > percent;
     }
 
@@ -58,10 +59,37 @@ public class OperatorHub {
         return mesinha1.getRawAxis(kBlackAxisUp) < percent;
     }
 
-    public boolean getRedAxisUp(double percent){
-        return mesinha2.getRawAxis(kBlackAxisUp) > percent;
+    public boolean getRedAxisUp(double percent)
+    {
+        if ( mesinha2.getRawAxis(kBlackAxisUp) >percent)
+        {
+            return true;
+        }
+        
+       return false;
     }
 
+    public boolean getRedAxisDown(double percent)
+    {
+        if ( mesinha2.getRawAxis(kBlackAxisUp) < percent)
+        {
+            return true;
+        }
+        
+       return false;
+    }
+    public boolean getRedAxisUpDownHome( )
+    {
+        if ( mesinha2.getRawAxis(kBlackAxisUp) < 0.3 && mesinha2.getRawAxis(kBlackAxisUp)>-0.3)
+        {
+            return true;
+        }
+        
+       return false;
+    }
+
+
+   
     //Mesinha2
     public boolean getRedAxisSides(double percent){
         return mesinha2.getRawAxis(kBlackAxisUp) < percent;

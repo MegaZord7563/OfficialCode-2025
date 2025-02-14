@@ -2,21 +2,26 @@ package frc.robot.commands.lift;
 
 
 
+
+
 //WPI Imports
 import edu.wpi.first.wpilibj2.command.Command;
 
 //Robot imports
 import frc.robot.RobotContainer;
+import frc.robot.Utils.OperatorHub;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 public class LiftManualCmd extends Command
 {
    // Declare the boolean variables   
     private boolean finish = false;
+   
+    
+    public static final OperatorHub operatorHub =RobotContainer.operatorHub;
 
     //Declare doubles
-    private double setPoint = 0.0;
-    private double initialPosition;
+   
 
     
     
@@ -25,9 +30,9 @@ public class LiftManualCmd extends Command
   private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
 
   /** Creates a new AngleCmd. */
-  public LiftManualCmd(double targetPosition) 
+  public LiftManualCmd() 
   {
-    setPoint = targetPosition;
+    
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(liftSubsystem);
   }
@@ -40,7 +45,7 @@ public class LiftManualCmd extends Command
     System.out.println("Lift Manual Command Initialized");
 
     finish = false;
-    initialPosition = liftSubsystem.getPosition();
+    
 
     
     
@@ -51,10 +56,22 @@ public class LiftManualCmd extends Command
   public void execute() 
   {
     //double currentPosition = liftSubsystem.getPosition();
+  
    
-    liftSubsystem.runMotor(setPoint , false);
 
-    //if ((currentPosition-initialPosition)>100)finish=true;
+    if(operatorHub.getRedAxisUp(0.75))
+    {
+      liftSubsystem.setSpeed(0.3);
+    }
+    else if(operatorHub.getRedAxisDown(-0.75))
+    {
+      liftSubsystem.setSpeed(-0.3);
+    }
+    else
+    {
+      liftSubsystem.holdMotor();
+      finish = true;
+    }
      
   }    
 
@@ -63,6 +80,7 @@ public class LiftManualCmd extends Command
   public void end(boolean interrupted) 
   {
     System.out.println("Lift Manual Command Done!");
+   
   }
 
   // Returns true when the command should end.

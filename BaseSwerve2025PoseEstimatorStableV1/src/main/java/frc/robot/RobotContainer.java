@@ -105,7 +105,7 @@ public class RobotContainer
   //Lift Commands
   public  static LiftCommand liftCmd =new LiftCommand();
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
-  public static LiftManualCmd liftManualCmd = new LiftManualCmd(0);
+  public static LiftManualCmd liftManualCmd = new LiftManualCmd();
 
   
   //Coral Commands
@@ -153,8 +153,8 @@ public class RobotContainer
   public static Joystick mesinhaJoy2 = 
                           new Joystick(MesinhaJoy2Constants.kJoy2Port);
 
-  //public static final OperatorHub operatorHub = 
-                                  //new OperatorHub(mesinhaJoy1, mesinhaJoy2);
+  public static final OperatorHub operatorHub = 
+                                  new OperatorHub(mesinhaJoy1, mesinhaJoy2);
   
   
   /**
@@ -186,7 +186,11 @@ public class RobotContainer
     //Lift Commands
     liftCmd.addRequirements(liftSubsystem);
     liftAuto.addRequirements(liftSubsystem);
+    
     liftManualCmd.addRequirements(liftSubsystem);
+    liftSubsystem.setDefaultCommand(liftManualCmd);
+
+
 
     //Coral Commands
     articulador1Cmd.addRequirements(articuladorCoralSubsystem);
@@ -257,7 +261,7 @@ public class RobotContainer
                                   ); 
     
     
-
+    
                                                  
     
   }
@@ -306,27 +310,49 @@ public class RobotContainer
      //driverJoystick.b().whileFalse(new InstantCommand(()->rampSubsystem.runMotor(0)));
 
      //lift manual control up and down	
-     driverJoystick.povUp().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
-     driverJoystick.povUp().whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
-     driverJoystick.povDown().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(-0.3)));
-     driverJoystick.povDown().whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
+     //driverJoystick.povUp().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
+     //driverJoystick.povUp().whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
+
+     //driverJoystick.povDown().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(-0.3)));
+     //driverJoystick.povDown().whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
      
-     driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
-     driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
+     //driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))));
+     //driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0,false))));
+
+     
 
      /**
-      * OPERATOR CONTROLLER BUTTONS
-      *///driverJoystick,XboxController.Button.kBumperRight.value
-
+      * OPERATOR CONTROLS
+      */
     
-     //JoystickButton shootCoral = new JoystickButton (mesinhaJoy2, MesinhaJoy2Constants.kCoralShoo);
+  //set command to coral
+    JoystickButton shootCoral = new JoystickButton (mesinhaJoy1, operatorHub.kOne);
+    shootCoral.whileTrue(new InstantCommand (()->coralSubsystem.runMotor(20)));
+    shootCoral.whileFalse(new InstantCommand (coralSubsystem::resetEncoder));
+
+    //JoystickButton liftUp = new JoystickButton (mesinhaJoy2, operatorHub.);
+    //liftUp.whileTrue(new InstantCommand (new InstantCommand(() -> liftSubsystem.setSpeed(0.3))));
+    
+
+   
+
+
+    //Set command to climber
+    JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
+    climb.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true)));
+    
+    JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
+    climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));
+    //driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))));
+    //driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0,false))));
+
+
+
      //outTakeTrapForward.whileTrue(new RunCommand (()-> outTakeCmd.selectForward()));
      //outTakeTrapForward.whileFalse(new RunCommand(() -> outTakeCmd.selectStopForward()));
 
      //set command to shoot coral
-     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(20)));
-     driverJoystick.x().whileFalse(new InstantCommand(coralSubsystem::resetEncoder));
-
+     
 
 
 

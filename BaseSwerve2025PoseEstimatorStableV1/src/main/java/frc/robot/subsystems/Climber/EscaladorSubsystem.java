@@ -84,7 +84,7 @@ public class EscaladorSubsystem extends SubsystemBase
      config
     .idleMode(EscaladorConstants.kIdleMode) //LiftConstants.kLiftIdleMode
     .smartCurrentLimit(EscaladorConstants.kCurrentLimit) //LiftConstants.kLiftCurrentLimit
-    .inverted(false);
+    .inverted(true);
 
     // Set the soft limits to stop the motor at -50 and 50 rotations
     config.softLimit
@@ -114,12 +114,12 @@ public class EscaladorSubsystem extends SubsystemBase
     // Set MAXMotion parameters for position control. We need to pass
     // a closed loop slot to the maxMotion method to set the parameters for that slot.
     // In this case, we are setting the parameters for slot 0.
-    .maxVelocity(5000)
-    .maxAcceleration(1000)
+    .maxVelocity(500.0)//m/s
+    .maxAcceleration(250)//m/s
     .allowedClosedLoopError(0.05)
     // Set MAXMotion parameters for velocity control in slot 2
     .maxAcceleration(500, ClosedLoopSlot.kSlot1)
-    .maxVelocity(6000, ClosedLoopSlot.kSlot1)
+    .maxVelocity(1000, ClosedLoopSlot.kSlot1)
     .allowedClosedLoopError(0.01, ClosedLoopSlot.kSlot1);
     
 
@@ -156,38 +156,24 @@ public class EscaladorSubsystem extends SubsystemBase
    * @param targetSetpoint
    * @param isPositionControl
    */
-  public void runMotors( double targetSetpoint)
+  public void runMotors( double targetSetpoint,  boolean direction)
   {
     
     
-    /*if(position)
+    if(direction)
     {
-      //Set position control is slot 1
-      System.out.println("Switching to Position Control");
-      //escaladorLeaderMotor.setControl(m_positionVoltage.withPosition(setPoint));
-      
-      //Motion Magic - Set position control is slot 1
-      escaladorMotor.setControl(m_mmReq.withPosition(setPoint).withSlot(2));
-      System.out.println("Current Position: " + escaladorLeaderMotor.getPosition().getValue());
-    }
-    else
-    {
-      //Set velocity control is slot 0  
-      System.out.println("Switching to Velocity Control");
-      //escaladorLeaderMotor.setControl(m_velocityVoltage.withSlot(1).withVelocity(targetSetpoint));
-      //System.out.println("Target Velocity: " + targetSetpoint);
-      System.out.println("Current Velocity: " + escaladorLeaderMotor.getVelocity().getValue());
-    }*/
-
-    
-      System.out.println("Escalador Position Control Enabled");
-      /*coralPidController.setReference(targetPosition, 
-                                            ControlType.kPosition,
-                                            ClosedLoopSlot.kSlot1);
-     */  
       escaladorPidController.setReference(targetSetpoint, ControlType.kPosition);
 
       System.out.println("Escaldor  Current Position: " + getPosition());
+    }
+    else
+    {
+      escaladorPidController.setReference(targetSetpoint, ControlType.kMAXMotionPositionControl);
+    }
+
+    
+      
+      
 
     
 
@@ -202,7 +188,8 @@ public class EscaladorSubsystem extends SubsystemBase
     escaladorPidController.setReference(0.0, ControlType.kPosition);
   }
 
-  public void setVelocity(double speed){
+  public void setVelocity(double speed)
+  {
     escaladorMotor.set(speed);
   }
 

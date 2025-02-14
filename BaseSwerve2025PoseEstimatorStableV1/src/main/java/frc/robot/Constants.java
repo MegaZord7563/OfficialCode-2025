@@ -640,7 +640,7 @@ import edu.wpi.first.math.util.Units;
 
     public static final double escaladorVelocity= 0.8;
 
-    public static final double escaladorClimbPosition= 1.11;
+    public static final double escaladorClimbPosition= 1.18;
       
 
     /* 

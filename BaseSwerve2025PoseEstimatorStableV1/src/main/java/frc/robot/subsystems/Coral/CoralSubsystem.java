@@ -53,7 +53,7 @@ public class CoralSubsystem extends SubsystemBase
    * blue = connect to SDA MXP port
    * 
    */
-  private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
+  //private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
   
 
   /* Start at motion 0, use slot 2 */
@@ -90,16 +90,16 @@ public class CoralSubsystem extends SubsystemBase
      * poll all enabled sensors and store their measured range.
      */
     // Create the distance sensor
-    distOnboard.setAutomaticMode(true);
+    //distOnboard.setAutomaticMode(true);
 
     //// Set the distance sensor units
-    distOnboard.setDistanceUnits(Unit.kMillimeters);
+    //distOnboard.setDistanceUnits(Unit.kMillimeters);
     
-    distOnboard.setMeasurementPeriod(0.2);
+    //distOnboard.setMeasurementPeriod(0.2);
     //
     ////
-    distOnboard.setEnabled(true);
-    distOnboard.setRangeProfile(RangeProfile.kDefault);
+    //distOnboard.setEnabled(true);
+    //distOnboard.setRangeProfile(RangeProfile.kDefault);
   
     // Create the  encoder
     //coralEncoder = coralMotor.getEncoder();
@@ -222,10 +222,10 @@ public class CoralSubsystem extends SubsystemBase
      * 
      * @return The distance in millimeters.
      */
-  public double getDistance() 
+  /*public double getDistance() 
   {
     return distOnboard.getRange();
-  }
+  }*/
 
   @Override
   public void periodic() 
@@ -240,7 +240,7 @@ public class CoralSubsystem extends SubsystemBase
      * returns true.
      */
     
-    boolean isValid = distOnboard.isRangeValid();
+    /*boolean isValid = distOnboard.isRangeValid();
 
     SmartDashboard.putBoolean("Range Valid", isValid);
 
@@ -265,7 +265,7 @@ public class CoralSubsystem extends SubsystemBase
     else 
     {
       SmartDashboard.putString("Operational Range", "Invalid Measurement");
-    }  
+    }  */
 
     if (sensorValue)
     {
