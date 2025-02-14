@@ -304,6 +304,11 @@ public class CoralSubsystem extends SubsystemBase
     return coralMotor.getVelocity().getValueAsDouble();
   }
 
+  public void setVelocity(double speed)
+  {
+    coralMotor.set(speed);
+  }
+
 
   /**
    * @ reset encoder

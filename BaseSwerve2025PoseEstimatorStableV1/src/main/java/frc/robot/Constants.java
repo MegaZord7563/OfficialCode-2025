@@ -735,8 +735,8 @@ import edu.wpi.first.math.util.Units;
         public static final double kOperatorDeathBand = 0.05;
         public static final int kOne = 9;      //ok
         public static final int kTwo = 10;        //ok
-        public static final int kThree = 11;         //ok
-        public static final int kFour = 12;       //ok   
+        public static final int kThree = 12;         //ok
+        public static final int kFour = 11;       //ok   
         public static final int kFive = 6;       //ok  
         public static final int kSix = 8;         //ok
         public static final int kSeven = 7;      //ok 
