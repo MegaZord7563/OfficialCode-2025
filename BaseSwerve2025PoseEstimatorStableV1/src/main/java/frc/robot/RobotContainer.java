@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.Joystick;
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,15 +19,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
 import frc.robot.Constants.OIConstants.JoystickOperatorConstants;
+import frc.robot.Constants.OIConstants.MesinhaJoy1Constants;
+import frc.robot.Constants.OIConstants.MesinhaJoy2Constants;
 import frc.robot.Constants.SubsystemsConstants.AlgaIntakeConstants;
 import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
 import frc.robot.Constants.SubsystemsConstants.RampConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.Utils.OperatorHub;
 import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
@@ -91,7 +96,7 @@ public class RobotContainer
 
 
 
-  public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
+ 
   
 /**
  * COMMANDS
@@ -136,9 +141,20 @@ public class RobotContainer
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //public static XboxController driverJoystick;
   //Controllers
-  public static CommandXboxController driverJoystick;
+
+  //Operator Controller
+  public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
   
-  public static CommandXboxController operatorJoystick;
+  public static CommandXboxController driverJoystick = 
+                                      new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
+  
+  public static Joystick mesinhaJoy1 = 
+                          new Joystick(MesinhaJoy1Constants.kJoy1Port);
+  public static Joystick mesinhaJoy2 = 
+                          new Joystick(MesinhaJoy2Constants.kJoy2Port);
+
+  //public static final OperatorHub operatorHub = 
+                                  //new OperatorHub(mesinhaJoy1, mesinhaJoy2);
   
   
   /**
@@ -204,8 +220,8 @@ public class RobotContainer
    
     
     // Instantiate Xbox Controller
-    driverJoystick= new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
-    operatorJoystick= new CommandXboxController(JoystickOperatorConstants.kOperatorControllerPort);
+    
+    
      //Add to choices to smart dashboard
     SmartDashboard.putData("Autonomous", chooserAuto);
 
@@ -277,9 +293,7 @@ public class RobotContainer
      //set command to track algae
      //driverJoystick.y().whileTrue(trackAlgaeCmd);
 
-     //set command to shoot coral
-     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(20)));
-     driverJoystick.x().whileFalse(new InstantCommand(coralSubsystem::resetEncoder));
+     
 
      //set command to score level
      driverJoystick.a().whileTrue(scoreLevel);
@@ -302,7 +316,21 @@ public class RobotContainer
 
      /**
       * OPERATOR CONTROLLER BUTTONS
-      */
+      *///driverJoystick,XboxController.Button.kBumperRight.value
+
+    
+     //JoystickButton shootCoral = new JoystickButton (mesinhaJoy2, MesinhaJoy2Constants.kCoralShoo);
+     //outTakeTrapForward.whileTrue(new RunCommand (()-> outTakeCmd.selectForward()));
+     //outTakeTrapForward.whileFalse(new RunCommand(() -> outTakeCmd.selectStopForward()));
+
+     //set command to shoot coral
+     driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(20)));
+     driverJoystick.x().whileFalse(new InstantCommand(coralSubsystem::resetEncoder));
+
+
+
+
+/* 
      operatorJoystick.x().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity)));
      operatorJoystick.x().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
 
@@ -334,7 +362,7 @@ public class RobotContainer
      operatorJoystick.back().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.startPosition))));
      operatorJoystick.start().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.pickPosition))));
 
-     operatorJoystick.leftBumper().whileTrue(rampCoral);
+     operatorJoystick.leftBumper().whileTrue(rampCoral);*/
      
     //find path
      //driverJoystick.y().onTrue(pathAfterFind);

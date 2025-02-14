@@ -10,10 +10,13 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SoftLimitConfig;
 
 //WPILIB Imports
@@ -36,7 +39,8 @@ public class LiftSubsystem extends SubsystemBase
   private final TalonFX liftMotor;
 
   /* Start at motion 0, use slot 2 */
-  private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(0);
+  private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
+  private final DynamicMotionMagicVoltage m_mmReq1 = new DynamicMotionMagicVoltage(0,0,0, 0  );  
  
 
   //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
@@ -148,7 +152,7 @@ public class LiftSubsystem extends SubsystemBase
     //globalConfig.Voltage.withPeakForwardVoltage(Volts.of(12))
 
     
-/* 
+
     globalConfig.Slot1.kS =  LiftConstants.KS1; // Add 0.25 V output to overcome static friction
     globalConfig.Slot1.kV = LiftConstants.KV1; // A velocity target of 1 rps results in 0.12 V output
     globalConfig.Slot1.kA = LiftConstants.KA1; // An acceleration of 1 rps/s requires 0.01 V output
@@ -165,15 +169,6 @@ public class LiftSubsystem extends SubsystemBase
       .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500/20));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
 
   
-    
-    /*mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(25)) //// Target cruise velocity of 80 rps
-    .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(12.5)) // Target acceleration of 160 rps/s (0.5 seconds)
-    // Take approximately 0.1 seconds to reach max accel 
-    .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(125));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
-
-   
-               
-    
      
     /* Retry config apply up to 5 times, report if failure */
     StatusCode status = StatusCode.StatusCodeNotInitialized;
@@ -302,51 +297,23 @@ public class LiftSubsystem extends SubsystemBase
   */
   public void runMotor(double targetPosition, boolean direction)
   {
-
-    // Set the lift motor speed slot0
-      liftMotor.setControl( m_mmReq.withPosition(targetPosition).withSlot(0));
-
-      //Motion Magic - Set position control is slot 1
-      //liftMotor.setControl(m_mmReq.withPosition(targetPosition).withSlot(1));
-
-      System.out.println("Lift Current Position: " + this.getPosition());
-    
-    
-    /* 
-    
-    if (direction)
-    {
-      System.out.println("Switching to Position Control UP");
-      liftLeaderPidController.setReference(targetPosition,  ControlType.kMAXMotionPositionControl,
-                                                            ClosedLoopSlot.kSlot2);
-    }
-    else
-    {
-      System.out.println("Switching to Position Control DOWN");
-      /*liftLeaderPidController.setReference(targetPosition, 
-                                            ControlType.kPosition,
-                                            ClosedLoopSlot.kSlot1);
-       liftLeaderPidController.setReference(targetPosition, 
-                                            ControlType.kMAXMotionPositionControl,
-                                            ClosedLoopSlot.kSlot2);*/
-  }
-
-  public void runMotorManual(double targetPosition)
-  {
-
-    // Set the lift motor speed slot0
-      liftMotor.setControl( m_mmReq.withPosition(targetPosition).withSlot(0));
-
-      //Motion Magic - Set position control is slot 1
-      //liftMotor.setControl(m_mmReq.withPosition(targetPosition).withSlot(1));
-
-      System.out.println("Lift Current Position: " + this.getPosition());
-
-  }
-    
   
 
-  /**
+    // Set the lift motor speed slot0 if direction is true
+    if (direction)
+    {
+      liftMotor.setControl( m_mmReq.withPosition(targetPosition).withSlot(1));
+    }
+    //Motion Magic - Set position control is slot 1 if direction is false
+    else
+    {
+      liftMotor.setControl( m_mmReq.withPosition(targetPosition).withSlot(0));
+    } 
+     
+       
+  }
+
+   /**
    * Stop the lift motor
    * @
    */
@@ -356,7 +323,7 @@ public class LiftSubsystem extends SubsystemBase
     
   }
    /**
-   * Stop the lift motor
+   * Hold lift on position
    * @
    */
   public void holdMotor()
@@ -366,7 +333,7 @@ public class LiftSubsystem extends SubsystemBase
   }
 
   /**
-   * Stop the lift motor
+   * turn on the lift motor
    * @
    */
   public void setSpeed(double speed)

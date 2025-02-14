@@ -8,7 +8,6 @@ package frc.robot.subsystems.Coral;
 
 import java.util.function.Supplier;
 
-import org.opencv.core.Mat.Tuple2;
 
 //REV Imports
 import com.revrobotics.RelativeEncoder;
@@ -24,7 +23,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPILIB Imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.SubsystemsConstants.ArticuladorAlgaeConstants;
+
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.RampConstants;
 
@@ -148,6 +147,26 @@ public class RampSubsystem extends SubsystemBase
   public void stopMotor()
   {
     rampPidController.setReference(0, ControlType.kMAXMotionPositionControl);
+    
+  }
+
+  /**
+   * Hold the ramp motor
+   * @
+   */
+  public void holdMotor()
+  {
+   rampPidController.setReference(rampEncoder.getPosition(), ControlType.kMAXMotionPositionControl);
+    
+  }
+
+  /**
+   * turn on the ramp motor
+   * @
+   */
+  public void setSpeed(double speed)
+  {
+    rampMotor.set(speed) ;
     
   }
 
