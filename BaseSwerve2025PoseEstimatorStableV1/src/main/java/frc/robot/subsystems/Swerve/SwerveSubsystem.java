@@ -125,7 +125,7 @@ public class SwerveSubsystem extends SubsystemBase
   RobotConfig config;
 
   //Select alliance heading - default is blue
-  private double allianceHeading = 0;
+  private double allianceHeading = 180;
 
       
   boolean deploy = true;
@@ -153,7 +153,7 @@ public class SwerveSubsystem extends SubsystemBase
     var alliance2 = DriverStation.getAlliance();
     if (alliance2.get() == DriverStation.Alliance.Red) 
     {
-      allianceHeading = 180;
+      allianceHeading = 0;
     }
 
     //Initialize pose estimator ALWAYS towards to red wall

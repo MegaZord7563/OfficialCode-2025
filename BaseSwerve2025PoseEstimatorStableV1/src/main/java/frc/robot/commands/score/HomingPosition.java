@@ -48,7 +48,7 @@ public class HomingPosition extends SequentialCommandGroup
     (
       
       new RunCommand(()->aCoralSubsystem.runMotor(0.0))
-                                        //.onlyIf(() -> !aCoralSubsystem.isHomed().get())
+                                        .onlyIf(() -> !aCoralSubsystem.isHomed().get())
                                         .until(() -> aCoralSubsystem.isHomed().get()),
      
       new RunCommand(()->liftSubsystem.runMotor(0.0, false))
