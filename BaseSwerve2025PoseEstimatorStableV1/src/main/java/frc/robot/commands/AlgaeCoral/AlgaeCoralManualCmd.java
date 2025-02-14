@@ -24,6 +24,12 @@ public class AlgaeCoralManualCmd extends Command {
     private final OperatorHub operatorHub ;
 
     boolean finish = false;
+    boolean trava = false;
+    boolean travaC = false;
+
+    private double encoderPosition;
+
+    private double encoderPositionC;
 
   /** Creates a new AlgaeCoralManualCmd. */
   public AlgaeCoralManualCmd(OperatorHub operatorHub) {
@@ -46,35 +52,72 @@ public class AlgaeCoralManualCmd extends Command {
 
     if (operatorHub.getSelectOne()){
 
-      if(operatorHub.getOne()){ coralSubsystem.runMotor(20);}
+      if(operatorHub.getOne()){ coralSubsystem.setVelocity(1);;}
 
-      if(operatorHub.getTwo()){ coralSubsystem.runMotor(-20);}
+      if(operatorHub.getTwo()){ coralSubsystem.setVelocity(-1);}
 
-      if( operatorHub.getBlackAxisUp(0.7)){ aCoralSubsystem.setVelocity(0.4);}
+      if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
+      if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
 
-      if( operatorHub.getBlackAxisDown(-0.7)){ aCoralSubsystem.setVelocity(-0.4);}
-
-      else{ aCoralSubsystem.runMotor(aCoralSubsystem.getPosition());
-        coralSubsystem.resetEncoder();
+      if(operatorHub.getBlackAxisUp(0.75))
+      {
+        aCoralSubsystem.setVelocity(0.3);;
+        encoderPositionC = aCoralSubsystem.getPosition();
+        trava =true;
+      }
+      else if(operatorHub.getBlackAxisDown(-0.75))
+      {
+        aCoralSubsystem.setVelocity(-0.3);
+        encoderPositionC = aCoralSubsystem.getPosition();
+        trava =true;
+      }
+      else if(operatorHub.getRedAxisUpDownHome()&&!aCoralSubsystem.isHomed().get()&&travaC)
+      {
+        aCoralSubsystem.runMotor(encoderPositionC);
+        trava=false;
+      }
+      else if (aCoralSubsystem.isHomed().get())
+      {
         finish = true;
       }
+      else{
+        aCoralSubsystem.setVelocity(0);
+      }
+
     }
     else{
             
-      if(operatorHub.getOne()){ algaSubsystem.setVelocity(0.5);}
+      if(operatorHub.getOne()){ algaSubsystem.setVelocity(1);}
       
-      if(operatorHub.getTwo()){ algaSubsystem.setVelocity(-0.5); }
+      if(operatorHub.getTwo()){ algaSubsystem.setVelocity(-1); }
 
-      if( operatorHub.getBlackAxisUp(0.7)){ aAlgaeSubsystem.setVelocity(0.6);}
+      if(!operatorHub.getOne()){ algaSubsystem.setVelocity(0);}
+      
+      if(!operatorHub.getTwo()){ algaSubsystem.setVelocity(0); }
 
-      if( operatorHub.getBlackAxisDown(-0.7)){ aAlgaeSubsystem.setVelocity(-0.6);}
-
-      else{aAlgaeSubsystem.runMotor(aAlgaeSubsystem.getPosition());
-        finish = true;
-        algaSubsystem.setVelocity(0);
+      if(operatorHub.getBlackAxisUp(0.75))
+      {
+        aAlgaeSubsystem.setVelocity(0.5);;
+        encoderPosition = aAlgaeSubsystem.getPosition();
+        trava =true;
       }
-      
-          }
+      else if(operatorHub.getBlackAxisDown(-0.75))
+      {
+        aAlgaeSubsystem.setVelocity(-0.5);
+        encoderPosition = aAlgaeSubsystem.getPosition();
+        trava =true;
+      }
+      else if(operatorHub.getRedAxisUpDownHome()&&!aAlgaeSubsystem.isHomed().get()&&trava)
+      {
+        aAlgaeSubsystem.runMotor(encoderPosition);
+        trava=false;
+      }
+      else if (aAlgaeSubsystem.isHomed().get())
+      {
+        finish = true;
+      }
+
+      }
         }
       
 
