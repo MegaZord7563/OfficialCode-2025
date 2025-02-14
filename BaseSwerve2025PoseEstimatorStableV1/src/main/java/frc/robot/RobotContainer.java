@@ -11,6 +11,12 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.Joystick;
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -153,7 +159,17 @@ public class RobotContainer
   //Controllers
 
   
-  
+  // Creates UsbCamera and MjpegServer [1] and connects them
+  UsbCamera usbCamera = new UsbCamera("USB Camera 0", 0);
+  MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
+
+  // Creates the CvSink and connects it to the UsbCamera
+  CvSink cvSink = new CvSink("opencv_USB Camera 0");
+
+  // Creates the CvSource and MjpegServer [2] and connects them
+  CvSource outputStream = new CvSource("Blur", PixelFormat.kMJPEG, 640, 480, 30);
+  MjpegServer mjpegServer2 = new MjpegServer("serve_Blur", 1182);
+
   
   /**
   * Declare class SendableChoser()  
@@ -165,6 +181,10 @@ public class RobotContainer
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
+    mjpegServer1.setSource(usbCamera);
+    cvSink.setSource(usbCamera);
+    mjpegServer2.setSource(outputStream);
+  
     //liftCmd = new LiftCommand();
     //articulador1Cmd = new Articulador1Cmd();
     //scoreLevel = new ScoreLevel();
@@ -332,7 +352,7 @@ public class RobotContainer
   //set command to coral
     JoystickButton shootCoral = new JoystickButton (mesinhaJoy1, operatorHub.kOne);
     shootCoral.whileTrue(new InstantCommand (()->coralSubsystem.runMotor(20)));
-    shootCoral.whileFalse(new InstantCommand (coralSubsystem::resetEncoder));
+    shootCoral.whileFalse(new InstantCommand (()->coralSubsystem.runMotor(0)));
 
     /*JoystickButton liftUp = new JoystickButton (mesinhaJoy2, operatorHub.getRedAxisUpInt(0.75));
     liftUp.whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));

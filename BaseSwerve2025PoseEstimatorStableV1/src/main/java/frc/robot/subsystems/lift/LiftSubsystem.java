@@ -124,7 +124,7 @@ public class LiftSubsystem extends SubsystemBase
     /* Configure the soft limits */
     globalConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     globalConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    globalConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1.45;
+    globalConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 1.50;
     globalConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0; 
 
     
@@ -163,10 +163,10 @@ public class LiftSubsystem extends SubsystemBase
     
     /* Configure Motion Magic */
     MotionMagicConfigs mm = globalConfig.MotionMagic;
-    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(100/20)) //// Target cruise velocity of 80 rps
-      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(50/20)) // Target acceleration of 160 rps/s (0.5 seconds)
+    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(100/10)) //// Target cruise velocity of 80 rps
+      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(50/10)) // Target acceleration of 160 rps/s (0.5 seconds)
       // Take approximately 0.1 seconds to reach max accel 
-      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500/20));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
+      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500/10));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
 
   
      
