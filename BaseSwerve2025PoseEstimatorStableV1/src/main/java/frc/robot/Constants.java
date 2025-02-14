@@ -632,8 +632,8 @@ import edu.wpi.first.math.util.Units;
       public static final double kFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       public static final double kMinOutput = -1;
       public static final double kMaxOutput = 1;
-    public static double kSoftLimitMax;
-    public static double kSoftLimitMin;
+      public static double kSoftLimitMax;
+      public static double kSoftLimitMin;
 
       
     //Escalator

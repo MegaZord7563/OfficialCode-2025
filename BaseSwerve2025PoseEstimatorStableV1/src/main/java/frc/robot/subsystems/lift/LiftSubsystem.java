@@ -326,9 +326,9 @@ public class LiftSubsystem extends SubsystemBase
    * Hold lift on position
    * @
    */
-  public void holdMotor()
+  public void holdMotor(double setPoint)
   {
-    liftMotor.setControl( m_mmReq.withPosition(liftMotor.getPosition().getValueAsDouble()).withSlot(0));
+    liftMotor.setControl( m_mmReq.withPosition(setPoint).withSlot(0));
     
   }
 

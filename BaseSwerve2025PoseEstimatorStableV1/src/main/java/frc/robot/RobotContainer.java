@@ -65,7 +65,19 @@ import frc.robot.subsystems.lift.LiftSubsystem;
 public class RobotContainer 
 {
   // The robot's subsystems and commands are defined here...
+  //Operator Controller
+  public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
   
+  public static CommandXboxController driverJoystick = 
+                                      new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
+  
+  public static Joystick mesinhaJoy1 = 
+                          new Joystick(MesinhaJoy1Constants.kJoy1Port);
+  public static Joystick mesinhaJoy2 = 
+                          new Joystick(MesinhaJoy2Constants.kJoy2Port);
+
+  public static final OperatorHub operatorHub = 
+                                  new OperatorHub(mesinhaJoy1, mesinhaJoy2);
   /**
    * SUBSYSTEMS
    */
@@ -105,7 +117,7 @@ public class RobotContainer
   //Lift Commands
   public  static LiftCommand liftCmd =new LiftCommand();
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
-  public static LiftManualCmd liftManualCmd = new LiftManualCmd();
+  public static LiftManualCmd liftManualCmd = new LiftManualCmd(operatorHub);
 
   
   //Coral Commands
@@ -142,19 +154,7 @@ public class RobotContainer
   //public static XboxController driverJoystick;
   //Controllers
 
-  //Operator Controller
-  public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
   
-  public static CommandXboxController driverJoystick = 
-                                      new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
-  
-  public static Joystick mesinhaJoy1 = 
-                          new Joystick(MesinhaJoy1Constants.kJoy1Port);
-  public static Joystick mesinhaJoy2 = 
-                          new Joystick(MesinhaJoy2Constants.kJoy2Port);
-
-  public static final OperatorHub operatorHub = 
-                                  new OperatorHub(mesinhaJoy1, mesinhaJoy2);
   
   
   /**

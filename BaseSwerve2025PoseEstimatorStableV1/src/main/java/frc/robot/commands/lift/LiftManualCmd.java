@@ -16,9 +16,11 @@ public class LiftManualCmd extends Command
 {
    // Declare the boolean variables   
     private boolean finish = false;
+
+    private double encoderPosition, currentPosition;
    
     
-    public static final OperatorHub operatorHub =RobotContainer.operatorHub;
+    public final OperatorHub operatorHub;//=RobotContainer.operatorHub;
 
     //Declare doubles
    
@@ -30,9 +32,9 @@ public class LiftManualCmd extends Command
   private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
 
   /** Creates a new AngleCmd. */
-  public LiftManualCmd() 
+  public LiftManualCmd(OperatorHub operatorHub) 
   {
-    
+    this.operatorHub=operatorHub;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(liftSubsystem);
   }
@@ -43,10 +45,10 @@ public class LiftManualCmd extends Command
   {
     // Print the initialization of the command
     System.out.println("Lift Manual Command Initialized");
-
+    
     finish = false;
     
-
+    currentPosition=liftSubsystem.getPosition();
     
     
   }
@@ -55,21 +57,26 @@ public class LiftManualCmd extends Command
   @Override
   public void execute() 
   {
-    //double currentPosition = liftSubsystem.getPosition();
-  
-   
+     
 
     if(operatorHub.getRedAxisUp(0.75))
     {
       liftSubsystem.setSpeed(0.3);
+      encoderPosition = liftSubsystem.getPosition();
     }
     else if(operatorHub.getRedAxisDown(-0.75))
     {
       liftSubsystem.setSpeed(-0.3);
+      encoderPosition = liftSubsystem.getPosition();
     }
-    else
+    else if(operatorHub.getRedAxisUpDownHome())
     {
-      liftSubsystem.holdMotor();
+      liftSubsystem.holdMotor(encoderPosition);
+      
+    }
+    else if (liftSubsystem.isHomed().get())
+    {
+      
       finish = true;
     }
      
@@ -79,15 +86,16 @@ public class LiftManualCmd extends Command
   @Override
   public void end(boolean interrupted) 
   {
+    
+    liftSubsystem.holdMotor(liftSubsystem.getPosition());
     System.out.println("Lift Manual Command Done!");
-   
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() 
   {
-    return finish ;
+    return finish;///||RobotContainer.driverJoystick.getHID().getStartButton();
   }
 
 }
