@@ -21,17 +21,16 @@ public class AlgaeCoralManualCmd extends Command {
     private final AlgaSubsystem algaSubsystem = RobotContainer.algaSubsystem;
     private final ArticuladorAlgaeSubsystem aAlgaeSubsystem = RobotContainer.articuladorAlgaeSubsystem;
 
-    private final OperatorHub operatorHub = RobotContainer.operatorHub;
+    private final OperatorHub operatorHub ;
 
     boolean finish = false;
 
   /** Creates a new AlgaeCoralManualCmd. */
-  public AlgaeCoralManualCmd() {
+  public AlgaeCoralManualCmd(OperatorHub operatorHub) {
+    this.operatorHub=operatorHub;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(aCoralSubsystem);
-    addRequirements(coralSubsystem);
-    addRequirements(algaSubsystem);
-    addRequirements(aAlgaeSubsystem);
+    addRequirements(aCoralSubsystem,coralSubsystem,algaSubsystem,aAlgaeSubsystem);
+
 
   }
 
@@ -66,12 +65,13 @@ public class AlgaeCoralManualCmd extends Command {
       
       if(operatorHub.getTwo()){ algaSubsystem.setVelocity(-0.5); }
 
-      if( operatorHub.getBlackAxisUp(0.7)){ aAlgaeSubsystem.setVelocity(0.4);}
+      if( operatorHub.getBlackAxisUp(0.7)){ aAlgaeSubsystem.setVelocity(0.6);}
 
-      if( operatorHub.getBlackAxisDown(-0.7)){ aAlgaeSubsystem.setVelocity(-0.4);}
+      if( operatorHub.getBlackAxisDown(-0.7)){ aAlgaeSubsystem.setVelocity(-0.6);}
 
       else{aAlgaeSubsystem.runMotor(aAlgaeSubsystem.getPosition());
         finish = true;
+        algaSubsystem.setVelocity(0);
       }
       
           }

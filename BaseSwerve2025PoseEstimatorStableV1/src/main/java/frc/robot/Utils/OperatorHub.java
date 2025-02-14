@@ -93,7 +93,6 @@ public class OperatorHub {
        return false;
     }
 
-
    
     //Mesinha2
     public boolean getRedAxisSides(double percent){
