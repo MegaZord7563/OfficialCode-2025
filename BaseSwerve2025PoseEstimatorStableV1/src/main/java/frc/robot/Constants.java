@@ -731,17 +731,15 @@ import edu.wpi.first.math.util.Units;
 
       public static final class MesinhaJoy1Constants {
         //First part of operator Hub
-        public static final int kJoy1Port = 2;
+        public static final int kJoy1Port = 1;
         public static final double kOperatorDeathBand = 0.05;
-        public static final int kThree = 10;      //ok
-        public static final int kFive = 9;        //ok
-        public static final int kSix = 1;         //ok
-        public static final int kSeven = 4;       //ok   
-        public static final int kEight = 8;       //ok  
-        public static final int kTen = 3;         //ok
-        public static final int kEleven = 6;      //ok 
-        public static final int kThirteen = 2;    //ok
-        public static final int kFourteen = 5;    //ok 
+        public static final int kOne = 9;      //ok
+        public static final int kTwo = 10;        //ok
+        public static final int kThree = 11;         //ok
+        public static final int kFour = 12;       //ok   
+        public static final int kFive = 6;       //ok  
+        public static final int kSix = 8;         //ok
+        public static final int kSeven = 7;      //ok 
 
         public static final int kBlackAxisUp = 0;     //ok
         public static final int kBlackAxisSides = 1;  //ok 
@@ -749,19 +747,11 @@ import edu.wpi.first.math.util.Units;
 
       public static final class MesinhaJoy2Constants {
         //Second part of operator Hub
-        public static final int kJoy2Port = 1;
+        public static final int kJoy2Port = 2;
         public static final double kOperatorDeathBand = 0.05;
-        public static final int kOne = 12;      //ok
-        public static final int kTwo = 11;      //ok
-        public static final int kFour = 3;      //ok 
-        public static final int kNine = 2;      //ok
-        public static final int kTwelve = 1;    //ok
-
-        public static final int kKey1 = 5;        //ok
-        public static final int kKey2Left = 6;    //ok
-        public static final int kKey2Right = 7;   //ok  
-        public static final int kKey3 = 4;        //ok    
-                   
+        public static final int kOne = 3;      //ok
+        public static final int kTwo = 2;      //ok
+        public static final int kThree = 1;      //ok 
         
         public static final int kRedAxisUp = 0;     //ok
         public static final int kRedAxisSides = 1;  //ok

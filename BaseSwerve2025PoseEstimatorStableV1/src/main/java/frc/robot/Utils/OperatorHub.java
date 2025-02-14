@@ -12,21 +12,18 @@ public class OperatorHub {
  *                         Mesinha1                           *
  **************************************************************/
     //Botões mesinha1
-    public int kAlgeaOrCoral = MesinhaJoy1Constants.kThree;
 
-    //Algae
-    public int kAlgaeUp = MesinhaJoy1Constants.kSix;
-    public int kAlgaeDown = MesinhaJoy1Constants.kSeven;
-    public int kPickAlgae = MesinhaJoy1Constants.kEight;
-    public int kLeaveAlgae = MesinhaJoy1Constants.kTen;
-    public int kTiltAlgae = MesinhaJoy1Constants.kBlackAxisUp;
+    public int kOne = MesinhaJoy1Constants.kOne;
+    public int kTwo = MesinhaJoy1Constants.kTwo;
+    public int kThree = MesinhaJoy1Constants.kThree;
+    public int kFour = MesinhaJoy1Constants.kFour;
 
-    //Escalator
-    public int kPrepareEscalate = MesinhaJoy1Constants.kFive;
+    public int kSelectOne = MesinhaJoy1Constants.kFive;
+    public int kSelectTwo = MesinhaJoy1Constants.kSix;
+    public int kSelectThree = MesinhaJoy1Constants.kSeven;
 
-    //Coral
-    public int kCoralShoot = MesinhaJoy1Constants.kEleven;
-
+    public int kBlackAxisUp = MesinhaJoy1Constants.kBlackAxisUp;
+    public int kBlackAxisSides = MesinhaJoy1Constants.kBlackAxisSides;
 
 /**************************************************************
  *                         Mesinha2                           *
@@ -34,24 +31,14 @@ public class OperatorHub {
     //Botões mesinha2
 
     //Positions
-    public int kStationSide = MesinhaJoy2Constants.kFour;
-    public int kStationPosition = MesinhaJoy2Constants.kNine;
 
-    //Coral
-    public int kPickCoral = MesinhaJoy2Constants.kTwo;
-    public int kCoralAxis = MesinhaJoy2Constants.kRedAxisSides;
-
-    //Ramp
-    public int kRampStart = MesinhaJoy2Constants.kOne;
-
-    //Home
-    public int kHome = MesinhaJoy2Constants.kTwelve;
-
-    //Escalador
-    public int kElevatorAxis = MesinhaJoy2Constants.kRedAxisUp;
+    public int kFive = MesinhaJoy2Constants.kOne;
+    public int kSix = MesinhaJoy2Constants.kTwo;
+    public int kSeven = MesinhaJoy2Constants.kThree;
 
 
-
+    public int kRedAxisUp = MesinhaJoy2Constants.kRedAxisUp;
+    public int kRedAxisSides = MesinhaJoy2Constants.kRedAxisSides;
 
     public OperatorHub(Joystick mesinha1, Joystick mesinha2){
         this.mesinha1 = mesinha1;
@@ -62,74 +49,69 @@ public class OperatorHub {
     ///////////////////////////////////////////////////////////////////////////////////////
     
     //Mesinha1
-    public boolean getTiltAlgae(double percent){
-        return mesinha1.getRawAxis(kTiltAlgae) > percent;
+    public boolean getBlackAxisUp(double percent){
+        return mesinha1.getRawAxis(kBlackAxisUp) > percent;
+    }
+
+    //Mesinha2
+    public boolean getBlackAxisSides(double percent){
+        return mesinha1.getRawAxis(kBlackAxisUp) < percent;
+    }
+
+    public boolean getRedAxisUp(double percent){
+        return mesinha2.getRawAxis(kBlackAxisUp) > percent;
+    }
+
+    //Mesinha2
+    public boolean getRedAxisSides(double percent){
+        return mesinha2.getRawAxis(kBlackAxisUp) < percent;
     }
 
     //Mesinha1
-    public boolean getElevatorAxis(double percent){
-        return mesinha1.getRawAxis(kElevatorAxis) < percent;
+    public boolean getOne(){
+        return mesinha1.getRawButton(kOne);
     }
 
     //Mesinha1
-    public boolean getAlgaeUp(){
-        return mesinha1.getRawButton(kAlgaeUp);
+    public boolean getTwo(){
+        return mesinha1.getRawButton(kTwo);
     }
 
     //Mesinha1
-    public boolean getAlgaeDown(){
-        return mesinha1.getRawButton(kAlgaeDown);
+    public boolean getThree(){
+        return mesinha1.getRawButton(kThree);
     }
 
     //Mesinha1
-    public boolean getPickAlgae(){
-        return mesinha1.getRawButton(kPickAlgae);
+    public boolean getFour(){
+        return mesinha1.getRawButton(kFour);
     }
-
-    //Mesinha1
-    public boolean getLeaveAlgae(){
-        return mesinha1.getRawButton(kLeaveAlgae);
+    //Mesinha2
+    public boolean getFive(){
+        return mesinha2.getRawButton(kFive);
+    }
+    //Mesinha2
+    public boolean getSix(){
+        return mesinha2.getRawButton(kSix);
+    }
+    //Mesinha2
+    public boolean getSeven(){
+        return mesinha2.getRawButton(kSeven);
     }
     
     //Mesinha1
-    public boolean getPrepareEscalate(){
-        return mesinha1.getRawButton(kPrepareEscalate);
+    public boolean getSelectOne(){
+        return mesinha1.getRawButton(kSelectOne);
     }
 
     //Mesinha1
-    public boolean getkCoralShoot(){
-        return mesinha1.getRawButton(kCoralShoot);
+    public boolean getSelectTwo(){
+        return mesinha1.getRawButton(kSelectTwo);
     }
         
     //Mesinha1
-    public boolean getStationSide(){
-        return mesinha1.getRawButton(kStationSide);
+    public boolean getSelectTrhee(){
+        return mesinha1.getRawButton(kSelectThree);
     }
-
-    //Mesinha1
-    public boolean getStationPosition(){
-        return mesinha1.getRawButton(kStationPosition);
-    }
-
-    //Mesinha1
-    public boolean getPickCoral(){
-        return mesinha1.getRawButton(kPickCoral);
-    }
-
-    //Mesinha2
-    public double getRampStart(){
-        return mesinha2.getRawAxis(kRampStart);
-    }
-
-    //Mesinha2
-    public double getHome(){
-        return mesinha2.getRawAxis(kHome);
-    }
-
-    //Mesinha2
-    public double getkCoralAxis(){
-        return mesinha2.getRawAxis(kCoralAxis);
-    }
-
 
 }
