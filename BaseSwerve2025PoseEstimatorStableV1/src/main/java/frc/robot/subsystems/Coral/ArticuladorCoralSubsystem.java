@@ -193,6 +193,11 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     
   }
 
+  public void setVelocity(double speed)
+  {
+    coralMotor.set(speed);
+  }
+
   public Supplier<Boolean> isHomed()
   {
     if (coralEncoder.getPosition() <=0.5)

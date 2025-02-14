@@ -33,6 +33,7 @@ import frc.robot.Constants.SubsystemsConstants.RampConstants;
 import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.OperatorHub;
 import frc.robot.Utils.TouchScreenInterface;
+import frc.robot.commands.AlgaeCoral.AlgaeCoralManualCmd;
 import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
@@ -91,13 +92,6 @@ public class RobotContainer
   public static ArticuladorCoralSubsystem articuladorCoralSubsystem = new ArticuladorCoralSubsystem();
   public static RampSubsystem rampSubsystem = new RampSubsystem();
   
-  
-  
-
-
-
- 
-  
 /**
  * COMMANDS
  */
@@ -113,6 +107,10 @@ public class RobotContainer
   public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
   public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
  
+  //Algae Coral Command
+  //
+  
+  //public static AlgaeCoralManualCmd algaeCoralManual = new AlgaeCoralManualCmd();
 
   /**
    * SEQUENTIAL COMMANDS
@@ -194,8 +192,14 @@ public class RobotContainer
 
     //Coral Commands
     articulador1Cmd.addRequirements(articuladorCoralSubsystem);
-   
+
+    //algaSubsystem.setDefaultCommand(algaeCoralManual);
+    //articuladorAlgaeSubsystem.setDefaultCommand(algaeCoralManual);
       
+  
+    //coralSubsystem.setDefaultCommand(algaeCoralManual);
+    //articuladorCoralSubsystem.setDefaultCommand(algaeCoralManual);
+
     // Build an auto chooser. This will use Commands.none() as the default option.
     chooserAuto = AutoBuilder.buildAutoChooser();
     
@@ -206,8 +210,7 @@ public class RobotContainer
     PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
     
    
-    
-    
+
 
     //Add options to the chooser
     chooserAuto.addOption("NovoAuto", autoPath);
