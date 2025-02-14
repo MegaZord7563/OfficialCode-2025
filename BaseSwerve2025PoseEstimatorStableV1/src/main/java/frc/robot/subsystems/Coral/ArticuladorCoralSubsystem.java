@@ -21,6 +21,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPILIB Imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,6 +43,9 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
 
   // The alga PID controller
   private final SparkClosedLoopController coralPidController;
+
+  // The sensor
+  private final DigitalInput sensor = new DigitalInput(0);
   
 
   /** Creates a new coralSubsytem. */
@@ -135,10 +139,20 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
   @Override
   public void periodic() 
   {
+    boolean sensorValue = sensor.get();
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Articulardor Coral Position", getPosition());
     SmartDashboard.putNumber("Articulador Coral Velocity", coralEncoder.getVelocity());
     SmartDashboard.putBoolean("Articulador Coral Homed", isHomed().get());
+    
+    if (sensorValue)
+    {
+      SmartDashboard.putBoolean("Sensor value", sensorValue);
+    }
+    else
+    {
+      SmartDashboard.putBoolean("Sensor value", sensorValue);
+    }
   }
 
   /**
@@ -215,5 +229,12 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     }
   }
 
-  
+  /**
+   * Detect if the coral is in the intake position
+   * @return sensor state
+   */
+  public boolean sensorCoral ()
+  {
+    return sensor.get();
+  }
 }

@@ -87,6 +87,36 @@ public class OperatorHub {
         
        return false;
     }
+    public int getRedAxisUpInt(double percent)
+    {
+        if ( mesinha2.getRawAxis(kBlackAxisUp) >percent)
+        {
+            return 1;
+        }
+        
+       return 0;
+    }
+
+    public int getRedAxisDownInt(double percent)
+    {
+        if ( mesinha2.getRawAxis(kBlackAxisUp) < percent)
+        {
+            return -1;
+        }
+        
+       return 0;
+    }
+    
+    public int getRedAxisUpDownCenterInt(double percent)
+    {
+        if (getRedAxisDownInt(-0.75)==0&&getRedAxisUpInt(0.75)==0)
+        {
+            return 1;
+        }
+        
+       return 0;
+    }
+
 
 
    

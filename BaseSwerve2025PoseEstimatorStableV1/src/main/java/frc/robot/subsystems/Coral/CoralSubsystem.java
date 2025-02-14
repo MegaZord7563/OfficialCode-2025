@@ -41,7 +41,7 @@ public class CoralSubsystem extends SubsystemBase
   //private SparkMaxConfig globalConfig = new SparkMaxConfig();
 
   private final TalonFX coralMotor;
-  private final DigitalInput sensor = new DigitalInput(0);
+  
 
 
   // The distance sensor
@@ -231,7 +231,7 @@ public class CoralSubsystem extends SubsystemBase
   public void periodic() 
 
   {
-    boolean sensorValue = sensor.get();
+   
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral Velocity m/s", getVelocity());
 
@@ -267,15 +267,10 @@ public class CoralSubsystem extends SubsystemBase
       SmartDashboard.putString("Operational Range", "Invalid Measurement");
     }  */
 
-    if (sensorValue)
-    {
-      SmartDashboard.putBoolean("Sensor value", sensorValue);
-    }
-    else
-    {
-      SmartDashboard.putBoolean("Sensor value", sensorValue);
-    }
+    
   }
+
+  
 
   /**
    * Set the coral motor speed

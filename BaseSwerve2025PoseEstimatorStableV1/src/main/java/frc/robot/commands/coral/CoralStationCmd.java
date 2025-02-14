@@ -20,7 +20,7 @@ public class CoralStationCmd extends Command
 
   // Declare the double variables
   private double encoderPosition = 0;
-  private double setPoint = 65;//em graus
+  private double setPoint = 66;//em graus
   private double tolerance = 0.05;//5%
 
   //declare boolean variables
@@ -53,7 +53,7 @@ public class CoralStationCmd extends Command
     aCoralSubsystem.runMotor(setPoint);
 
     // Check if the setpoint is within the tolerance
-    if (setPoint * (1-tolerance) < encoderPosition && encoderPosition < setPoint * (1+tolerance)) finish=true;
+    if (setPoint * (1-tolerance) < encoderPosition && encoderPosition < setPoint * (1+tolerance)&&aCoralSubsystem.sensorCoral()) finish=true;
   }
 
 

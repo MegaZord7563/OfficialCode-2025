@@ -16,8 +16,9 @@ public class LiftManualCmd extends Command
 {
    // Declare the boolean variables   
     private boolean finish = false;
+    private boolean trava = false;
 
-    private double encoderPosition, currentPosition;
+    private double encoderPosition;
    
     
     public final OperatorHub operatorHub;//=RobotContainer.operatorHub;
@@ -47,9 +48,7 @@ public class LiftManualCmd extends Command
     System.out.println("Lift Manual Command Initialized");
     
     finish = false;
-    
-    currentPosition=liftSubsystem.getPosition();
-    
+     
     
   }
 
@@ -63,16 +62,18 @@ public class LiftManualCmd extends Command
     {
       liftSubsystem.setSpeed(0.3);
       encoderPosition = liftSubsystem.getPosition();
+      trava =true;
     }
     else if(operatorHub.getRedAxisDown(-0.75))
     {
       liftSubsystem.setSpeed(-0.3);
       encoderPosition = liftSubsystem.getPosition();
+      trava =true;
     }
-    else if(operatorHub.getRedAxisUpDownHome())
+    else if(operatorHub.getRedAxisUpDownHome()&&!liftSubsystem.isHomed().get()&&trava)
     {
       liftSubsystem.holdMotor(encoderPosition);
-      
+      trava=false;
     }
     else if (liftSubsystem.isHomed().get())
     {
@@ -87,7 +88,7 @@ public class LiftManualCmd extends Command
   public void end(boolean interrupted) 
   {
     
-    liftSubsystem.holdMotor(liftSubsystem.getPosition());
+    liftSubsystem.holdMotor(0);
     System.out.println("Lift Manual Command Done!");
   }
 

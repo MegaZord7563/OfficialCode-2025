@@ -185,7 +185,8 @@ public class RobotContainer
 
     //Lift Commands
     liftCmd.addRequirements(liftSubsystem);
-    liftAuto.addRequirements(liftSubsystem);
+    
+    //liftAuto.addRequirements(liftSubsystem);
     
     liftManualCmd.addRequirements(liftSubsystem);
     liftSubsystem.setDefaultCommand(liftManualCmd);
@@ -330,8 +331,15 @@ public class RobotContainer
     shootCoral.whileTrue(new InstantCommand (()->coralSubsystem.runMotor(20)));
     shootCoral.whileFalse(new InstantCommand (coralSubsystem::resetEncoder));
 
-    //JoystickButton liftUp = new JoystickButton (mesinhaJoy2, operatorHub.);
-    //liftUp.whileTrue(new InstantCommand (new InstantCommand(() -> liftSubsystem.setSpeed(0.3))));
+    /*JoystickButton liftUp = new JoystickButton (mesinhaJoy2, operatorHub.getRedAxisUpInt(0.75));
+    liftUp.whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
+    //liftUp.whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
+
+    JoystickButton liftDown = new JoystickButton (mesinhaJoy2, operatorHub.getRedAxisDownInt(-0.75));
+    liftDown.whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(-0.3)));*/
+
+
+    
     
 
    
