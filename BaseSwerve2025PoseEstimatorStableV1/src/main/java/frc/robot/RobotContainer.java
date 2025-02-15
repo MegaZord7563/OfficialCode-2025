@@ -119,6 +119,8 @@ public class RobotContainer
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
   public static LiftManualCmd liftManualCmd = new LiftManualCmd(operatorHub);
 
+  public static AlgaeCoralManualCmd algaeCoralManualCmd = new AlgaeCoralManualCmd(operatorHub);
+
   
   //Coral Commands
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
@@ -209,6 +211,9 @@ public class RobotContainer
     liftManualCmd.addRequirements(liftSubsystem);
     liftSubsystem.setDefaultCommand(liftManualCmd);
 
+    algaeCoralManualCmd.addRequirements(articuladorAlgaeSubsystem);
+    articuladorAlgaeSubsystem.setDefaultCommand(algaeCoralManualCmd);
+  
 
 
     //Coral Commands
@@ -344,43 +349,6 @@ public class RobotContainer
      /**
       * OPERATOR CONTROLS
       */
-    
-  //set command to coral
-    JoystickButton shootCoral = new JoystickButton (mesinhaJoy1, operatorHub.kOne);
-    shootCoral.whileTrue(new InstantCommand (()->coralSubsystem.runMotor(20)));
-    shootCoral.whileFalse(new InstantCommand (()->coralSubsystem.runMotor(0)));
-
-    /*JoystickButton liftUp = new JoystickButton (mesinhaJoy2, operatorHub.getRedAxisUpInt(0.75));
-    liftUp.whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
-    //liftUp.whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
-
-    JoystickButton liftDown = new JoystickButton (mesinhaJoy2, operatorHub.getRedAxisDownInt(-0.75));
-    liftDown.whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(-0.3)));*/
-
-
-    
-    
-    //set command to coral
-    if(operatorHub.getSelectOne()){
-      JoystickButton shootCoral = new JoystickButton (mesinhaJoy1, operatorHub.kOne);
-      shootCoral.whileTrue(new InstantCommand (()->coralSubsystem.runMotor(20)));
-      shootCoral.whileFalse(new InstantCommand (coralSubsystem::resetEncoder));
-
-      JoystickButton backShootCoral = new JoystickButton (mesinhaJoy1, operatorHub.kTwo);
-      backShootCoral.whileTrue(new InstantCommand (()->coralSubsystem.runMotor(-20)));
-      backShootCoral.whileFalse(new InstantCommand (coralSubsystem::resetEncoder));
-    } 
-    else{
-      JoystickButton shootAlgae = new JoystickButton (mesinhaJoy1, operatorHub.kOne);
-      shootAlgae.whileTrue(new InstantCommand (()->algaSubsystem.setVelocity(0.5)));
-      shootAlgae.whileFalse(new InstantCommand (()-> algaSubsystem.setVelocity(0)));
-
-      JoystickButton shootBackAlgae = new JoystickButton (mesinhaJoy1, operatorHub.kTwo);
-      shootBackAlgae.whileTrue(new InstantCommand (()->algaSubsystem.setVelocity(-0.5)));
-      shootBackAlgae.whileFalse(new InstantCommand (()-> algaSubsystem.setVelocity(0)));
-    }
-   
-
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);

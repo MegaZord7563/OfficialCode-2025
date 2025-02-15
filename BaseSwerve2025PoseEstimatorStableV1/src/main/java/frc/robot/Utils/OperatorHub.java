@@ -122,6 +122,47 @@ public class OperatorHub {
        return 0;
     }
 
+    public boolean getBlackAxisUpDownHome( )
+    {
+        if ( mesinha1.getRawAxis(kBlackAxisUp) < 0.3 && mesinha1.getRawAxis(kBlackAxisUp)>-0.3)
+        {
+            return true;
+        }
+        
+       return false;
+    }
+
+    
+
+       public int getBlackAxisUpInt(double percent)
+    {
+        if ( mesinha1.getRawAxis(kBlackAxisUp) >percent)
+        {
+            return 1;
+        }
+        
+       return 0;
+    }
+
+    public int getBlackAxisDownInt(double percent)
+    {
+        if ( mesinha1.getRawAxis(kBlackAxisUp) < percent)
+        {
+            return -1;
+        }
+        
+       return 0;
+    }
+    
+    public int getBlackAxisUpDownCenterInt(double percent)
+    {
+        if (getBlackAxisDownInt(-0.75)==0&&getBlackAxisDownInt(0.75)==0)
+        {
+            return 1;
+        }
+       return 0;
+    }
+
 
    
     //Mesinha2
