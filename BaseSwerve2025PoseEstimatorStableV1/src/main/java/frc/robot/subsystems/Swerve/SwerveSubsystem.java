@@ -30,9 +30,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.TimeUnit;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -144,6 +145,12 @@ public class SwerveSubsystem extends SubsystemBase
   //optical sensors
   private DigitalInput sensorLeft = new DigitalInput(1);
   private DigitalInput sensorRight = new DigitalInput(2);
+
+  private boolean sensorLeftLate;
+  private boolean sensorRightLate;
+
+
+
   
   public SwerveSubsystem() 
   {
@@ -249,6 +256,7 @@ public class SwerveSubsystem extends SubsystemBase
   
     this.addPoseVision();
     
+
 
     // Output  to SmartDashboard
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
@@ -840,6 +848,50 @@ public void stopModules ()
   {
     return sensorRight.get();
   }
+
+/* 
+  public boolean getSensorLeftLate()
+  {
+    new Thread(() -> {
+      try {
+          Thread.sleep(500); //avoid to block the rest of our code from running
+          sensorLeftLate = getSensorLeft();
+      } catch (Exception e) {
+      }
+  }).start();
+
+  return sensorLeftLate;
+  }
+
+  public boolean getSensorRightLate()
+  {
+    new Thread(() -> {
+      try {
+          Thread.sleep(500); //avoid to block the rest of our code from running
+          sensorRightLate = getSensorRight();
+      } catch (Exception e) {
+      }
+  }).start();
+
+  return sensorRightLate;
+  }
+*/
+
+  public boolean getSensorRightLate()
+  {
+    Timer.delay(0.5);
+    sensorRightLate = getSensorRight();
+  return sensorRightLate;
+  }
+
+
+  public boolean getSensorLeftLate()
+  {
+    Timer.delay(0.5);
+    sensorLeftLate = getSensorLeft();
+  return sensorLeftLate;
+  }
+  
 
   /**
    * Get the gyro yaw

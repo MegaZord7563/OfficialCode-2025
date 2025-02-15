@@ -331,8 +331,6 @@ public class RobotContainer
      
      driverJoystick.y().whileTrue(homingEndGame);
 
-     //driverJoystick.b().whileTrue(new InstantCommand(()->rampSubsystem.runMotor(105)));
-     //driverJoystick.b().whileFalse(new InstantCommand(()->rampSubsystem.runMotor(0)));
 
      //lift manual control up and down	
      //driverJoystick.povUp().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
@@ -370,36 +368,14 @@ public class RobotContainer
 
 
 /* 
-     operatorJoystick.x().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity)));
-     operatorJoystick.x().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
-
-     operatorJoystick.y().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity * -1)));
-     operatorJoystick.y().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
-
-     operatorJoystick.b().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(AlgaIntakeConstants.pickAlgaePIDPosition)));
-     operatorJoystick.b().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
-
-     operatorJoystick.a().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(AlgaIntakeConstants.startAlgaePIDPosition)));
-     operatorJoystick.a().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
-
-     operatorJoystick.povDown().whileTrue(new InstantCommand(()->algaSubsystem.setVelocity(AlgaIntakeConstants.shooterAlgaeVelocity *-1)));
-     operatorJoystick.povDown().whileFalse(new InstantCommand(()->algaSubsystem.setVelocity(0)));
-
-     operatorJoystick.povUp().whileTrue((new InstantCommand(()->algaSubsystem.setVelocity(AlgaIntakeConstants.shooterAlgaeVelocity))));
-     operatorJoystick.povUp().whileFalse((new InstantCommand(()->algaSubsystem.setVelocity(0))));
-
-     operatorJoystick.povLeft().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity))));
-     operatorJoystick.povLeft().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
-
-     operatorJoystick.povRight().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity*-1))));
-     operatorJoystick.povRight().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
-
-     //operatorJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
-     //operatorJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
 
 
-     operatorJoystick.back().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.startPosition))));
-     operatorJoystick.start().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.pickPosition))));
+
+  
+
+
+
+
 
      operatorJoystick.leftBumper().whileTrue(rampCoral);*/
      
@@ -418,9 +394,6 @@ public class RobotContainer
      
      //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFindRed.endCommand()));
    
-
-    
-
    
   }
   

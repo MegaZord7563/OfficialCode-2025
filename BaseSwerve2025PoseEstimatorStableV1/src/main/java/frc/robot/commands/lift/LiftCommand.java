@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
+import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 public class LiftCommand extends Command
@@ -40,6 +41,7 @@ public class LiftCommand extends Command
 
   // Create the subsystem
   private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
+  private final LedControl ledControl = RobotContainer.ledControl;
 
   /** Creates a new AngleCmd. */
   public LiftCommand() 
@@ -88,6 +90,7 @@ public class LiftCommand extends Command
       
       //if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
       finish =true;
+      ledControl.greenLed();
     }
     if (l2)
     {
@@ -97,19 +100,22 @@ public class LiftCommand extends Command
       liftSubsystem.runMotor(l2Setpoint, false);
       
       if (l2Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l2Setpoint * (1+tolerance)) finish=true;
-     
+      ledControl.yellowLed();
+
     }
     if (l3)
     {
       System.out.println("L3 SELECTED");
       liftSubsystem.runMotor(l3Setpoint, false);
       if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
+      ledControl.orangeLed();
     }
     if (l4)
     {
       System.out.println("L4 SELECTED");
       liftSubsystem.runMotor(l4Setpoint , false);
       if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
+      ledControl.redLed();
     }
 
     

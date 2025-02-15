@@ -4,13 +4,16 @@
 
 package frc.robot.commands.AlgaeCoral;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Utils.OperatorHub;
+import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Algae.AlgaSubsystem;
 import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 import frc.robot.subsystems.Coral.CoralSubsystem;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeCoralManualCmd extends Command {
@@ -19,12 +22,18 @@ public class AlgaeCoralManualCmd extends Command {
     private final CoralSubsystem coralSubsystem = RobotContainer.coralSubsystem;
     private final AlgaSubsystem algaSubsystem = RobotContainer.algaSubsystem;
     private final ArticuladorAlgaeSubsystem aAlgaeSubsystem = RobotContainer.articuladorAlgaeSubsystem;
+    private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
+    private final LedControl ledControl = RobotContainer.ledControl;
+    
 
     private final OperatorHub operatorHub ;
 
     boolean finish = false;
     boolean trava = false;
     boolean travaC = false;
+
+    boolean leftScore = false;
+    boolean rigthScore = false;
 
     private double encoderPosition;
 
@@ -46,7 +55,21 @@ public class AlgaeCoralManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
+    if(!swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
+      if( !swerveDrive.getSensorRightLate()){
+        ledControl.blueLed();
+        leftScore = true;
+      }
+    }
+
+    if(!swerveDrive.getSensorRight() && swerveDrive.getSensorLeft()){
+      if( !swerveDrive.getSensorLeftLate()){
+        ledControl.blueLed();
+        rigthScore = true;
+      }
+    }
+
     //Ramp Initialization
     if(operatorHub.getEight()){
       RobotContainer.initializeRamp.schedule();
@@ -58,13 +81,13 @@ public class AlgaeCoralManualCmd extends Command {
 
     //Score L1
     if(operatorHub.getSeven()){
-      algaSubsystem.runMotors(3);
-      algaSubsystem.resetEncoder();
+      algaSubsystem.startAlga(9.5);
     }
+
 
     //Pick Algae
     if(operatorHub.getThree()){
-      aAlgaeSubsystem.runMotor(90);
+      aAlgaeSubsystem.runMotor(80);
     }
 
     //Score Algae
@@ -76,7 +99,7 @@ public class AlgaeCoralManualCmd extends Command {
     if (operatorHub.getSelectOne()){
 
       //Coral Shooter
-      if(operatorHub.getOne()){ coralSubsystem.setVelocity(1);;}
+      if(operatorHub.getOne()){ coralSubsystem.setVelocity(1);}
       else if(operatorHub.getTwo()){ coralSubsystem.setVelocity(-1);}
 
       else if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
@@ -117,17 +140,22 @@ public class AlgaeCoralManualCmd extends Command {
     else{
 
       //Algae Shooter
-      if(operatorHub.getOne()){ algaSubsystem.runMotors(9.5);;}
-      else if(operatorHub.getTwo()){ algaSubsystem.setVelocity(-9.5); }
+      if(operatorHub.getOne()){  
+      algaSubsystem.startAlga(9.5);
+      ledControl.redLed();
+      }
+      
 
-      else if(!operatorHub.getOne()){ algaSubsystem.setVelocity(0);}
-      else if(!operatorHub.getTwo()){ algaSubsystem.setVelocity(0); }
+      else if(operatorHub.getTwo()){ algaSubsystem.startAlga(-9.5);}
+
+      else if(!operatorHub.getOne()){algaSubsystem.startAlga(0);}
+      else if(!operatorHub.getTwo()){  algaSubsystem.startAlga(0);}
 
       //Algae Articulator
       //Up
       if(operatorHub.getBlackAxisUp(0.75))
       {
-        aAlgaeSubsystem.setVelocity(0.1);;
+        aAlgaeSubsystem.setVelocity(0.1);
         encoderPosition = aAlgaeSubsystem.getPosition();
         trava =true;
         System.out.println("BlackAxisUp");
@@ -153,6 +181,9 @@ public class AlgaeCoralManualCmd extends Command {
         //finish = true;
       }
       }
+
+      SmartDashboard.putBoolean("LeftScore", leftScore);
+      SmartDashboard.putBoolean("RightScore", rigthScore);
         }
 
       
