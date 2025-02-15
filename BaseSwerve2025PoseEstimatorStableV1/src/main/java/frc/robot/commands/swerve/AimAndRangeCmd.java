@@ -8,14 +8,16 @@ package frc.robot.commands.swerve;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 // WPI imports
-
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
 // Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.Limelight.AimingUtils;
 import frc.robot.Limelight.LimelightHelpers;
-
+import frc.robot.Utils.SelectScore;
+import frc.robot.Utils.TouchScreenInterface;
+import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -27,13 +29,13 @@ public class AimAndRangeCmd extends Command
   private static String limelightName = "limelight-front";
 
   // Variables
-  private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
+  //private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
   private static boolean finish = false; 
 
   //Max speed variables
-  private final double kMaxSpeed2Drive = 0.3;                   // Simple speed limit so we don't drive too fast
-  private final double kMaxSpeed2Steer = 0.3; 
-  private final double kMaxSpeed2Rot = 0.3; 
+  private final double kMaxSpeed2Drive = 0.15;                   // Simple speed limit so we don't drive too fast
+  private final double kMaxSpeed2Steer = 0.15; 
+  private final double kMaxSpeed2Rot = 0.15; 
 
   //PID offset variables
   private final double kPsteer = 0.03;                    // how hard to turn toward the target
@@ -44,17 +46,31 @@ public class AimAndRangeCmd extends Command
   private PIDController pidSteer = new PIDController(kPsteer,0,0);
   private PIDController pidRot = new PIDController(kProt,0,0);
 
+  // Declare the boolean variables   
+  private boolean kA = false;
+  private boolean kB = false;
+  private boolean kC = false;
+  private boolean kD = false;
+  private boolean kE = false;
+  private boolean kF = false;
+  private boolean kG = false;
+  private boolean kH = false;
+  private boolean kI = false;
+  private boolean kJ = false;
+  private boolean kK = false;
+  private boolean kL = false;
 
 
+  //double kX, double kY , double kRot
   /** Creates a new AimAndRangeCmd. */
-  public AimAndRangeCmd(double kX, double kY , double kRot) 
+  public AimAndRangeCmd()
   {
     //AimingUtils.trackReefPosition(limelightName,Id1, Id2);
 
     // Set the class ID
-    this.kX = kX;
+    /*this.kX = kX;
     this.kY = kY;
-    this.kRot = kRot;
+    this.kRot = kRot;*/
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
   }
@@ -66,6 +82,7 @@ public class AimAndRangeCmd extends Command
       // Switch to pipeline 1
     LimelightHelpers.setPipelineIndex(limelightName, 0);
 
+    
     // Set variables
     finish = false;
   }
@@ -74,23 +91,107 @@ public class AimAndRangeCmd extends Command
   @Override
   public void execute() 
   {
+    kA = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kA);
+    kB = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kB);  
+    kC = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kC);
+    kD = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kD);
+    kE = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kE);
+    kF = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kF);
+    kG = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kG);
+    kH = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kH);
+    kI = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kI);
+    kJ = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kJ);
+    kK = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kK);
+    kL = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL);
+
 
     robotPosition();
     // Get raw AprilTag/Fiducial data
-    
+    if (kA)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 1);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kB)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 2);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kC)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 3);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kD)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 4);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kE)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 5);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kF)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 6);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kG)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 7);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kH)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 8);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kI)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 9);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kJ)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 10);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kK)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 11);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else if (kL)
+    {
+        //AimingUtils.trackReefPosition(limelightName, 0, 12);
+        targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+    }
+    else
+    {
+        finish=true;
+    }
 
    // Check if a valid detection was found
    if (!finish) 
    {
     
-    double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(targetPosition.getY(), kY);
+    double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
     // try to drive forward until the target area reaches our desired area
     //double drive_cmd = MathUtil.clamp(pidDrive.calculate(distanceToTarget, kDistanceSetpoint),-kMaxSpeed2Drive,kMaxSpeed2Drive);
-    double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(targetPosition.getX(), kX);
+    double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(robotPosition().getX(),targetPosition.getX());
 
-   double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(targetPosition.getRotation().getDegrees(), kRot);
+    double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(robotPosition().getRotation().getDegrees(),targetPosition.getRotation().getDegrees());
     // Drive the swerve subsystem with the calculated speeds
     swerveDrive.driveToTarget(() -> drive_cmd, () -> steer_cmd, () -> rot_cmd, () -> true);
+
+    //testar metodo
+    /*swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(drive_cmd, 
+                                                                      steer_cmd, 
+                                                                      rot_cmd, 
+                                                                      swerveDrive.getGyroRotation2d()));*/
+
+    
   
 
         
@@ -140,6 +241,7 @@ public class AimAndRangeCmd extends Command
   public void end(boolean interrupted) 
   {
     swerveDrive.stopModules();
+    System.out.println("Aim and Range Command Done!!");
   }
 
   // Returns true when the command should end.

@@ -12,13 +12,10 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.CvSource;
-import edu.wpi.first.cscore.MjpegServer;
+//WPILIB Imports
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.Joystick;
-//WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,12 +27,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
-import frc.robot.Constants.OIConstants.JoystickOperatorConstants;
 import frc.robot.Constants.OIConstants.MesinhaJoy1Constants;
 import frc.robot.Constants.OIConstants.MesinhaJoy2Constants;
-import frc.robot.Constants.SubsystemsConstants.AlgaIntakeConstants;
 import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
-import frc.robot.Constants.SubsystemsConstants.RampConstants;
 import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.OperatorHub;
 import frc.robot.Utils.TouchScreenInterface;
@@ -54,6 +48,7 @@ import frc.robot.commands.score.HomingPosition;
 import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
 import frc.robot.commands.swerve.TrackAlgae;
+import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Algae.AlgaSubsystem;
 import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
 import frc.robot.subsystems.Climber.EscaladorSubsystem;
@@ -90,6 +85,7 @@ public class RobotContainer
    */
   //Put all subsystems here
   public static LimelightHelpers limelightHelpers = new LimelightHelpers();
+  public static LedControl ledControl = new LedControl();
   
   //Swerve Drive
   public static SwerveSubsystem swerveDrive = new SwerveSubsystem();
@@ -143,7 +139,7 @@ public class RobotContainer
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
-  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( 0, 0, 0);
+  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
   
   //PathFindingCommand
   public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
@@ -161,17 +157,9 @@ public class RobotContainer
   //Controllers
 
   
-  // Creates UsbCamera and MjpegServer [1] and connects them
-  UsbCamera usbCamera = new UsbCamera("USB Camera 0", 0);
-  MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
-
-  // Creates the CvSink and connects it to the UsbCamera
-  CvSink cvSink = new CvSink("opencv_USB Camera 0");
-
-  // Creates the CvSource and MjpegServer [2] and connects them
-  CvSource outputStream = new CvSource("Blur", PixelFormat.kMJPEG, 640, 480, 30);
-  MjpegServer mjpegServer2 = new MjpegServer("serve_Blur", 1182);
-
+  // Creates UsbCamera 
+  UsbCamera usbCamera;
+  
   
   /**
   * Declare class SendableChoser()  
@@ -183,10 +171,20 @@ public class RobotContainer
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
-    mjpegServer1.setSource(usbCamera);
-    cvSink.setSource(usbCamera);
-    mjpegServer2.setSource(outputStream);
+   //Configure camera 
   
+    usbCamera = CameraServer.startAutomaticCapture();
+    // Set the resolution
+    usbCamera.setResolution(640, 480);
+    // Set the frames per second  
+    usbCamera.setFPS(30);
+    // Set the pixel format
+    usbCamera.setPixelFormat(PixelFormat.kMJPEG);
+    
+
+
+    
+    
     //liftCmd = new LiftCommand();
     //articulador1Cmd = new Articulador1Cmd();
     //scoreLevel = new ScoreLevel();
