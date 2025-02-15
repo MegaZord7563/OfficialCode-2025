@@ -17,6 +17,7 @@ public class OperatorHub {
     public int kTwo = MesinhaJoy1Constants.kTwo;
     public int kThree = MesinhaJoy1Constants.kThree;
     public int kFour = MesinhaJoy1Constants.kFour;
+    public int kEight = MesinhaJoy1Constants.kEight;
 
     public int kSelectOne = MesinhaJoy1Constants.kFive;
     public int kSelectTwo = MesinhaJoy1Constants.kSix;
@@ -35,6 +36,7 @@ public class OperatorHub {
     public int kFive = MesinhaJoy2Constants.kOne;
     public int kSix = MesinhaJoy2Constants.kTwo;
     public int kSeven = MesinhaJoy2Constants.kThree;
+    public int kNine = MesinhaJoy2Constants.kFour;
 
 
     public int kRedAxisUp = MesinhaJoy2Constants.kRedAxisUp;
@@ -200,6 +202,14 @@ public class OperatorHub {
     //Mesinha2
     public boolean getSeven(){
         return mesinha2.getRawButton(kSeven);
+    }
+
+    public boolean getEight(){
+        return mesinha1.getRawButton(kEight);
+    }
+
+    public boolean getNine(){
+        return mesinha2.getRawButton(kNine);
     }
     
     //Mesinha1

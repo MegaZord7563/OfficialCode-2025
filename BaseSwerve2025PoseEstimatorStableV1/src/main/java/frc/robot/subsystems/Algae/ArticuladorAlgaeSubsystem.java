@@ -177,7 +177,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
 
   public Supplier<Boolean> isHomed()
   {
-    if (algaeEncoder.getPosition()<= 0.5)
+    if (algaeEncoder.getPosition()<= 8)
     {
       return ()->true;
 

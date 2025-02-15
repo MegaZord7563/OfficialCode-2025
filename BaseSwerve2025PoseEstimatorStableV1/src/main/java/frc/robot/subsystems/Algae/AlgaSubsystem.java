@@ -16,7 +16,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPILIB Imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SubsystemsConstants.AlgaIntakeConstants;
@@ -54,6 +54,7 @@ public class AlgaSubsystem extends SubsystemBase
     algaEncoder = algaMotor.getEncoder();
     //liftRightEncoder = liftRightMotor.getEncoder();
 
+    algaEncoder.setPosition(0);
     //Create PID controller
     algaPidController = algaMotor.getClosedLoopController();
     
@@ -101,17 +102,17 @@ public class AlgaSubsystem extends SubsystemBase
   public void periodic() 
   {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Algae Shooter Position", getPosition());
   }
 
   /**
    * Set the coral motor speed
    * @param AlgaMotorSpeed
    */
-  public void startAlga(double targetSpeed)
+  public void startAlga(double targetPosition)
   {
     
-      algaPidController.setReference(targetSpeed, ControlType.kVelocity);
-    
+      algaPidController.setReference(targetPosition, ControlType.kPosition);
     
   }
 
@@ -119,6 +120,15 @@ public class AlgaSubsystem extends SubsystemBase
     algaMotor.set(speed);
   }
 
+  public void resetEncoder(){
+    algaEncoder.setPosition(0);
+  }
+
+  public void runMotors( double targetSetpoint)
+  {
+  
+    algaPidController.setReference(targetSetpoint, ControlType.kPosition);
+  }
   /**
    * Stop the lift motor
    * 
@@ -129,9 +139,16 @@ public class AlgaSubsystem extends SubsystemBase
     
   }
 
+
+
   public double getVelocity()
   {
     return algaEncoder.getVelocity();
+  }
+
+  public double getPosition()
+  {
+    return algaEncoder.getPosition();
   }
  
   

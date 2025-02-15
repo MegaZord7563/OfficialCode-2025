@@ -441,10 +441,10 @@ import edu.wpi.first.math.util.Units;
       public static final double kAlgaVelocityConversionFactor = kAlgaPositionConversionFactor /60.0;//rotation to m/s
 
       //Alga PID
-      public static final double kP = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kP = 1;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kFF = 1.0/473.0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       public static final double kMinOutput = -1;
       public static final double kMaxOutput = 1;
 
@@ -550,7 +550,7 @@ import edu.wpi.first.math.util.Units;
 
 
     public static final double kSoftLimitMin = 0;
-    public static final double kSoftLimitMax = 91;
+    public static final double kSoftLimitMax = 71;
       
     } 
 
@@ -740,6 +740,7 @@ import edu.wpi.first.math.util.Units;
         public static final int kFive = 6;       //ok  
         public static final int kSix = 8;         //ok
         public static final int kSeven = 7;      //ok 
+        public static final int kEight = 1; 
 
         public static final int kBlackAxisUp = 0;     //ok
         public static final int kBlackAxisSides = 1;  //ok 
@@ -751,7 +752,8 @@ import edu.wpi.first.math.util.Units;
         public static final double kOperatorDeathBand = 0.05;
         public static final int kOne = 3;      //ok
         public static final int kTwo = 2;      //ok
-        public static final int kThree = 1;      //ok 
+        public static final int kThree = 1; 
+        public static final int kFour = 6;      //ok 
         
         public static final int kRedAxisUp = 0;     //ok
         public static final int kRedAxisSides = 1;  //ok

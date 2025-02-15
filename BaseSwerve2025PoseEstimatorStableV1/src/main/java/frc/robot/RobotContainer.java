@@ -39,6 +39,7 @@ import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.coral.CoralStationCmd;
+import frc.robot.commands.coral.PickL1Cmd;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.lift.LiftCommandAuto;
 import frc.robot.commands.lift.LiftManualCmd;
@@ -133,6 +134,7 @@ public class RobotContainer
   public static HomingPosition homingPosition = new HomingPosition();
   public static InitializeRamp initializeRamp = new InitializeRamp(); 
   public static HomingEndGame homingEndGame = new HomingEndGame();
+  public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
 
 
   //Swerve commands
