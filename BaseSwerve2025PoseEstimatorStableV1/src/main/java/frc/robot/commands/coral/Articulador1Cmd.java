@@ -27,9 +27,9 @@ public class Articulador1Cmd extends Command
     //setpoint in grades
    
     private double l1Setpoint = 55.0;
-    private double l2Setpoint = 45.0;
-    private double l3Setpoint = 45.0;
-    private double l4Setpoint = 45.0;
+    private double l2Setpoint = 50.0;
+    private double l3Setpoint = 50.0;
+    private double l4Setpoint = 40.0;
 
 
     // Create the subsystem

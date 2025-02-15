@@ -160,7 +160,7 @@ public class TrackAlgae extends Command
       
     // Set pipeline to track apriltags
     LimelightHelpers.setPipelineIndex(limelightName, 0);
-    System.out.println("Command Closed");
+    System.out.println("Track Algae Command Done!!");
 
   }
 

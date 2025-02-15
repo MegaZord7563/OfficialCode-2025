@@ -30,7 +30,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -128,8 +128,8 @@ public class SwerveSubsystem extends SubsystemBase
   private double allianceHeading = 180;
 
       
-  boolean deploy = true;
-  int countDeploy = 0;
+  private boolean deploy = true;
+  private int countDeploy = 0;
 
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
   below are robot specific, and should be tuned. */
@@ -140,8 +140,10 @@ public class SwerveSubsystem extends SubsystemBase
   // Create a NetworkTable publisher to publish the pose to NetworkTables
   StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault()
   .getStructTopic("MyPose", Pose2d.struct).publish();
-                
-
+  
+  //optical sensors
+  private DigitalInput sensorLeft = new DigitalInput(1);
+  private DigitalInput sensorRight = new DigitalInput(2);
   
   public SwerveSubsystem() 
   {
@@ -241,15 +243,14 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic() 
   {
-    // This method will be called once per scheduler run
-        
+    
     
     this.updatePoseEstimator();
   
     this.addPoseVision();
     
 
-    // Output the pose to SmartDashboard
+    // Output  to SmartDashboard
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
     SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
     SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
@@ -259,7 +260,8 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putBoolean("First Gear", throttleSlow);
     SmartDashboard.putBoolean("Second Gear", throttleFast);
     SmartDashboard.putBoolean("Third Gear", throttleMax);
-    //SmartDashboard.putNumber("Pigeon", frontLeftModule.getDriveVelocityMPS());
+    SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());
+    SmartDashboard.putBoolean("Sensor Right value", getSensorRight());
     
 
     if(deploy)
@@ -819,6 +821,33 @@ public void stopModules ()
     this.setModuleStates(swerveModuleStates);//*/  
 
     
+  }
+
+  /**
+   * False if target is on the left side of the robot
+   * @return
+   */
+  public boolean getSensorLeft()
+  {
+    return sensorLeft.get();
+  } 
+
+  /**
+   * False if target is on the right side of the robot
+   * @return
+   */
+  public boolean getSensorRight()
+  {
+    return sensorRight.get();
+  }
+
+  /**
+   * Get the gyro yaw
+   * @return
+   */
+  public Rotation2d getGyroRotation2d()
+  {
+    return gyro.getRotation2d();
   }
 
 }
