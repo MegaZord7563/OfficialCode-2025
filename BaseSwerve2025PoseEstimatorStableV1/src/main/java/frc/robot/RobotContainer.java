@@ -128,7 +128,7 @@ public class RobotContainer
   //Algae Coral Command
   //
   
-  //public static AlgaeCoralManualCmd algaeCoralManual = new AlgaeCoralManualCmd();
+  //public static AlgaeCoralManualCmd algaeCoralManual = new AlgaeCoralManualCmd(operatorHub);
 
   /**
    * SEQUENTIAL COMMANDS
@@ -215,11 +215,7 @@ public class RobotContainer
     articulador1Cmd.addRequirements(articuladorCoralSubsystem);
 
     //algaSubsystem.setDefaultCommand(algaeCoralManual);
-    //articuladorAlgaeSubsystem.setDefaultCommand(algaeCoralManual);
-      
-  
-    //coralSubsystem.setDefaultCommand(algaeCoralManual);
-    //articuladorCoralSubsystem.setDefaultCommand(algaeCoralManual);
+
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     chooserAuto = AutoBuilder.buildAutoChooser();
@@ -364,7 +360,25 @@ public class RobotContainer
 
     
     
+    //set command to coral
+    if(operatorHub.getSelectOne()){
+      JoystickButton shootCoral = new JoystickButton (mesinhaJoy1, operatorHub.kOne);
+      shootCoral.whileTrue(new InstantCommand (()->coralSubsystem.runMotor(20)));
+      shootCoral.whileFalse(new InstantCommand (coralSubsystem::resetEncoder));
 
+      JoystickButton backShootCoral = new JoystickButton (mesinhaJoy1, operatorHub.kTwo);
+      backShootCoral.whileTrue(new InstantCommand (()->coralSubsystem.runMotor(-20)));
+      backShootCoral.whileFalse(new InstantCommand (coralSubsystem::resetEncoder));
+    } 
+    else{
+      JoystickButton shootAlgae = new JoystickButton (mesinhaJoy1, operatorHub.kOne);
+      shootAlgae.whileTrue(new InstantCommand (()->algaSubsystem.setVelocity(0.5)));
+      shootAlgae.whileFalse(new InstantCommand (()-> algaSubsystem.setVelocity(0)));
+
+      JoystickButton shootBackAlgae = new JoystickButton (mesinhaJoy1, operatorHub.kTwo);
+      shootBackAlgae.whileTrue(new InstantCommand (()->algaSubsystem.setVelocity(-0.5)));
+      shootBackAlgae.whileFalse(new InstantCommand (()-> algaSubsystem.setVelocity(0)));
+    }
    
 
 
