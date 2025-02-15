@@ -49,17 +49,20 @@ public class AlgaeCoralManualCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    
+    //Selective Key Coral/Algae
     if (operatorHub.getSelectOne()){
 
+      //Coral Shooter
       if(operatorHub.getOne()){ coralSubsystem.setVelocity(1);;}
 
-      if(operatorHub.getTwo()){ coralSubsystem.setVelocity(-1);}
+      else if(operatorHub.getTwo()){ coralSubsystem.setVelocity(-1);}
 
-      if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
-      if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
+      else if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
+      else if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
 
-      if(operatorHub.getBlackAxisUp(0.75))
+      //Coral Articulator
+      else if(operatorHub.getBlackAxisUp(0.75))
       {
         aCoralSubsystem.setVelocity(0.3);;
         encoderPositionC = aCoralSubsystem.getPosition();
@@ -71,9 +74,11 @@ public class AlgaeCoralManualCmd extends Command {
         encoderPositionC = aCoralSubsystem.getPosition();
         trava =true;
       }
-      else if(operatorHub.getRedAxisUpDownHome()&&!aCoralSubsystem.isHomed().get()&&travaC)
+      else if(operatorHub.getBlackAxisUpDownHome()&&!aCoralSubsystem.isHomed().get())
       {
+        encoderPositionC = aCoralSubsystem.getPosition();
         aCoralSubsystem.runMotor(encoderPositionC);
+        System.out.println("BackAxisHome");
         trava=false;
       }
       else if (aCoralSubsystem.isHomed().get())
@@ -81,21 +86,23 @@ public class AlgaeCoralManualCmd extends Command {
         finish = true;
       }
       else{
+        //Prestar atenção
         aCoralSubsystem.setVelocity(0);
       }
 
     }
     else{
-            
+      //Algae Shooter
       if(operatorHub.getOne()){ algaSubsystem.setVelocity(1);}
       
-      if(operatorHub.getTwo()){ algaSubsystem.setVelocity(-1); }
+      else if(operatorHub.getTwo()){ algaSubsystem.setVelocity(-1); }
 
-      if(!operatorHub.getOne()){ algaSubsystem.setVelocity(0);}
+      else if(!operatorHub.getOne()){ algaSubsystem.setVelocity(0);}
       
-      if(!operatorHub.getTwo()){ algaSubsystem.setVelocity(0); }
+      else if(!operatorHub.getTwo()){ algaSubsystem.setVelocity(0); }
 
-      if(operatorHub.getBlackAxisUp(0.75))
+      //Algae Articulator
+      else if(operatorHub.getBlackAxisUp(0.75))
       {
         aAlgaeSubsystem.setVelocity(0.5);;
         encoderPosition = aAlgaeSubsystem.getPosition();
@@ -107,22 +114,23 @@ public class AlgaeCoralManualCmd extends Command {
         encoderPosition = aAlgaeSubsystem.getPosition();
         trava =true;
       }
-      else if(operatorHub.getRedAxisUpDownHome()&&!aAlgaeSubsystem.isHomed().get()&&trava)
+      else if(operatorHub.getBlackAxisUpDownHome()&&!aAlgaeSubsystem.isHomed().get())
       {
+        encoderPosition = aAlgaeSubsystem.getPosition();
         aAlgaeSubsystem.runMotor(encoderPosition);
         trava=false;
+        System.out.println("BlackAxisHome");
       }
       else if (aAlgaeSubsystem.isHomed().get())
       {
         finish = true;
       }
-
       }
         }
       
 
       
-        // Called once the command ends or is interrupted.
+  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
