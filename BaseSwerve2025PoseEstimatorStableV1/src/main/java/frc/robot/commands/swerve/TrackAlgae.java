@@ -27,7 +27,7 @@ public class TrackAlgae extends Command
   //private  Translation2d targetPosition = new Translation2d(0, 0);
   
   // Limelight name
-  private static String limelightName = "limelight-front";
+  private static String limelightName = "limelight-back";
 
   // Variables
   private final int expectedClassId = 0; // Replace with the correct class ID for the game piece
@@ -39,8 +39,8 @@ public class TrackAlgae extends Command
   private final double kPdrive = 2.0; //0.26 
 
   //Max speed variables
-  private final double kMaxSpeed2Drive = 0.3;                   // Simple speed limit so we don't drive too fast
-  private final double kMaxPeed2Steer = 0.3; 
+  private final double kMaxSpeed2Drive = 0.2;                   // Simple speed limit so we don't drive too fast
+  private final double kMaxPeed2Steer = 0.2; 
 
   private final double kDistanceSetpoint = 0.5;
   // Variables

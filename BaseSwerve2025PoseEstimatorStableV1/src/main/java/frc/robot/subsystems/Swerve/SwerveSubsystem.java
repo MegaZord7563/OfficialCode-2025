@@ -126,7 +126,7 @@ public class SwerveSubsystem extends SubsystemBase
   RobotConfig config;
 
   //Select alliance heading - default is blue
-  private double allianceHeading = 180;
+  private double allianceHeading = 0;
 
       
   private boolean deploy = true;
@@ -150,7 +150,6 @@ public class SwerveSubsystem extends SubsystemBase
   private boolean sensorRightLate;
 
 
-
   
   public SwerveSubsystem() 
   {
@@ -163,6 +162,18 @@ public class SwerveSubsystem extends SubsystemBase
     if (alliance2.get() == DriverStation.Alliance.Red) 
     {
       allianceHeading = 0;
+      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,-0.2595,0.405,0,0,0);
+      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,0.1705,0.100,0,0,180);
+      System.out.println("limelight settings Red");
+       
+    }else
+    {
+      //blue
+      allianceHeading = 180;
+      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,-0.2595,0.405,0,0,180);
+      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,0.1705,0.100,0,0,0);
+      System.out.println("limelight settings Blue");
+
     }
 
     //Initialize pose estimator ALWAYS towards to red wall
@@ -255,6 +266,7 @@ public class SwerveSubsystem extends SubsystemBase
     this.updatePoseEstimator();
   
     this.addPoseVision();
+   
     
 
 
@@ -794,8 +806,8 @@ public void stopModules ()
   {
     
     // 1. Get real-time joystick inputs
-    double xSpeed = xSpdFunction.get();
-    double ySpeed = ySpdFunction.get();  
+    double xSpeed = -xSpdFunction.get();
+    double ySpeed = -ySpdFunction.get();  
     double turningSpeed = turningSpdFunction.get();
     boolean fieldOriented = fieldOrientedFunction.get();
 
@@ -814,12 +826,12 @@ public void stopModules ()
     var swerveModuleStates =  DriveConstants.
                               kDriveKinematics.
                               toSwerveModuleStates
-                              (fieldOriented ? 
+                              (//fieldOriented ? 
                                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
                                                                       ySpeed, 
                                                                       turningSpeed, 
                                                                       gyro.getRotation2d()) 
-                                : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
+                                //: new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
                               );//Do this if fielOrientation is false 
 
     

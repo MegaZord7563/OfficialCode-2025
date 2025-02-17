@@ -80,10 +80,10 @@ public class SelectScore
                 poseToScore = new Pose2d(4.986,3.448,Rotation2d.fromDegrees(300));
             }
             else if (touch.getButtonValue(VirtualButton.kG)){
-                poseToScore = new Pose2d(5.321,3.861,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(6.00,4.60,Rotation2d.fromDegrees(0));
             }
             else if (touch.getButtonValue(VirtualButton.kH)){
-                poseToScore = new Pose2d(5.321,4.190,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(6.0,4.60,Rotation2d.fromDegrees(0));
             }
             else if (touch.getButtonValue(VirtualButton.kI)){
                 poseToScore = new Pose2d(4.986,4.603,Rotation2d.fromDegrees(60));
