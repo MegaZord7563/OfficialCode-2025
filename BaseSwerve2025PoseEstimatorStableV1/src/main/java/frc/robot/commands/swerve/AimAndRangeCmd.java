@@ -26,6 +26,7 @@ public class AimAndRangeCmd extends Command
   // Instantiate the object
   private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
   private  Pose2d targetPosition = new Pose2d(0, 0, null);
+  private  Pose2d currentPosition = new Pose2d(0, 0, null);
   private static String limelightName = "limelight-front";
 
   // Variables
@@ -35,16 +36,25 @@ public class AimAndRangeCmd extends Command
   //Max speed variables
   private final double kMaxSpeed2Drive = 0.15;                   // Simple speed limit so we don't drive too fast
   private final double kMaxSpeed2Steer = 0.15; 
-  private final double kMaxSpeed2Rot = 0.15; 
+  private final double kMaxSpeed2Rot = 0.05; 
 
   //PID offset variables
-  private final double kPsteer = 0.03;                    // how hard to turn toward the target
-  private final double kPdrive = 0.1; //0.26 
-  private final double kProt = 0.0; //0.26 
+  private final double kPsteer = 2.0;                    // how hard to turn toward the target
+  private final double kPdrive = 2.0; //0.26 
+  private final double kProt = 0.01; //0.26 
   //PID controller
   private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
   private PIDController pidSteer = new PIDController(kPsteer,0,0);
   private PIDController pidRot = new PIDController(kProt,0,0);
+
+  /Trapezoidal constants
+  private static double kDt = 0.02; //The period between controller updates in seconds. 
+  private static double kMaxVelocity = 4;
+  private static double kMaxAcceleration = 1;
+  
+
+  //private final TrapezoidProfile.Constraints m_constraints =  new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
+  //private final ProfiledPIDController mController = new ProfiledPIDController(KP, KI, KD, m_constraints,kDt);
 
   // Declare the boolean variables   
   private boolean kA = false;
@@ -81,6 +91,7 @@ public class AimAndRangeCmd extends Command
   {
       // Switch to pipeline 1
     LimelightHelpers.setPipelineIndex(limelightName, 0);
+    System.out.println("Aim and Range Command Started!!");
 
     
     // Set variables
@@ -105,12 +116,13 @@ public class AimAndRangeCmd extends Command
     kL = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL);
 
 
-    robotPosition();
+    currentPosition =robotPosition();
     // Get raw AprilTag/Fiducial data
     if (kA)
     {
         //AimingUtils.trackReefPosition(limelightName, 0, 1);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        System.out.println("Position A selected !!");
     }
     else if (kB)
     {
@@ -141,11 +153,14 @@ public class AimAndRangeCmd extends Command
     {
         //AimingUtils.trackReefPosition(limelightName, 0, 7);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        System.out.println("Position G selected !!");
+
     }
     else if (kH)
     {
         //AimingUtils.trackReefPosition(limelightName, 0, 8);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        System.out.println("Position H selected !!");
     }
     else if (kI)
     {
@@ -167,11 +182,7 @@ public class AimAndRangeCmd extends Command
         //AimingUtils.trackReefPosition(limelightName, 0, 12);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
     }
-    else
-    {
-        finish=true;
-    }
-
+    
    // Check if a valid detection was found
    if (!finish) 
    {
@@ -201,6 +212,15 @@ public class AimAndRangeCmd extends Command
     // Drive the swerve subsystem with the calculated speeds
     swerveDrive.driveToTarget(() -> drive_cmd, () -> steer_cmd, () -> rot_cmd, () -> true);
 
+    System.out.println("steer cmd"+steer_cmd);
+    System.out.println("target Y"+targetPosition.getY());
+
+    System.out.println("drive cmd"+drive_cmd);
+    System.out.println("target x"+targetPosition.getX());
+
+    System.out.println("rot_cmd"+robotPosition().getRotation().getDegrees());
+    System.out.println("target rotation"+targetPosition.getRotation().getDegrees());
+
     //testar metodo
     /*swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(drive_cmd, 
                                                                       steer_cmd, 
@@ -212,10 +232,7 @@ public class AimAndRangeCmd extends Command
 
         
     }
-    else
-    {
-        finish = true;
-    }
+    
       
   }
 
@@ -233,8 +250,8 @@ public class AimAndRangeCmd extends Command
 
     // Get the robot's current position
     //Translation2d robotPosition = currentPose.getTranslation();
-    targetPosition = currentPose;
-    return targetPosition;
+    //targetPosition = currentPose;
+    return currentPose;
   }
  /* 
   // Helper method to calculate distance to a fiducial
@@ -268,7 +285,7 @@ public class AimAndRangeCmd extends Command
         // For example, you can check if the robot is close enough to the target
         Pose2d distanceToTarget = AimingUtils.estimateDistanceToTargetFromPose(swerveDrive, targetPosition);
         
-        return finish || (distanceToTarget.getX() < 0.1 && distanceToTarget.getY() < 0.1 && distanceToTarget.getRotation().getDegrees() < 5); // Example threshold distance in meters
+        return false;//finish || (distanceToTarget.getX() < 0.1 && distanceToTarget.getY() < 0.1 && distanceToTarget.getRotation().getDegrees() < 5); // Example threshold distance in meters
   }
 
 }

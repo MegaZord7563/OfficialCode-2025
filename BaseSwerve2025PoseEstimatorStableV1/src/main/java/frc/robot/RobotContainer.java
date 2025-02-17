@@ -276,9 +276,9 @@ public class RobotContainer
     swerveDrive.setDefaultCommand
                                   (new RunCommand
                                     (()-> swerveDrive.driveRobotOriented
-                                      ( ()->-driverJoystick.getLeftY(),
-                                        ()->-driverJoystick.getLeftX(),
-                                        ()->-driverJoystick.getRightX(),
+                                      ( ()->driverJoystick.getLeftY(),
+                                        ()->driverJoystick.getLeftX(),
+                                        ()->driverJoystick.getRightX(),
                                         ()->!driverJoystick.getHID().getAButton()
                                       ), 
                                       swerveDrive
@@ -320,14 +320,15 @@ public class RobotContainer
      driverJoystick.start().whileTrue(homingPosition);
      
      //set command to track algae
-     driverJoystick.y().whileTrue(aimAndRangeCmd);
+     driverJoystick.x().whileTrue(aimAndRangeCmd);
+     driverJoystick.b().whileTrue(trackAlgaeCmd);
 
      
 
      //set command to score level
      driverJoystick.a().whileTrue(scoreLevel);
      
-     driverJoystick.b().onTrue(coralStationCmd);
+     //driverJoystick.b().onTrue(coralStationCmd);
      
      driverJoystick.y().whileTrue(homingEndGame);
 

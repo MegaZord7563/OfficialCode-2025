@@ -45,7 +45,7 @@ public class LiftManualCmd extends Command
   public void initialize() 
   {
     // Print the initialization of the command
-    System.out.println("Lift Manual Command Initialized");
+    //System.out.println("Lift Manual Command Initialized");
     
     finish = false;
      
@@ -89,7 +89,7 @@ public class LiftManualCmd extends Command
   {
     
     liftSubsystem.holdMotor(0);
-    System.out.println("Lift Manual Command Done!");
+    //System.out.println("Lift Manual Command Done!");
   }
 
   // Returns true when the command should end.
