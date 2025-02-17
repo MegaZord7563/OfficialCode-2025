@@ -164,7 +164,6 @@ This code cancels the ongoing **Pathfinding** command and stops the robot's move
 
 ### Pigeon Orientation
 
-![image](https://github.com/user-attachments/assets/daf11b26-5f23-4e2e-bedb-bd8ce64805d8)
+![405594573-daf11b26-5f23-4e2e-bedb-bd8ce64805d8](https://github.com/user-attachments/assets/590767d1-e72c-44da-99f5-3f7217b2c90b)
 
-Always the front side of the robot must be turned to the red side of the field.
 
