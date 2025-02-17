@@ -13,7 +13,8 @@ import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 import frc.robot.subsystems.Coral.CoralSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlgaeCoralManualCmd extends Command {
+public class AlgaeCoralManualCmd extends Command 
+{
 
     private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
     private final CoralSubsystem coralSubsystem = RobotContainer.coralSubsystem;
@@ -31,7 +32,8 @@ public class AlgaeCoralManualCmd extends Command {
     private double encoderPositionC;
 
   /** Creates a new AlgaeCoralManualCmd. */
-  public AlgaeCoralManualCmd(OperatorHub operatorHub) {
+  public AlgaeCoralManualCmd(OperatorHub operatorHub) 
+  {
     this.operatorHub=operatorHub;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(aCoralSubsystem,coralSubsystem,algaSubsystem,aAlgaeSubsystem);
@@ -117,7 +119,7 @@ public class AlgaeCoralManualCmd extends Command {
     else{
 
       //Algae Shooter
-      if(operatorHub.getOne()){ algaSubsystem.runMotors(9.5);;}
+      if(operatorHub.getOne()){ algaSubsystem.runMotors(9.5);}
       else if(operatorHub.getTwo()){ algaSubsystem.setVelocity(-9.5); }
 
       else if(!operatorHub.getOne()){ algaSubsystem.setVelocity(0);}

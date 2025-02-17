@@ -320,7 +320,7 @@ public class RobotContainer
      driverJoystick.start().whileTrue(homingPosition);
      
      //set command to track algae
-     //driverJoystick.y().whileTrue(trackAlgaeCmd);
+     driverJoystick.y().whileTrue(aimAndRangeCmd);
 
      
 
