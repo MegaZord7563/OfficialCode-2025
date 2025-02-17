@@ -86,7 +86,6 @@ public class AlgaeCoralManualCmd extends Command
       algaSubsystem.startAlga(9.5);
     }
 
-
     //Pick Algae
     if(operatorHub.getThree()){
       aAlgaeSubsystem.runMotor(80);
@@ -150,8 +149,9 @@ public class AlgaeCoralManualCmd extends Command
 
       else if(operatorHub.getTwo()){ algaSubsystem.startAlga(-9.5);}
 
-      else if(!operatorHub.getOne()){algaSubsystem.startAlga(0);}
-      else if(!operatorHub.getTwo()){  algaSubsystem.startAlga(0);}
+      else if(!operatorHub.getOne() && !operatorHub.getTwo()){algaSubsystem.resetEncoder();}
+
+
 
       //Algae Articulator
       //Up

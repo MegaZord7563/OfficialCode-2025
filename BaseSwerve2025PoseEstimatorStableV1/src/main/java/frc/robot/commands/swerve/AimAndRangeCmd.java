@@ -176,6 +176,22 @@ public class AimAndRangeCmd extends Command
    if (!finish) 
    {
     
+    if(swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
+        if(swerveDrive.getSensorLeft()){
+            swerveDrive.driveToTarget(() -> 0.0, () -> 0.5, () -> 0.0, () -> true);
+        }else{
+            swerveDrive.driveToTarget(() -> 0.0, () -> 0.0, () -> 0.0, () -> true);
+        }
+      }
+
+      if(swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
+        if(swerveDrive.getSensorRight()){
+            swerveDrive.driveToTarget(() -> 0.0, () -> -0.5, () -> 0.0, () -> true);
+        }else{
+            swerveDrive.driveToTarget(() -> 0.0, () -> 0.0, () -> 0.0, () -> true);
+        }
+      }
+
     double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
     // try to drive forward until the target area reaches our desired area
     //double drive_cmd = MathUtil.clamp(pidDrive.calculate(distanceToTarget, kDistanceSetpoint),-kMaxSpeed2Drive,kMaxSpeed2Drive);
