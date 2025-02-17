@@ -113,8 +113,10 @@ public class AlgaSubsystem extends SubsystemBase
   {
     
       algaPidController.setReference(targetPosition, ControlType.kPosition);
-    
+
   }
+
+
 
   public void setVelocity(double speed){
     algaMotor.set(speed);
@@ -124,11 +126,7 @@ public class AlgaSubsystem extends SubsystemBase
     algaEncoder.setPosition(0);
   }
 
-  public void runMotors( double targetSetpoint)
-  {
-  
-    algaPidController.setReference(targetSetpoint, ControlType.kPosition);
-  }
+
   /**
    * Stop the lift motor
    * 

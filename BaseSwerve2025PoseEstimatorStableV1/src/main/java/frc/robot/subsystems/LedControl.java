@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LedControl extends SubsystemBase 
@@ -19,7 +20,7 @@ public class LedControl extends SubsystemBase
   {
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
-    m_led = new AddressableLED(9);
+    m_led = new AddressableLED(0);
 
     // Reuse buffer
     // Default to a length of 60, start empty output
@@ -39,7 +40,9 @@ public class LedControl extends SubsystemBase
     // This method will be called once per scheduler run
 
     //rainbow();
-    //m_led.setData(m_ledBuffer);
+
+    greenLed();
+    m_led.setData(m_ledBuffer);
   }
 
   // Sets the LED color to red
@@ -51,6 +54,22 @@ public class LedControl extends SubsystemBase
       // Sets the specified LED to the RGB values for red
       // green e blue invertidos
       m_ledBuffer.setRGB(i, 255, 0, 0);
+    }
+    m_led.setData(m_ledBuffer);
+    
+  
+  
+  }
+
+  public void orangeLed()
+  {
+
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) 
+    {
+      // Sets the specified LED to the RGB values for red
+      // green e blue invertidos
+      m_ledBuffer.setRGB(i, 255, 70, 0);
+
     }
     m_led.setData(m_ledBuffer);
     
@@ -73,8 +92,7 @@ public class LedControl extends SubsystemBase
   {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
-      // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setHSV(i, 60, 100, 100);
+      m_ledBuffer.setRGB(i, 0, 0, 255);
     }
    m_led.setData(m_ledBuffer);
   
