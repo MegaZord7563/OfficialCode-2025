@@ -144,11 +144,9 @@ public class RobotContainer
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
   
   //PathFindingCommand
-  public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
-                                                    1, 0.7, 2.83, 0);
+  public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 1);
 
-  public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 
-                                                    1, 2.198, 4.921, 180);
+  public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 1);
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
   public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");

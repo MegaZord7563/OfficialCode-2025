@@ -18,16 +18,19 @@ import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.SelectScore;
 import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
+import frc.robot.commands.pathPlanner.PathFindingCommand;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AimAndRangeCmd extends Command 
 {
   // Instantiate the object
-  private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-  private  Pose2d targetPosition = new Pose2d(0, 0, null);
-  private  Pose2d currentPosition = new Pose2d(0, 0, null);
-  private static String limelightName = "limelight-front";
+  private final static SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
+    private  Pose2d targetPosition = new Pose2d(0, 0, null);
+    private  Pose2d currentPosition = new Pose2d(0, 0, null);
+    private static String limelightName = "limelight-front";
+    
+    public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 1);
 
   // Variables
   //private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
@@ -47,7 +50,7 @@ public class AimAndRangeCmd extends Command
   private PIDController pidSteer = new PIDController(kPsteer,0,0);
   private PIDController pidRot = new PIDController(kProt,0,0);
 
-  /Trapezoidal constants
+  //Trapezoidal constants
   private static double kDt = 0.02; //The period between controller updates in seconds. 
   private static double kMaxVelocity = 4;
   private static double kMaxAcceleration = 1;
@@ -187,39 +190,27 @@ public class AimAndRangeCmd extends Command
    if (!finish) 
    {
     
-    if(swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
-        if(swerveDrive.getSensorLeft()){
-            swerveDrive.driveToTarget(() -> 0.0, () -> 0.5, () -> 0.0, () -> true);
-        }else{
-            swerveDrive.driveToTarget(() -> 0.0, () -> 0.0, () -> 0.0, () -> true);
-        }
-      }
-
-      if(swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
-        if(swerveDrive.getSensorRight()){
-            swerveDrive.driveToTarget(() -> 0.0, () -> -0.5, () -> 0.0, () -> true);
-        }else{
-            swerveDrive.driveToTarget(() -> 0.0, () -> 0.0, () -> 0.0, () -> true);
-        }
-      }
-
-    double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
+    pathFindingCmd.setX(targetPosition.getX());
+    pathFindingCmd.setY(targetPosition.getY());
+    pathFindingCmd.setRot(targetPosition.getRotation().getDegrees());
+    
+    //double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
     // try to drive forward until the target area reaches our desired area
     //double drive_cmd = MathUtil.clamp(pidDrive.calculate(distanceToTarget, kDistanceSetpoint),-kMaxSpeed2Drive,kMaxSpeed2Drive);
-    double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(robotPosition().getX(),targetPosition.getX());
+    //double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(robotPosition().getX(),targetPosition.getX());
 
-    double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(robotPosition().getRotation().getDegrees(),targetPosition.getRotation().getDegrees());
+    //double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(robotPosition().getRotation().getDegrees(),targetPosition.getRotation().getDegrees());
     // Drive the swerve subsystem with the calculated speeds
-    swerveDrive.driveToTarget(() -> drive_cmd, () -> steer_cmd, () -> rot_cmd, () -> true);
+    //swerveDrive.driveToTarget(() -> drive_cmd, () -> steer_cmd, () -> rot_cmd, () -> true);
 
-    System.out.println("steer cmd"+steer_cmd);
-    System.out.println("target Y"+targetPosition.getY());
+    //System.out.println("steer cmd"+steer_cmd);
+    //System.out.println("target Y"+targetPosition.getY());
 
-    System.out.println("drive cmd"+drive_cmd);
-    System.out.println("target x"+targetPosition.getX());
+    //System.out.println("drive cmd"+drive_cmd);
+    //System.out.println("target x"+targetPosition.getX());
 
-    System.out.println("rot_cmd"+robotPosition().getRotation().getDegrees());
-    System.out.println("target rotation"+targetPosition.getRotation().getDegrees());
+    //System.out.println("rot_cmd"+robotPosition().getRotation().getDegrees());
+    //System.out.println("target rotation"+targetPosition.getRotation().getDegrees());
 
     //testar metodo
     /*swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(drive_cmd, 

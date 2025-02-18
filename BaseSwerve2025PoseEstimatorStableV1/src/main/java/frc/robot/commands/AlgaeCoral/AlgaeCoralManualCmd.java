@@ -58,7 +58,7 @@ public class AlgaeCoralManualCmd extends Command
   @Override
   public void execute() {
 
-    if(!swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
+    if(swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
       if( !swerveDrive.getSensorRightLate()){
         ledControl.blueLed();
         leftScore = true;
