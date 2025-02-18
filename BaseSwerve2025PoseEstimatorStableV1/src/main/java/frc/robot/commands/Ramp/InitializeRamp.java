@@ -35,7 +35,7 @@ public class InitializeRamp extends SequentialCommandGroup
                                         .onlyIf(()-> aAlgaeSubsystem.isHomed().get())
                                         .until(() -> aAlgaeSubsystem.inPosition(45).get()),
       //Move the Ramp to the 105 degrees position
-      new RunCommand(()->rampSubsystem.runMotor(105))
+      new RunCommand(()->rampSubsystem.runMotor(100))
                                       .onlyIf(() -> aAlgaeSubsystem.inPosition(45).get())
                                       .until(()->rampSubsystem.inPosition(100).get()),
        //Move the Algae to the 7 degrees position                         

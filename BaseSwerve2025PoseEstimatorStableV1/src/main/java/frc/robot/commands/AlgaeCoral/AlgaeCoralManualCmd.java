@@ -58,7 +58,7 @@ public class AlgaeCoralManualCmd extends Command
   @Override
   public void execute() {
 
-    if(!swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
+    if(swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
       if( !swerveDrive.getSensorRightLate()){
         ledControl.blueLed();
         leftScore = true;
@@ -85,7 +85,6 @@ public class AlgaeCoralManualCmd extends Command
     if(operatorHub.getSeven()){
       algaSubsystem.startAlga(9.5);
     }
-
 
     //Pick Algae
     if(operatorHub.getThree()){
@@ -150,8 +149,9 @@ public class AlgaeCoralManualCmd extends Command
 
       else if(operatorHub.getTwo()){ algaSubsystem.startAlga(-9.5);}
 
-      else if(!operatorHub.getOne()){algaSubsystem.startAlga(0);}
-      else if(!operatorHub.getTwo()){  algaSubsystem.startAlga(0);}
+      else if(!operatorHub.getOne() && !operatorHub.getTwo()){algaSubsystem.resetEncoder();}
+
+
 
       //Algae Articulator
       //Up

@@ -144,14 +144,12 @@ public class RobotContainer
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
   
   //PathFindingCommand
-  public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
-                                                    1, 0.7, 2.83, 0);
+  public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 1);
 
-  public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 
-                                                    1, 2.198, 4.921, 180);
+  public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 1);
 
-  public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
-  public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
+  //public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
+  //public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -230,6 +228,8 @@ public class RobotContainer
     PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
     PathPlannerAuto autoField = new PathPlannerAuto("NewFieldAuto");
     PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
+
+    //PathPlannerAuto score21 = new PathPlannerAuto("AutoScore21"); 
     
    
 
@@ -242,6 +242,8 @@ public class RobotContainer
     chooserAuto.addOption("NewFieldAuto", autoField);
 
     chooserAuto.addOption("AutoLift", autoLift);
+
+    //chooserAuto.addOption("AutoScore21", score21);
 
     //Instantiate subsystems
     //swerveDrive 
@@ -321,6 +323,7 @@ public class RobotContainer
      
      //set command to track algae
      driverJoystick.x().whileTrue(aimAndRangeCmd);
+
      driverJoystick.b().whileTrue(trackAlgaeCmd);
 
      
