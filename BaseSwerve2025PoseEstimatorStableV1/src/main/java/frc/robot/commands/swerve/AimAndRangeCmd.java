@@ -47,10 +47,10 @@ public class AimAndRangeCmd extends Command
   private PIDController pidSteer = new PIDController(kPsteer,0,0);
   private PIDController pidRot = new PIDController(kProt,0,0);
 
-  /Trapezoidal constants
-  private static double kDt = 0.02; //The period between controller updates in seconds. 
-  private static double kMaxVelocity = 4;
-  private static double kMaxAcceleration = 1;
+  //Trapezoidal constants
+  //private static double kDt = 0.02; //The period b/etween controller updates in seconds. 
+  //private static double kMaxVelocity = 4;
+  //private static double kMaxAcceleration = 1;
   
 
   //private final TrapezoidProfile.Constraints m_constraints =  new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
