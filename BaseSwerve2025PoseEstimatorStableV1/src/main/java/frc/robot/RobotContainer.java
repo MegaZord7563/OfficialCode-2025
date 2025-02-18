@@ -228,7 +228,8 @@ public class RobotContainer
     PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
     PathPlannerAuto autoField = new PathPlannerAuto("NewFieldAuto");
     PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
-    PathPlannerAuto score21 = new PathPlannerAuto("AutoScore21"); 
+
+    //PathPlannerAuto score21 = new PathPlannerAuto("AutoScore21"); 
     
    
 
@@ -241,8 +242,8 @@ public class RobotContainer
     chooserAuto.addOption("NewFieldAuto", autoField);
 
     chooserAuto.addOption("AutoLift", autoLift);
-    
-    chooserAuto.addOption("AutoScore21", score21);
+
+    //chooserAuto.addOption("AutoScore21", score21);
 
     //Instantiate subsystems
     //swerveDrive 
@@ -322,6 +323,7 @@ public class RobotContainer
      
      //set command to track algae
      driverJoystick.x().whileTrue(aimAndRangeCmd);
+
      driverJoystick.b().whileTrue(trackAlgaeCmd);
 
      

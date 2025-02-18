@@ -190,10 +190,14 @@ public class AimAndRangeCmd extends Command
    if (!finish) 
    {
     
+
+    
+
     pathFindingCmd.setX(targetPosition.getX());
     pathFindingCmd.setY(targetPosition.getY());
     pathFindingCmd.setRot(targetPosition.getRotation().getDegrees());
     
+
     //double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
     // try to drive forward until the target area reaches our desired area
     //double drive_cmd = MathUtil.clamp(pidDrive.calculate(distanceToTarget, kDistanceSetpoint),-kMaxSpeed2Drive,kMaxSpeed2Drive);
