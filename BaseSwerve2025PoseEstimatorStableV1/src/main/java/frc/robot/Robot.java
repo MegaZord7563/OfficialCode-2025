@@ -100,11 +100,14 @@ public class Robot extends TimedRobot
     //This is a test to see if we can get the limelight values when the robot is disabled
     LimelightHelpers.getLatestResults(DriveConstants.limelightFront);
     LimelightHelpers.getLatestResults(DriveConstants.limelightBack);
+    
 
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -137,7 +140,7 @@ public class Robot extends TimedRobot
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
+    //RobotContainer.homingEndGame.schedule();
     RobotContainer.initializeRamp.schedule();
     
   }

@@ -28,14 +28,20 @@ public class SensorAlignRightCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!swerveDrive.getSensorLeft() && !swerveDrive.getSensorRight()) {
-        swerveDrive.driveToTarget(() -> 0.0, () -> 0.1, () -> 0.0, () -> true);
+    if (!swerveDrive.getSensorLeft() && !swerveDrive.getSensorRight()) 
+    {
+        swerveDrive.driveToTarget(() -> 0.0, () -> 0.05, () -> 0.0, () -> true);
       }
-      else if (swerveDrive.getSensorRight()) {
-        swerveDrive.stopModules();
-        swerveDrive.driveToTarget(() -> 0.0, () -> 0.0, () -> 0.0, () -> true);
+      else if(!swerveDrive.getSensorLeft() && swerveDrive.getSensorRight())
+      {
+        System.out.println("Parar Robo");
+        //swerveDrive.driveToTarget(() -> 0.0, () -> 0.0, () -> 0.0, () -> true);
+        
+             
+        //steerPosition = robotPosition().getY();
         finish = true;
     }
+
   }
 
   // Called once the command ends or is interrupted.

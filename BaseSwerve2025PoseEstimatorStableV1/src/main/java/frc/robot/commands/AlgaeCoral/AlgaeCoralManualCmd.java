@@ -58,43 +58,6 @@ public class AlgaeCoralManualCmd extends Command
   @Override
   public void execute() {
 
-    if(swerveDrive.getSensorLeft() && swerveDrive.getSensorRight()){
-      if( !swerveDrive.getSensorRightLate()){
-        ledControl.blueLed();
-        leftScore = true;
-      }
-    }
-
-    if(!swerveDrive.getSensorRight() && swerveDrive.getSensorLeft()){
-      if( !swerveDrive.getSensorLeftLate()){
-        ledControl.blueLed();
-        rigthScore = true;
-      }
-    }
-
-    //Ramp Initialization
-    if(operatorHub.getEight()){
-      RobotContainer.initializeRamp.schedule();
-    }
-    //Pick Position L1
-    if(operatorHub.getNine()){
-      RobotContainer.pickL1Cmd.schedule();
-    }
-
-    //Score L1
-    if(operatorHub.getSeven()){
-      algaSubsystem.startAlga(9.5);
-    }
-
-    //Pick Algae
-    if(operatorHub.getThree()){
-      aAlgaeSubsystem.runMotor(80);
-    }
-
-    //Score Algae
-   if(operatorHub.getFour()){
-      aAlgaeSubsystem.runMotor(8);
-    }
 
     //Selective Key Coral/Algae
     if (operatorHub.getSelectOne()){
@@ -104,7 +67,7 @@ public class AlgaeCoralManualCmd extends Command
       else if(operatorHub.getTwo()){ coralSubsystem.setVelocity(-1);}
 
       else if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
-      else if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
+
 
       //Coral Articulator
       //Up

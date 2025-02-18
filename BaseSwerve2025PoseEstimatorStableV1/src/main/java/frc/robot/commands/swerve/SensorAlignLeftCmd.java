@@ -19,7 +19,8 @@ public class SensorAlignLeftCmd extends Command {
 
   double steerPosition;
 
-  public SensorAlignLeftCmd(SwerveSubsystem swerveDrive) {
+  public SensorAlignLeftCmd(SwerveSubsystem swerveDrive) 
+  {
     this.swerveDrive = swerveDrive;
     addRequirements(swerveDrive);
   }
@@ -33,19 +34,25 @@ public class SensorAlignLeftCmd extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
+  public void execute() 
+  {
     if (!swerveDrive.getSensorLeft() && !swerveDrive.getSensorRight()) {
-        swerveDrive.driveToTarget(() -> 0.0, () -> -0.12, () -> 0.0, () -> true);
+        swerveDrive.driveToTarget(() -> 0.0, () -> -0.05, () -> 0.0, () -> true);
+
       }
-      else if (swerveDrive.getSensorLeft()) {
-        swerveDrive.stopModules();
-        swerveDrive.driveToTarget(() -> 0.0, () -> 0.0, () -> 0.0, () -> true);
+      
+      else if(swerveDrive.getSensorLeft() && !swerveDrive.getSensorRight())
+      {
+        System.out.println("Parar Robo");
+        //swerveDrive.driveToTarget(() -> 0.0, () -> 0.0, () -> 0.0, () -> true);
+        
+             
+        //steerPosition = robotPosition().getY();
         finish = true;
-        steerPosition = robotPosition().getY();
     }
 
-    double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),steerPosition);
-    swerveDrive.driveToTarget(() -> 0.0, () -> steer_cmd, () -> 0.0,() -> true);
+    //double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),steerPosition);
+    //swerveDrive.driveToTarget(() -> 0.0, () -> steer_cmd, () -> 0.0,() -> true);
   }
 
     public Pose2d robotPosition()
@@ -63,7 +70,9 @@ public class SensorAlignLeftCmd extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void end(boolean interrupted) 
+  {
+    //
     swerveDrive.stopModules();
   }
 

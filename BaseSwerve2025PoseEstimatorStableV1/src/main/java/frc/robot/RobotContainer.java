@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -119,7 +120,7 @@ public class RobotContainer
   public static LiftCommandAuto liftAuto = new LiftCommandAuto();
   public static LiftManualCmd liftManualCmd = new LiftManualCmd(operatorHub);
 
-  public static AlgaeCoralManualCmd algaeCoralManualCmd = new AlgaeCoralManualCmd(operatorHub);
+  //public static AlgaeCoralManualCmd algaeCoralManualCmd = new AlgaeCoralManualCmd(operatorHub);
 
   
   //Coral Commands
@@ -219,8 +220,8 @@ public class RobotContainer
     liftManualCmd.addRequirements(liftSubsystem);
     liftSubsystem.setDefaultCommand(liftManualCmd);
 
-    algaeCoralManualCmd.addRequirements(articuladorAlgaeSubsystem);
-    articuladorAlgaeSubsystem.setDefaultCommand(algaeCoralManualCmd);
+    //algaeCoralManualCmd.addRequirements(articuladorAlgaeSubsystem);
+    //articuladorAlgaeSubsystem.setDefaultCommand(algaeCoralManualCmd);
   
 
 
@@ -290,7 +291,7 @@ public class RobotContainer
                                         ()->!driverJoystick.getHID().getAButton()
                                       ), 
                                       swerveDrive
-                                    ).onlyIf(()-> !driverJoystick.getHID().getXButton())
+                                    )//.onlyIf(()-> !driverJoystick.getHID().getXButton())
                           )
                                   ; 
     
@@ -372,8 +373,53 @@ public class RobotContainer
     //driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))));
     //driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0,false))));
 
+    //Initialize Ramp
+    JoystickButton initRamp = new JoystickButton(mesinhaJoy1, operatorHub.kEight);
+    initRamp.whileTrue(initializeRamp);
 
+    //Pick Position L1
+    JoystickButton pickL1 = new JoystickButton(mesinhaJoy2, operatorHub.kNine);
+    pickL1.whileTrue(pickL1Cmd);
 
+    //Score L1
+    JoystickButton scoreL1 = new JoystickButton(mesinhaJoy2, operatorHub.kSeven);
+    scoreL1.whileTrue(new InstantCommand(()-> algaSubsystem.startAlga(9.5)));
+
+    //Pick Algae
+    JoystickButton pickAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kThree);
+    pickAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(80)));
+    
+    //Score Algae
+    JoystickButton scoreAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
+    scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
+    
+    //Pick Coral
+    JoystickButton pickCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
+    pickCoral.whileTrue(new ConditionalCommand(
+                              new InstantCommand(()-> coralSubsystem.setVelocity(1)), 
+                              new InstantCommand(()->algaSubsystem.startAlga(9.5)), 
+                              ()-> operatorHub.getSelectOne()
+                            ));
+
+    pickCoral.whileFalse(new ConditionalCommand(
+                              new InstantCommand(()-> coralSubsystem.setVelocity(0))
+                                .onlyIf(()->(!operatorHub.getOne() && !operatorHub.getTwo())),
+                              new InstantCommand(()->algaSubsystem.resetEncoder())
+                                .onlyIf(()->(!operatorHub.getOne() && !operatorHub.getTwo())), 
+                              ()-> operatorHub.getSelectOne()
+                            ));
+
+    JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+    shootCoral.whileTrue(new ConditionalCommand(
+                              new InstantCommand(()-> coralSubsystem.setVelocity(-1)), 
+                              new InstantCommand(()-> algaSubsystem.startAlga(-9.5)), 
+                              ()-> operatorHub.getSelectOne()
+                            ));                           
+    
+    
+        
+   
+    
      //outTakeTrapForward.whileTrue(new RunCommand (()-> outTakeCmd.selectForward()));
      //outTakeTrapForward.whileFalse(new RunCommand(() -> outTakeCmd.selectStopForward()));
 

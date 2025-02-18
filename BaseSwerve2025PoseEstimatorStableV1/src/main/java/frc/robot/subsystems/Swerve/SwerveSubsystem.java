@@ -280,6 +280,7 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putBoolean("First Gear", throttleSlow);
     SmartDashboard.putBoolean("Second Gear", throttleFast);
     SmartDashboard.putBoolean("Third Gear", throttleMax);
+    
     SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());
     SmartDashboard.putBoolean("Sensor Right value", getSensorRight());
     
@@ -348,6 +349,8 @@ public class SwerveSubsystem extends SubsystemBase
     builder.addDoubleProperty("Robot Angle", () -> gyro.getRotation2d().getDegrees(), null);
     }
   });*/
+    getSensorLeft();
+    getSensorRight();
 
   }
 
@@ -812,9 +815,9 @@ public void stopModules ()
     boolean fieldOriented = fieldOrientedFunction.get();
 
     // 2. Apply deadband
-    xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
-    ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-    turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+    //xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+   // ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+    //turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
     // 3. Make the driving smoother
     xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;

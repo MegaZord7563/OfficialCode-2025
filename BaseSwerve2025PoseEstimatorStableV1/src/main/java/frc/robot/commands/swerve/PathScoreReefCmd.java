@@ -248,7 +248,7 @@ public class PathScoreReefCmd extends Command
         // For example, you can check if the robot is close enough to the target
         Pose2d distanceToTarget = AimingUtils.estimateDistanceToTargetFromPose(swerveDrive, targetPosition);
         
-        return false;//finish || (distanceToTarget.getX() < 0.1 && distanceToTarget.getY() < 0.1 && distanceToTarget.getRotation().getDegrees() < 5); // Example threshold distance in meters
+        return finish;//finish || (distanceToTarget.getX() < 0.1 && distanceToTarget.getY() < 0.1 && distanceToTarget.getRotation().getDegrees() < 5); // Example threshold distance in meters
   }
 
 }
