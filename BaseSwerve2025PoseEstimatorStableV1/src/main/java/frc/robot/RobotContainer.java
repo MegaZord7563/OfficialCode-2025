@@ -48,6 +48,9 @@ import frc.robot.commands.pathPlanner.PathFindingCommand;
 import frc.robot.commands.score.HomingPosition;
 import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
+import frc.robot.commands.swerve.PathScoreReefCmd;
+import frc.robot.commands.swerve.SensorAlignLeftCmd;
+import frc.robot.commands.swerve.SensorAlignRightCmd;
 import frc.robot.commands.swerve.TrackAlgae;
 import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Algae.AlgaSubsystem;
@@ -142,11 +145,14 @@ public class RobotContainer
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(swerveDrive,0.5);
+  public static SensorAlignLeftCmd sensorAlignLeft = new SensorAlignLeftCmd(swerveDrive);
+  public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
   //PathFindingCommand
-  public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 1);
+  //public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 1);
 
-  public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 1);
+  //public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 1);
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
   public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
@@ -199,6 +205,10 @@ public class RobotContainer
     //Swerve Commands
     trackAlgaeCmd.addRequirements(swerveDrive);
     aimAndRangeCmd.addRequirements(swerveDrive);
+    pathScoreReefCmd.addRequirements(swerveDrive);
+    sensorAlignLeft.addRequirements(swerveDrive);
+
+    sensorAlignRight.addRequirements(swerveDrive);
 
 
     //Lift Commands
@@ -280,8 +290,9 @@ public class RobotContainer
                                         ()->!driverJoystick.getHID().getAButton()
                                       ), 
                                       swerveDrive
-                                    )
-                                  ); 
+                                    ).onlyIf(()-> !driverJoystick.getHID().getXButton())
+                          )
+                                  ; 
     
     
     
@@ -318,8 +329,13 @@ public class RobotContainer
      driverJoystick.start().whileTrue(homingPosition);
      
      //set command to track algae
-     driverJoystick.x().whileTrue(aimAndRangeCmd);
-     driverJoystick.b().whileTrue(trackAlgaeCmd);
+    // driverJoystick.x().whileTrue(aimAndRangeCmd);
+     driverJoystick.x().whileTrue(pathScoreReefCmd);
+
+     //driverJoystick.b().whileTrue(trackAlgaeCmd);
+
+     driverJoystick.b().whileTrue(sensorAlignLeft);
+     driverJoystick.y().whileTrue(sensorAlignRight);
 
      
 
@@ -328,7 +344,7 @@ public class RobotContainer
      
      //driverJoystick.b().onTrue(coralStationCmd);
      
-     driverJoystick.y().whileTrue(homingEndGame);
+     //driverJoystick.y().whileTrue(homingEndGame);
 
 
      //lift manual control up and down	

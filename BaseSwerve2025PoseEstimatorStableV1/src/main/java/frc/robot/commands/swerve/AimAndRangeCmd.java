@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 // WPI imports
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 // Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.Limelight.AimingUtils;
@@ -29,8 +29,8 @@ public class AimAndRangeCmd extends Command
     private  Pose2d targetPosition = new Pose2d(0, 0, null);
     private  Pose2d currentPosition = new Pose2d(0, 0, null);
     private static String limelightName = "limelight-front";
-    
-    public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 1);
+
+  private PathFindingCommand pathFindingCommand = new PathFindingCommand(swerveDrive, 1);
 
   // Variables
   //private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
@@ -189,12 +189,16 @@ public class AimAndRangeCmd extends Command
    // Check if a valid detection was found
    if (!finish) 
    {
+
+    pathFindingCommand.setX(targetPosition.getX());
+    pathFindingCommand.setY(targetPosition.getY());
+    pathFindingCommand.setRot(targetPosition.getRotation().getDegrees());
+
+    System.out.println("targetPosition.getX()" + targetPosition.getX());
+    System.out.println("targetPosition.getY()" + targetPosition.getY());
+    System.out.println("targetPosition.getRotation().getDegrees()" + targetPosition.getRotation().getDegrees());
     
-    pathFindingCmd.setX(targetPosition.getX());
-    pathFindingCmd.setY(targetPosition.getY());
-    pathFindingCmd.setRot(targetPosition.getRotation().getDegrees());
-    
-    //double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
+    double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
     // try to drive forward until the target area reaches our desired area
     //double drive_cmd = MathUtil.clamp(pidDrive.calculate(distanceToTarget, kDistanceSetpoint),-kMaxSpeed2Drive,kMaxSpeed2Drive);
     //double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(robotPosition().getX(),targetPosition.getX());

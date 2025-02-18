@@ -270,8 +270,8 @@ import edu.wpi.first.math.util.Units;
   //Path Planner Constants
   public static final class PathPlannerConstants
   {
-    public static final double kPTranslationPath = 0.95;//Anterior 0.125,
-      public static final double kPRotationPath = .70;
+    public static final double kPTranslationPath = 0.45;//Anterior 0.125,
+      public static final double kPRotationPath = .40;
 
       public static final PPHolonomicDriveController AutoConfig = new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
         new PIDConstants(kPTranslationPath, 0.0, 0.0), // Translation PID constants

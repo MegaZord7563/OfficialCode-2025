@@ -143,8 +143,8 @@ public class SwerveSubsystem extends SubsystemBase
   .getStructTopic("MyPose", Pose2d.struct).publish();
   
   //optical sensors
-  private DigitalInput sensorLeft = new DigitalInput(1);
-  private DigitalInput sensorRight = new DigitalInput(2);
+  private DigitalInput sensorLeft = new DigitalInput(2);
+  private DigitalInput sensorRight = new DigitalInput(1);
 
   private boolean sensorLeftLate;
   private boolean sensorRightLate;
