@@ -606,7 +606,7 @@ import edu.wpi.first.math.util.Units;
     public static final class EscaladorConstants
     {
       //Escalador Motor ports
-      public static final int kMotor1Id = 15;
+      public static final int kMotor1Id = 26;//02/18/2025 estava igual ao modulo serve front left
       //public static final int kMotor2Id = 25;
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
 

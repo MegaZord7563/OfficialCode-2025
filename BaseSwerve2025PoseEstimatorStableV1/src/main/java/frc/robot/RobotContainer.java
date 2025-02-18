@@ -385,18 +385,18 @@ public class RobotContainer
     JoystickButton scoreL1 = new JoystickButton(mesinhaJoy2, operatorHub.kSeven);
     scoreL1.whileTrue(new InstantCommand(()-> algaSubsystem.startAlga(9.5)));
 
-    //Pick Algae
+    //Pick Algae - testado 
     JoystickButton pickAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kThree);
     pickAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(80)));
     
-    //Score Algae
+    //Score Algae - testado
     JoystickButton scoreAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
     scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
     
     //Pick Coral
-    JoystickButton pickCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
+   /*  JoystickButton pickCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
     pickCoral.whileTrue(new ConditionalCommand(
-                              new InstantCommand(()-> coralSubsystem.setVelocity(1)), 
+                              new InstantCommand(()-> coralSubsystem.runMotor(20)), 
                               new InstantCommand(()->algaSubsystem.startAlga(9.5)), 
                               ()-> operatorHub.getSelectOne()
                             ));
@@ -407,15 +407,20 @@ public class RobotContainer
                               new InstantCommand(()->algaSubsystem.resetEncoder())
                                 .onlyIf(()->(!operatorHub.getOne() && !operatorHub.getTwo())), 
                               ()-> operatorHub.getSelectOne()
-                            ));
+                            ));*/
 
     JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
-    shootCoral.whileTrue(new ConditionalCommand(
-                              new InstantCommand(()-> coralSubsystem.setVelocity(-1)), 
+   /*  shootCoral.whileTrue(new ConditionalCommand(
+                              new InstantCommand(()-> coralSubsystem.runMotor(-20)), 
                               new InstantCommand(()-> algaSubsystem.startAlga(-9.5)), 
                               ()-> operatorHub.getSelectOne()
-                            ));                           
+                            )); */
     
+                            //JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+    shootCoral.whileTrue(new RunCommand(()-> coralSubsystem.runMotor(20))
+                                            .onlyIf(()->operatorHub.getSelectOne()).until(()->coralSubsystem.getPosition()==20));  
+    shootCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
+                                            .onlyIf(()->operatorHub.getSelectOne())); 
     
         
    
