@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -40,10 +40,11 @@ import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.coral.AcoralManualCmd;
+
 import frc.robot.commands.coral.CoralStationCmd;
 import frc.robot.commands.coral.PickL1Cmd;
 import frc.robot.commands.lift.LiftCommand;
-import frc.robot.commands.lift.LiftCommandAuto;
+
 import frc.robot.commands.lift.LiftManualCmd;
 import frc.robot.commands.pathPlanner.PathAfterFind;
 import frc.robot.commands.pathPlanner.PathFindingCommand;
@@ -119,7 +120,7 @@ public class RobotContainer
 
   //Lift Commands
   public  static LiftCommand liftCmd =new LiftCommand();
-  public static LiftCommandAuto liftAuto = new LiftCommandAuto();
+ 
   public static LiftManualCmd liftManualCmd = new LiftManualCmd(operatorHub);
 
   //public static AlgaeCoralManualCmd algaeCoralManualCmd = new AlgaeCoralManualCmd(operatorHub);
@@ -129,6 +130,7 @@ public class RobotContainer
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
   public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
   public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
+  
   public static AcoralManualCmd aCoralManualCmd = new AcoralManualCmd(operatorHub);
  
   //Algae Coral Command
@@ -200,9 +202,7 @@ public class RobotContainer
     //articulador1Cmd = new Articulador1Cmd();
     //scoreLevel = new ScoreLevel();
 
-     // First of All - Register Named Commands
-    NamedCommands.registerCommand("lift", liftAuto);
-    
+      
   
     // Add commands to the subsystem
     
