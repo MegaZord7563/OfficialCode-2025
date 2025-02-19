@@ -368,7 +368,8 @@ public class RobotContainer
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
-    climb.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true)));
+    climb.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))
+                                                              .onlyIf(()->escaladorSubsystem.isDistanceValid()));
     
     JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
     climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));

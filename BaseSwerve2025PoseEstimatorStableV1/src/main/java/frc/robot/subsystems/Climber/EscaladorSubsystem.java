@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //Java imports
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
+import com.revrobotics.Rev2mDistanceSensor.Unit;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -52,8 +56,17 @@ public class EscaladorSubsystem extends SubsystemBase
 
   // The alga PID controller
   private final SparkClosedLoopController escaladorPidController;
-  //Global config
-  //private TalonFXConfiguration globalConfig = new TalonFXConfiguration();
+  
+  // The distance sensor
+  /**
+   * pin-out
+   * red = V+ 3.3V
+   * black = GND
+   * white = connect to SCL MXP port
+   * blue = connect to SDA MXP port
+   * 
+   */
+  private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
 
   /** Creates a new EscaladorSubsystem. */
   public EscaladorSubsystem() 
@@ -68,6 +81,23 @@ public class EscaladorSubsystem extends SubsystemBase
 
     // Create the coral encoder
     escaladorEncoder = escaladorMotor.getEncoder();
+    /**
+     * Before measurements can be read from the sensor, setAutomaticMode(true)
+     * must be called. This starts a background thread which will periodically
+     * poll all enabled sensors and store their measured range.
+     */
+    // Create the distance sensor
+    distOnboard.setAutomaticMode(true);
+
+    //// Set the distance sensor units
+    distOnboard.setDistanceUnits(Unit.kMillimeters);
+    
+    distOnboard.setMeasurementPeriod(0.1);
+    //
+    ////
+    distOnboard.setEnabled(true);
+    
+    distOnboard.setRangeProfile(RangeProfile.kDefault);
 
     //Initialize motors
     initializeMotors();
@@ -128,7 +158,24 @@ public class EscaladorSubsystem extends SubsystemBase
 
 
   }
-  
+
+  /**
+     * Get the distance measured by the sensor.
+     * 
+     * @return The distance in millimeters.
+     */
+    public double getDistance() 
+    {
+      return distOnboard.getRange();
+    }
+
+
+  // Check if the distance is within the operational range
+  public boolean isDistanceValid() 
+  {
+    double distance = getDistance();
+    return distance >= 50 && distance <= 150;
+  }
 
   /**
    * @ reset encoder
@@ -149,6 +196,38 @@ public class EscaladorSubsystem extends SubsystemBase
     SmartDashboard.putNumber("EscalatorCurrent", escaladorMotor.getOutputCurrent());
     SmartDashboard.putNumber("EscalatorVoltage", escaladorMotor.getAppliedOutput());
     SmartDashboard.putNumber("EscalatorTemperature",escaladorMotor.getMotorTemperature());
+
+    /**
+     * Range returned from the distance sensor is valid if isRangeValid()
+     * returns true.
+     */
+    
+     boolean isValid = distOnboard.isRangeValid();
+
+     SmartDashboard.putBoolean("Range Valid", isValid);
+ 
+     if(isValid) 
+     {
+       double distance = distOnboard.getRange();
+       SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
+       SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
+       // Check if the distance is within the operational range
+       if (distance >= 50 && distance <= 150) 
+       {
+         SmartDashboard.putString("Operational Range", "Within Range");
+     
+       } 
+       else 
+       {
+         SmartDashboard.putString("Operational Range", "Out of Range");
+     
+       }
+       
+     }
+     else 
+     {
+       SmartDashboard.putString("Operational Range", "Invalid Measurement");
+     }  
   }
 
   /**
