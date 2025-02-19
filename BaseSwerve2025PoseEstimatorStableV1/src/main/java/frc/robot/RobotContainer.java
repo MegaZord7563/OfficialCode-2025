@@ -419,15 +419,16 @@ public class RobotContainer
                             //JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
 
     JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
-    shootCoral.whileTrue(new RunCommand(()-> coralSubsystem.runMotor(20))
-                                            .onlyIf(()->operatorHub.getSelectOne()).until(()->coralSubsystem.getPosition()==20));  
-    shootCoral.whileFalse(new InstantCommand(()-> coralSubsystem.resetEncoder())
-                                            .onlyIf(()->(operatorHub.getSelectOne() && !operatorHub.getOne()))); 
+    shootCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+20))
+                                            .onlyIf(()->operatorHub.getSelectOne()));  
+    shootCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
+                                            .onlyIf(()->(operatorHub.getSelectOne()&& !operatorHub.getOne() ))); 
+    
     
     JoystickButton backCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
-    backCoral.whileTrue(new RunCommand(()-> coralSubsystem.runMotor(-20))
-                                            .onlyIf(()->operatorHub.getSelectOne()).until(()->coralSubsystem.getPosition()==-20));  
-    backCoral.whileFalse(new InstantCommand(()-> coralSubsystem.resetEncoder())
+    backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-20))
+                                            .onlyIf(()->operatorHub.getSelectOne()));  
+    backCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
                                             .onlyIf(()->(operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
         
 
