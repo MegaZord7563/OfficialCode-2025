@@ -238,11 +238,7 @@ public class CoralSubsystem extends SubsystemBase
     coralMotor.setControl(m_brake);
   }
 
-  public void holdMotor()
-  {
-    coralMotor.setControl( m_mmReq.withPosition(getPosition()));
-  }
-
+  
   /**
    * 
    * @return velocity m/s
