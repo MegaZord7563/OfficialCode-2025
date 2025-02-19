@@ -87,12 +87,6 @@ public class AlgaeCoralManualCmd extends Command
         System.out.println("BackAxisHome");
         travaC=false;
       }
-      else if (aCoralSubsystem.isHomed().get())
-      {
-        finish = true;
-      }
-
-
     }
     else{
 

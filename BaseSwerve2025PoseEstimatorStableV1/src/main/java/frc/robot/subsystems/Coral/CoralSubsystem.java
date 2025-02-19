@@ -8,6 +8,7 @@ package frc.robot.subsystems.Coral;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 
@@ -56,6 +57,8 @@ public class CoralSubsystem extends SubsystemBase
 
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
+
+
   
   // The lift encoder
   //private final RelativeEncoder coralEncoder;
@@ -160,7 +163,6 @@ public class CoralSubsystem extends SubsystemBase
     /* And initialize encoder position to 0 */
     resetEncoder();
     
-
   }
 
   /*// 
@@ -199,7 +201,11 @@ public class CoralSubsystem extends SubsystemBase
   public void periodic() 
 
   {
+
+  
    
+    SmartDashboard.putNumber("CoralPosition", getPosition());
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral Velocity m/s", getVelocity());
 
@@ -230,7 +236,11 @@ public class CoralSubsystem extends SubsystemBase
   public void stopMotor()
   {
     coralMotor.setControl(m_brake);
-    
+  }
+
+  public void holdMotor()
+  {
+    coralMotor.setControl( m_mmReq.withPosition(getPosition()));
   }
 
   /**

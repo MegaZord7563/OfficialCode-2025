@@ -210,7 +210,7 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
 
   /**
    * Set the algae encoder position
-   * @param position
+   * @param positionFlag
    */
   public void resetEncoder()
   {
