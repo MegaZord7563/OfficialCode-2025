@@ -175,7 +175,7 @@ public class PathScoreReefCmd extends Command
     {
         //AimingUtils.trackReefPosition(limelightName, 0, 12);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
-    }
+    }else {finish = true;}
     
    // Check if a valid detection was found
    if (!finish) 
@@ -232,23 +232,22 @@ public class PathScoreReefCmd extends Command
     swerveDrive.stopModules();
 
   }
-
+  /* 
     public void endCommand (){
     pathFindingCommand.cancel();
     PPHolonomicDriveController.overrideXYFeedback(()->swerveDrive.getPoseEstimator().getX(), ()->swerveDrive.getPoseEstimator().getY());
     PPHolonomicDriveController.overrideRotationFeedback(()-> swerveDrive.getPoseEstimator().getRotation().getRadians());
     System.out.println("EndCommand");
     finish = true;
-  }
+  }*/
   // Returns true when the command should end.
   @Override
   public boolean isFinished() 
   {
     // Optionally, add a condition to end the command
-        // For example, you can check if the robot is close enough to the target
-        Pose2d distanceToTarget = AimingUtils.estimateDistanceToTargetFromPose(swerveDrive, targetPosition);
+   
         
-        return finish;//finish || (distanceToTarget.getX() < 0.1 && distanceToTarget.getY() < 0.1 && distanceToTarget.getRotation().getDegrees() < 5); // Example threshold distance in meters
+        return finish;
   }
 
 }

@@ -44,7 +44,7 @@ import frc.robot.commands.coral.AcoralManualCmd;
 import frc.robot.commands.coral.CoralStationCmd;
 import frc.robot.commands.coral.PickL1Cmd;
 import frc.robot.commands.lift.LiftCommand;
-import frc.robot.commands.lift.LiftCommandAuto;
+
 import frc.robot.commands.lift.LiftManualCmd;
 import frc.robot.commands.pathPlanner.PathAfterFind;
 import frc.robot.commands.pathPlanner.PathFindingCommand;
@@ -120,7 +120,7 @@ public class RobotContainer
 
   //Lift Commands
   public  static LiftCommand liftCmd =new LiftCommand();
-  public static LiftCommandAuto liftAuto = new LiftCommandAuto();
+ 
   public static LiftManualCmd liftManualCmd = new LiftManualCmd(operatorHub);
 
   //public static AlgaeCoralManualCmd algaeCoralManualCmd = new AlgaeCoralManualCmd(operatorHub);
@@ -202,9 +202,7 @@ public class RobotContainer
     //articulador1Cmd = new Articulador1Cmd();
     //scoreLevel = new ScoreLevel();
 
-     // First of All - Register Named Commands
-    NamedCommands.registerCommand("lift", liftAuto);
-    
+      
   
     // Add commands to the subsystem
     
