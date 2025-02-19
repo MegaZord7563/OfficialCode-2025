@@ -50,6 +50,7 @@ import frc.robot.commands.pathPlanner.PathFindingCommand;
 import frc.robot.commands.score.HomingPosition;
 import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
+import frc.robot.commands.swerve.LeaveCmd;
 import frc.robot.commands.swerve.PathScoreReefCmd;
 import frc.robot.commands.swerve.SensorAlignLeftCmd;
 import frc.robot.commands.swerve.SensorAlignRightCmd;
@@ -148,6 +149,7 @@ public class RobotContainer
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
+  public static LeaveCmd leaveCmd = new LeaveCmd();
   public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(swerveDrive,0.5);
   public static SensorAlignLeftCmd sensorAlignLeft = new SensorAlignLeftCmd(swerveDrive);
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
@@ -208,9 +210,9 @@ public class RobotContainer
     //Swerve Commands
     trackAlgaeCmd.addRequirements(swerveDrive);
     aimAndRangeCmd.addRequirements(swerveDrive);
+    leaveCmd.addRequirements(swerveDrive);
     pathScoreReefCmd.addRequirements(swerveDrive);
     sensorAlignLeft.addRequirements(swerveDrive);
-
     sensorAlignRight.addRequirements(swerveDrive);
 
 
@@ -337,8 +339,10 @@ public class RobotContainer
 
      //driverJoystick.b().whileTrue(trackAlgaeCmd);
 
-     driverJoystick.b().whileTrue(sensorAlignLeft);
+     driverJoystick.b().whileTrue(leaveCmd);
      //driverJoystick.y().whileTrue(sensorAlignRight);
+
+     
 
      //set command to score level
      driverJoystick.a().whileTrue(scoreLevel);

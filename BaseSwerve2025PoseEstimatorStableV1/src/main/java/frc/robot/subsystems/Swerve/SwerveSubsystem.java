@@ -829,12 +829,12 @@ public void stopModules ()
     var swerveModuleStates =  DriveConstants.
                               kDriveKinematics.
                               toSwerveModuleStates
-                              (//fieldOriented ? 
+                              (fieldOriented ?
                                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
                                                                       ySpeed, 
                                                                       turningSpeed, 
                                                                       gyro.getRotation2d()) 
-                                //: new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
+                              : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
                               );//Do this if fielOrientation is false 
 
     

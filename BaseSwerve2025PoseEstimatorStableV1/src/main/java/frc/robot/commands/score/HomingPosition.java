@@ -6,6 +6,7 @@ package frc.robot.commands.score;
 
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 //CommandBase Imports
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.commands.lift.LiftManualCmd;
+import frc.robot.commands.swerve.LeaveCmd;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
@@ -30,6 +32,8 @@ public class HomingPosition extends SequentialCommandGroup
   //Declare commands
   private static LiftSubsystem liftSubsystem  = RobotContainer.liftSubsystem;
   private static ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
+  
+  //private static LeaveCmd leaveCmd = RobotContainer.leaveCmd;
 
   
 
@@ -46,10 +50,14 @@ public class HomingPosition extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands
     (
-      
+      new LeaveCmd().alongWith(
+                                new RunCommand(()->aCoralSubsystem.runMotor(0.0))
+                                .onlyIf(() -> !aCoralSubsystem.isHomed().get())
+                                .until(() -> aCoralSubsystem.isHomed().get())),
+      /*leaveCmd,
       new RunCommand(()->aCoralSubsystem.runMotor(0.0))
                                         .onlyIf(() -> !aCoralSubsystem.isHomed().get())
-                                        .until(() -> aCoralSubsystem.isHomed().get()),
+                                        .until(() -> aCoralSubsystem.isHomed().get()),*/
      
       new RunCommand(()->liftSubsystem.runMotor(0.0, false))
                                       .onlyIf(() -> aCoralSubsystem.isHomed().get())
