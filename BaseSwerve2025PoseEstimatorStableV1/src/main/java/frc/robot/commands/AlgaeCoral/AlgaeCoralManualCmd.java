@@ -62,13 +62,6 @@ public class AlgaeCoralManualCmd extends Command
     //Selective Key Coral/Algae
     if (operatorHub.getSelectOne()){
 
-      //Coral Shooter
-      if(operatorHub.getOne()){ coralSubsystem.setVelocity(1);}
-      else if(operatorHub.getTwo()){ coralSubsystem.setVelocity(-1);}
-
-      else if(!operatorHub.getTwo()){ coralSubsystem.setVelocity(0);}
-
-
       //Coral Articulator
       //Up
       if(operatorHub.getBlackAxisUp(0.75))
@@ -102,19 +95,6 @@ public class AlgaeCoralManualCmd extends Command
 
     }
     else{
-
-      //Algae Shooter
-      if(operatorHub.getOne()){  
-      algaSubsystem.startAlga(9.5);
-      ledControl.redLed();
-      }
-      
-
-      else if(operatorHub.getTwo()){ algaSubsystem.startAlga(-9.5);}
-
-      else if(!operatorHub.getOne() && !operatorHub.getTwo()){algaSubsystem.resetEncoder();}
-
-
 
       //Algae Articulator
       //Up

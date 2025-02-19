@@ -409,7 +409,7 @@ public class RobotContainer
                               ()-> operatorHub.getSelectOne()
                             ));*/
 
-    JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+
    /*  shootCoral.whileTrue(new ConditionalCommand(
                               new InstantCommand(()-> coralSubsystem.runMotor(-20)), 
                               new InstantCommand(()-> algaSubsystem.startAlga(-9.5)), 
@@ -417,13 +417,32 @@ public class RobotContainer
                             )); */
     
                             //JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+
+    JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
     shootCoral.whileTrue(new RunCommand(()-> coralSubsystem.runMotor(20))
                                             .onlyIf(()->operatorHub.getSelectOne()).until(()->coralSubsystem.getPosition()==20));  
-    shootCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
-                                            .onlyIf(()->operatorHub.getSelectOne())); 
+    shootCoral.whileFalse(new InstantCommand(()-> coralSubsystem.resetEncoder())
+                                            .onlyIf(()->(operatorHub.getSelectOne() && !operatorHub.getOne()))); 
     
+    JoystickButton backCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
+    backCoral.whileTrue(new RunCommand(()-> coralSubsystem.runMotor(-20))
+                                            .onlyIf(()->operatorHub.getSelectOne()).until(()->coralSubsystem.getPosition()==-20));  
+    backCoral.whileFalse(new InstantCommand(()-> coralSubsystem.resetEncoder())
+                                            .onlyIf(()->(operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
         
-   
+
+    JoystickButton shootAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+    shootAlgae.whileTrue(new RunCommand(()-> algaSubsystem.startAlga(9.5))
+                                            .onlyIf(()-> !operatorHub.getSelectOne()).until(()->algaSubsystem.getPosition()==9.3));  
+    shootAlgae.whileFalse(new InstantCommand(()-> algaSubsystem.resetEncoder())
+                                            .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getOne()))); 
+    
+    JoystickButton backAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
+    backAlgae.whileTrue(new RunCommand(()-> algaSubsystem.startAlga(-9.5))
+                                            .onlyIf(()-> !operatorHub.getSelectOne()).until(()->algaSubsystem.getPosition()== -9.3));  
+    backAlgae.whileFalse(new InstantCommand(()-> algaSubsystem.resetEncoder())
+                                            .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
+  
     
      //outTakeTrapForward.whileTrue(new RunCommand (()-> outTakeCmd.selectForward()));
      //outTakeTrapForward.whileFalse(new RunCommand(() -> outTakeCmd.selectStopForward()));
