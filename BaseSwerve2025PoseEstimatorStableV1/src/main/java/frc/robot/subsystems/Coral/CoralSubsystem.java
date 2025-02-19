@@ -8,6 +8,7 @@ package frc.robot.subsystems.Coral;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 
@@ -56,8 +57,9 @@ public class CoralSubsystem extends SubsystemBase
   private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
   
 
-  /* Start at motion 0, use slot 2 */
-   //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
+  private double positionShooter;
+  /* Start at motion 0, use slot 0 */
+  private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
 
  // private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
@@ -65,6 +67,8 @@ public class CoralSubsystem extends SubsystemBase
 
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
+
+
   
   // The lift encoder
   //private final RelativeEncoder coralEncoder;
@@ -185,7 +189,6 @@ public class CoralSubsystem extends SubsystemBase
     /* And initialize encoder position to 0 */
     resetEncoder();
     
-
   }
 
   /*// 
@@ -227,12 +230,27 @@ public class CoralSubsystem extends SubsystemBase
   {
     return distOnboard.getRange();
   }
+  
+  public void setPositionShoot(double position) 
+  {
+    position = positionShooter;
+  }
+
+  public double getPositionShoot() 
+  {
+    return positionShooter;
+  }
+
 
   @Override
   public void periodic() 
 
   {
+
+  
    
+    SmartDashboard.putNumber("CoralPosition", getPosition());
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral Velocity m/s", getVelocity());
 
@@ -293,7 +311,11 @@ public class CoralSubsystem extends SubsystemBase
   public void stopMotor()
   {
     coralMotor.setControl(m_brake);
-    
+  }
+
+  public void holdMotor()
+  {
+    coralMotor.setControl( m_mmReq.withPosition(getPosition()));
   }
 
   /**

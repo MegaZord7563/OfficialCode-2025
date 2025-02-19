@@ -205,7 +205,7 @@ public class AimAndRangeCmd extends Command
 
     //double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(robotPosition().getRotation().getDegrees(),targetPosition.getRotation().getDegrees());
     // Drive the swerve subsystem with the calculated speeds
-    //swerveDrive.driveToTarget(() -> drive_cmd, () -> steer_cmd, () -> rot_cmd, () -> true);
+    swerveDrive.driveToTarget(() -> 0.0, () -> steer_cmd, () -> 0.0, () -> true);
 
     //System.out.println("steer cmd"+steer_cmd);
     //System.out.println("target Y"+targetPosition.getY());

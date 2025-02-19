@@ -187,9 +187,6 @@ public class LiftSubsystem extends SubsystemBase
     //escaladorLeaderMotor.setSafetyEnabled(true);
 
     /* And initialize encoder position to 0 */
-    
-    
-
   }
 
   

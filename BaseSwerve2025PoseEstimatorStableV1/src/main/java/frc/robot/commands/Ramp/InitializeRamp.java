@@ -32,18 +32,17 @@ public class InitializeRamp extends SequentialCommandGroup
     (
       //Move the Algae to the 45 degrees position
       new RunCommand(()->aAlgaeSubsystem.runMotor(45))
-                                        .onlyIf(()-> aAlgaeSubsystem.isHomed().get())
-                                        .until(() -> aAlgaeSubsystem.inPosition(45).get()),
+                                        //.onlyIf(()-> aAlgaeSubsystem.isHomed().get())
+                                        .until(() -> aAlgaeSubsystem.inPosition(43).get()),
       //Move the Ramp to the 105 degrees position
       new RunCommand(()->rampSubsystem.runMotor(95))
-                                      .onlyIf(() -> aAlgaeSubsystem.inPosition(45).get())
-                                      .until(()->rampSubsystem.inPosition(95).get()),
+                                      .onlyIf(() -> aAlgaeSubsystem.inPosition(43).get())
+                                      .until(()->rampSubsystem.inPosition(93).get()),
        //Move the Algae to the 7 degrees position                         
       new RunCommand(()->aAlgaeSubsystem.runMotor(7))
-                                      .onlyIf(()->rampSubsystem.inPosition(95).get())
-                                      .until(() -> aAlgaeSubsystem.inPosition(7).get())
+                                      .onlyIf(()->rampSubsystem.inPosition(93).get())
+                                      .until(() -> aAlgaeSubsystem.inPosition(6).get())
       
-
     );
     System.out.println("Initialize Command Group Done!!!");
   }

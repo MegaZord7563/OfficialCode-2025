@@ -39,6 +39,7 @@ import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
+import frc.robot.commands.coral.CoralShooterCmd;
 import frc.robot.commands.coral.CoralStationCmd;
 import frc.robot.commands.coral.PickL1Cmd;
 import frc.robot.commands.lift.LiftCommand;
@@ -127,11 +128,12 @@ public class RobotContainer
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
   public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
   public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
+  public static CoralShooterCmd coralShooterCmd = new CoralShooterCmd(); 
  
   //Algae Coral Command
   //
   
-  //public static AlgaeCoralManualCmd algaeCoralManual = new AlgaeCoralManualCmd(operatorHub);
+  public static AlgaeCoralManualCmd algaeCoralManual = new AlgaeCoralManualCmd(operatorHub);
 
   /**
    * SEQUENTIAL COMMANDS
@@ -220,8 +222,8 @@ public class RobotContainer
     liftManualCmd.addRequirements(liftSubsystem);
     liftSubsystem.setDefaultCommand(liftManualCmd);
 
-    //algaeCoralManualCmd.addRequirements(articuladorAlgaeSubsystem);
-    //articuladorAlgaeSubsystem.setDefaultCommand(algaeCoralManualCmd);
+    algaeCoralManual.addRequirements(articuladorAlgaeSubsystem);
+    articuladorAlgaeSubsystem.setDefaultCommand(algaeCoralManual);
   
 
 
@@ -336,16 +338,14 @@ public class RobotContainer
      //driverJoystick.b().whileTrue(trackAlgaeCmd);
 
      driverJoystick.b().whileTrue(sensorAlignLeft);
-     driverJoystick.y().whileTrue(sensorAlignRight);
-
-     
+     //driverJoystick.y().whileTrue(sensorAlignRight);
 
      //set command to score level
      driverJoystick.a().whileTrue(scoreLevel);
      
      //driverJoystick.b().onTrue(coralStationCmd);
      
-     //driverJoystick.y().whileTrue(homingEndGame);
+     driverJoystick.y().whileTrue(homingEndGame);
 
 
      //lift manual control up and down	
@@ -387,7 +387,7 @@ public class RobotContainer
 
     //Pick Algae - testado 
     JoystickButton pickAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kThree);
-    pickAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(80)));
+    pickAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(85)));
     
     //Score Algae - testado
     JoystickButton scoreAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
@@ -419,29 +419,31 @@ public class RobotContainer
                             //JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
 
     JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
-    shootCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+20))
-                                            .onlyIf(()->operatorHub.getSelectOne()));  
+    shootCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+20.0))
+    .onlyIf(()->operatorHub.getSelectOne()));  
+
     shootCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
-                                            .onlyIf(()->(operatorHub.getSelectOne()&& !operatorHub.getOne() ))); 
-    
+                                            .onlyIf(()->(operatorHub.getSelectOne() && operatorHub.getOne()))); 
     
     JoystickButton backCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
     backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-20))
                                             .onlyIf(()->operatorHub.getSelectOne()));  
+    
+
     backCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
-                                            .onlyIf(()->(operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
-        
+                                            .onlyIf(()->(operatorHub.getSelectOne() && operatorHub.getTwo()))); 
+    
 
     JoystickButton shootAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
-    shootAlgae.whileTrue(new RunCommand(()-> algaSubsystem.startAlga(9.5))
+    shootAlgae.whileTrue(new RunCommand(()-> algaSubsystem.startAlga(algaSubsystem.getPosition() + 10))
                                             .onlyIf(()-> !operatorHub.getSelectOne()).until(()->algaSubsystem.getPosition()==9.3));  
-    shootAlgae.whileFalse(new InstantCommand(()-> algaSubsystem.resetEncoder())
+    shootAlgae.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
                                             .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getOne()))); 
     
     JoystickButton backAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
-    backAlgae.whileTrue(new RunCommand(()-> algaSubsystem.startAlga(-9.5))
+    backAlgae.whileTrue(new RunCommand(()-> algaSubsystem.startAlga(algaSubsystem.getPosition()-10))
                                             .onlyIf(()-> !operatorHub.getSelectOne()).until(()->algaSubsystem.getPosition()== -9.3));  
-    backAlgae.whileFalse(new InstantCommand(()-> algaSubsystem.resetEncoder())
+    backAlgae.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
                                             .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
   
     
@@ -454,14 +456,6 @@ public class RobotContainer
 
 
 /* 
-
-
-
-  
-
-
-
-
 
      operatorJoystick.leftBumper().whileTrue(rampCoral);*/
      
