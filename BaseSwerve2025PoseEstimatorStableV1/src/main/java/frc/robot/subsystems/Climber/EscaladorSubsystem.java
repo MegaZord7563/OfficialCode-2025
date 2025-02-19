@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.Climber;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 //WPILib imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,6 +49,9 @@ public class EscaladorSubsystem extends SubsystemBase
   
   // The Coral encoder
   private final RelativeEncoder escaladorEncoder;
+
+  //Difuse Sensor
+  private DigitalInput sensorClimber = new DigitalInput(3);
 
 
   // The alga PID controller
@@ -149,6 +153,10 @@ public class EscaladorSubsystem extends SubsystemBase
     SmartDashboard.putNumber("EscalatorCurrent", escaladorMotor.getOutputCurrent());
     SmartDashboard.putNumber("EscalatorVoltage", escaladorMotor.getAppliedOutput());
     SmartDashboard.putNumber("EscalatorTemperature",escaladorMotor.getMotorTemperature());
+
+    SmartDashboard.putBoolean("Sensor Climber value",getSensorClimber() );
+
+    getSensorClimber();
   }
 
   /**
@@ -192,6 +200,11 @@ public class EscaladorSubsystem extends SubsystemBase
   {
     escaladorMotor.set(speed);
   }
+
+  public boolean getSensorClimber()
+  {
+    return sensorClimber.get();
+  } 
 
   /**
    * 

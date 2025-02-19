@@ -16,21 +16,20 @@ import frc.robot.subsystems.Coral.CoralSubsystem;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlgaeCoralManualCmd extends Command 
+public class AlgaeManualCmd extends Command 
 {
 
-    private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
-    private final CoralSubsystem coralSubsystem = RobotContainer.coralSubsystem;
+
     private final AlgaSubsystem algaSubsystem = RobotContainer.algaSubsystem;
     private final ArticuladorAlgaeSubsystem aAlgaeSubsystem = RobotContainer.articuladorAlgaeSubsystem;
-    private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-    private final LedControl ledControl = RobotContainer.ledControl;
+    //private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
+    //private final LedControl ledControl = RobotContainer.ledControl;
     
 
     private final OperatorHub operatorHub ;
 
     boolean finish = false;
-    boolean trava = false;
+    boolean trava ;
     boolean travaC = false;
 
     boolean leftScore = false;
@@ -41,55 +40,25 @@ public class AlgaeCoralManualCmd extends Command
     private double encoderPositionC;
 
   /** Creates a new AlgaeCoralManualCmd. */
-  public AlgaeCoralManualCmd(OperatorHub operatorHub) 
+  public AlgaeManualCmd(OperatorHub operatorHub) 
   {
     this.operatorHub=operatorHub;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(aCoralSubsystem,coralSubsystem,algaSubsystem,aAlgaeSubsystem);
+    addRequirements(algaSubsystem,aAlgaeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     //System.out.println("AlgaeCoralManual Command Initialized");
+    finish = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-
     //Selective Key Coral/Algae
-    if (operatorHub.getSelectOne()){
-
-      //Coral Articulator
-      //Up
-      if(operatorHub.getBlackAxisUp(0.75))
-      {
-        aCoralSubsystem.setVelocity(0.1);
-        encoderPositionC = aCoralSubsystem.getPosition();
-        System.out.println("BlackAxisUp");
-        travaC =true;
-      }
-      //Down
-      else if(operatorHub.getBlackAxisDown(-0.75))
-      {
-        aCoralSubsystem.setVelocity(-0.1);
-        encoderPositionC = aCoralSubsystem.getPosition();
-        System.out.println("BlackAxisDown");
-        travaC =true;
-      }
-      //Center Position
-      else if(operatorHub.getBlackAxisUpDownHome()&&!aCoralSubsystem.isHomed().get()&&travaC)
-      {
-        encoderPositionC = aCoralSubsystem.getPosition();
-        aCoralSubsystem.runMotor(encoderPositionC);
-        System.out.println("BackAxisHome");
-        travaC=false;
-      }
-    }
-    else{
-
+    if (!operatorHub.getSelectOne()){
       //Algae Articulator
       //Up
       if(operatorHub.getBlackAxisUp(0.75))
@@ -111,7 +80,6 @@ public class AlgaeCoralManualCmd extends Command
       else if(operatorHub.getBlackAxisUpDownHome()&&!aAlgaeSubsystem.isHomed().get()&&trava)
       {
         System.out.println("BlackAxisHome");
-        encoderPosition = aAlgaeSubsystem.getPosition();
         aAlgaeSubsystem.runMotor(encoderPosition);
         trava=false;
       }
@@ -119,13 +87,19 @@ public class AlgaeCoralManualCmd extends Command
       {
         //finish = true;
       }
-      }
+
+
+    /* 
+
 
       SmartDashboard.putBoolean("LeftScore", leftScore);
       SmartDashboard.putBoolean("RightScore", rigthScore);
-        }
+    }
+    */
+    }
 
-      
+    }
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}

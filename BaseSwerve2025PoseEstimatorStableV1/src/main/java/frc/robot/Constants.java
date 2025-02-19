@@ -297,7 +297,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kLiftPulleyRatio = 20.0/42.0;
      
       //public static final double kLiftPulleyRatio = 42.0/20.0;
-      public static final double kLiftTuboDiam = 0.033;//0.0381;
+      public static final double kLiftTuboDiam = 0.0381; //0.033 
       public static final double  kLiftGearRatio = 1.0/3.0*kLiftPulleyRatio*kLiftTuboDiam*Math.PI;
 
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
