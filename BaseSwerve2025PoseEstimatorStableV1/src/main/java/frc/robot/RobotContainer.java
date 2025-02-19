@@ -40,7 +40,6 @@ import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.coral.AcoralManualCmd;
-import frc.robot.commands.coral.CoralShooterCmd;
 import frc.robot.commands.coral.CoralStationCmd;
 import frc.robot.commands.coral.PickL1Cmd;
 import frc.robot.commands.lift.LiftCommand;
@@ -130,7 +129,6 @@ public class RobotContainer
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
   public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
   public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
-  public static CoralShooterCmd coralShooterCmd = new CoralShooterCmd(); 
   public static AcoralManualCmd aCoralManualCmd = new AcoralManualCmd(operatorHub);
  
   //Algae Coral Command
@@ -375,7 +373,7 @@ public class RobotContainer
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
     climb.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))
-                                                              .onlyIf(()->escaladorSubsystem.isDistanceValid()));
+                                                              .onlyIf(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber())));
     
     JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
     climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));

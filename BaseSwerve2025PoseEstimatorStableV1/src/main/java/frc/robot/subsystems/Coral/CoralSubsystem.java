@@ -49,7 +49,7 @@ public class CoralSubsystem extends SubsystemBase
   
 
   /* Start at motion 0, use slot 2 */
-   //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
+   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
 
  // private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
 

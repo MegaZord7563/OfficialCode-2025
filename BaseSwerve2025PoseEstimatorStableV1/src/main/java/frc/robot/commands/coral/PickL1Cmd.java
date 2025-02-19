@@ -46,9 +46,9 @@ public class PickL1Cmd extends SequentialCommandGroup
      new RunCommand(()->aAlgaeSubsystem.runMotor(20))
                         .until(() -> aAlgaeSubsystem.inPosition(20).get()),
 
-    new RunCommand(()->rampSubsystem.runMotor(75))
+    new RunCommand(()->rampSubsystem.runMotor(70))
                         .onlyIf(() -> aAlgaeSubsystem.inPosition(20).get())
-                        .until(()-> rampSubsystem.inPosition(75).get())
+                        .until(()-> rampSubsystem.inPosition(70).get())
       
     );
     System.out.println("Pick L1 Done!!!");
