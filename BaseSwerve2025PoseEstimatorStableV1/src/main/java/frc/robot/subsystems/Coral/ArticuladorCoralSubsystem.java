@@ -214,7 +214,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
 
   public Supplier<Boolean> isHomed()
   {
-    if (coralEncoder.getPosition() <=0)
+    if (coralEncoder.getPosition() <=3)
     {
       return ()->true;
     }else 
