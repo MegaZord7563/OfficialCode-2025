@@ -628,7 +628,7 @@ public void stopModules ()
 
     for (int i = 0; i < 3; i++) 
     {
-      System.out.println("Velocity 80% Max");
+      System.out.println("Velocity 100% Max");
       
     }
   }
@@ -708,7 +708,7 @@ public void stopModules ()
     double ySpeed = ySpdFunction.get();  
     double turningSpeed = turningSpdFunction.get();
     boolean fieldOriented = fieldOrientedFunction.get();
-    double throttle = 0.3;
+    double throttle = 1.0;
        
     
     //Selects speed

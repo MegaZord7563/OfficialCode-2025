@@ -19,6 +19,9 @@ public class LedControl extends SubsystemBase
   private boolean ledsOn = true;
   public LedControl() 
   {
+
+    //Blue and Green are inverted
+
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
     m_led = new AddressableLED(0);
@@ -42,7 +45,7 @@ public class LedControl extends SubsystemBase
 
     if (ledsOn)
     {
-      rainbow();
+      setRainbow();
       ledsOn = false;
     }
     
@@ -50,7 +53,7 @@ public class LedControl extends SubsystemBase
   }
 
   // Sets the LED color to red
-  public void redLed()
+  public void setRedLed()
   {
 
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
@@ -65,14 +68,14 @@ public class LedControl extends SubsystemBase
   
   }
 
-  public void orangeLed()
+  public void setOrangeLed()
   {
 
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
       // Sets the specified LED to the RGB values for red
       // green e blue invertidos
-      m_ledBuffer.setRGB(i, 255, 70, 0);
+      m_ledBuffer.setRGB(i, 255, 0, 140);
 
     }
     m_led.setData(m_ledBuffer);
@@ -81,18 +84,18 @@ public class LedControl extends SubsystemBase
   
   }
   // Sets the LED color to blue 
-  public void blueLed2()
+  public void setBlueLed()
   { 
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
       // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setHSV(i, 120, 100, 100);
+      m_ledBuffer.setRGB(i,0,255,0);
     }
    m_led.setData(m_ledBuffer);
   
   } 
   // Sets the LED color to green
-  public void greenLed()
+  public void setGreenLed()
   {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
@@ -101,94 +104,62 @@ public class LedControl extends SubsystemBase
    m_led.setData(m_ledBuffer);
   
   } 
+
+  public void setPinkLed()
+  {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) 
+    {
+      m_ledBuffer.setRGB(i, 255, 147, 0);
+    }
+   m_led.setData(m_ledBuffer);
+  } 
+  
   // Sets the LED color to yellow
-  public void yellowLed()
+  public void setYellowLed()
   {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
       // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setHSV(i, 60, 100, 100);
+      m_ledBuffer.setRGB(i, 255, 0, 255);
     }
    m_led.setData(m_ledBuffer);
   
   } 
   // Sets the LED color to purple 
-  public void purpleLed()
+  public void setPurpleLed()
   {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
       // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setHSV(i, 300, 100, 100);
+      m_ledBuffer.setRGB(i, 148, 211, 0);
     }
    m_led.setData(m_ledBuffer);
   
   }
   // Sets the LED color to white
-  public void whiteLed()
+  public void setWhiteLed()
   {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
-      // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setHSV(i, 0, 0, 100);
+      m_ledBuffer.setRGB(i, 255, 255, 255);
     }
    m_led.setData(m_ledBuffer);
   
   }
   // Sets the LED color to black  
-  public void blackLed()
+  public void setBlackLed()
   {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
       // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setHSV(i, 0, 0, 0);
-    }
-   m_led.setData(m_ledBuffer);
-  
-  }
-
-  public void stopLed()
-  {
-
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) 
-    {
-      // Sets the specified LED to the RGB values for red
-      // green e blue invertidos
       m_ledBuffer.setRGB(i, 0, 0, 0);
     }
-    m_led.setData(m_ledBuffer);
-    
-   /*for (var i = 0; i < m_ledBuffer.getLength(); i++) 
-    {
-      // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setHSV(i, 0, 0, 0);
-    }*/
-   
-  
-  }
-
-  public void blueLed()
-  {
-/*
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) 
-    {
-      // Sets the specified LED to the RGB values for red
-      // green e blue invertidos
-      m_ledBuffer.setRGB(i, 0, 255, 0);
-    }
-    m_led.setData(m_ledBuffer); */
-    
-   for (var i = 0; i < m_ledBuffer.getLength(); i++) 
-    {
-      // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setHSV(i, 120, 100, 100);
-    }
    m_led.setData(m_ledBuffer);
   
   }
 
-
   
-  public void rainbow ()
+  public void setRainbow ()
   {
     // For every pixel
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 

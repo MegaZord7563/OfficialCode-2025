@@ -29,7 +29,7 @@ public class Articulador1Cmd extends Command
     private double l1Setpoint = 55.0;
     private double l2Setpoint = 50.0;
     private double l3Setpoint = 50.0;
-    private double l4Setpoint = 40.0;
+    private double l4Setpoint = 50.0;
 
 
     // Create the subsystem

@@ -93,12 +93,12 @@ public class LiftCommand extends Command
       
       //if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
       finish =true;
-      if(!artCoralSubsystem.sensorCoral())ledControl.greenLed();
+      if(!artCoralSubsystem.sensorCoral())ledControl.setWhiteLed();
     }
     if (l2)
     {
       System.out.println("L2 SELECTED");
-      if(!artCoralSubsystem.sensorCoral())ledControl.yellowLed();
+      if(!artCoralSubsystem.sensorCoral())ledControl.setBlueLed();
       
       liftSubsystem.runMotor(l2Setpoint, false);
       
@@ -109,14 +109,14 @@ public class LiftCommand extends Command
     if (l3)
     {
       System.out.println("L3 SELECTED");
-      if(!artCoralSubsystem.sensorCoral())ledControl.orangeLed();
+      if(!artCoralSubsystem.sensorCoral())ledControl.setGreenLed();
       liftSubsystem.runMotor(l3Setpoint, false);
       if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
       
     }
     if (l4)
     {
-      if(!artCoralSubsystem.sensorCoral())ledControl.redLed();
+      if(!artCoralSubsystem.sensorCoral())ledControl.setRedLed();
       System.out.println("L4 SELECTED");
       liftSubsystem.runMotor(l4Setpoint , false);
       if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
@@ -139,7 +139,7 @@ public class LiftCommand extends Command
     // Stop the lift
     //liftSubsystem.stopMotor();
     // Print the end of the command
-    ledControl.stopLed();
+    ledControl.setBlackLed();
     System.out.println("Lift Command Done!");
   }
 

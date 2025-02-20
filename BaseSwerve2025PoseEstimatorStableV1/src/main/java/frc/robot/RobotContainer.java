@@ -151,7 +151,7 @@ public class RobotContainer
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
   public static LeaveCmd leaveCmd = new LeaveCmd();
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(0.5);
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1);
   public static SensorAlignLeftCmd sensorAlignLeft = new SensorAlignLeftCmd(swerveDrive);
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
@@ -287,7 +287,7 @@ public class RobotContainer
                                       ( ()->driverJoystick.getLeftY(),
                                         ()->driverJoystick.getLeftX(),
                                         ()->-driverJoystick.getRightX(),
-                                        ()->!driverJoystick.getHID().getAButton()
+                                        ()->true
                                       ), 
                                       swerveDrive
                                     )//.onlyIf(()-> !driverJoystick.getHID().getXButton())
@@ -316,23 +316,25 @@ public class RobotContainer
       */
 
      //Changes robot speed - speeding up
-     //driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
-     //driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
-     //driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
+     driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
+     driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
+     driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
      
      //set command to homing position
-     driverJoystick.start().whileTrue(homingPosition);
+     driverJoystick.y().whileTrue(homingPosition);
      //set position to Score
      driverJoystick.x().whileTrue(pathScoreReefCmd);
      driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
 
 
     //Prepare to Pick Coral
-     driverJoystick.b().onTrue(coralStationCmd);
+     //driverJoystick.b().onTrue(coralStationCmd);
      //set command to score level
      driverJoystick.a().whileTrue(scoreLevel);
+
     //Home backRobot
-     driverJoystick.y().whileTrue(homingEndGame);
+     //driverJoystick.y().whileTrue(homingEndGame);
+
      //Align robot to score Right
      driverJoystick.povRight().whileTrue(sensorAlignRight);
      //Align robot to score Left
@@ -350,25 +352,28 @@ public class RobotContainer
     climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition, true))
             .onlyIf(()->rampSubsystem.isHomedBoolean()));
 
-    climb.onFalse(new InstantCommand(ledControl::greenLed)
+    climb.onFalse(new InstantCommand(ledControl::setGreenLed)
                     .onlyIf(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber())));
     
-    JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
-    climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));
+    //JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
+    //climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));
     //driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))));
     //driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0,false))));
 
     //Initialize Ramp
-    JoystickButton initRamp = new JoystickButton(mesinhaJoy1, operatorHub.kEight);
-    initRamp.whileTrue(initializeRamp);
+    //OperatorHub 2 Button 1
+    JoystickButton coralStation = new JoystickButton(mesinhaJoy1, operatorHub.kEight);
+    coralStation.onTrue(coralStationCmd);
 
     //Pick Position L1
-    JoystickButton pickL1 = new JoystickButton(mesinhaJoy2, operatorHub.kNine);
-    pickL1.whileTrue(pickL1Cmd);
+    //OperatorHub 2 Button 6
+    JoystickButton homeEndGame = new JoystickButton(mesinhaJoy2, operatorHub.kNine);
+    homeEndGame.onTrue(homingEndGame);
 
     //Score L1
-    JoystickButton scoreL1 = new JoystickButton(mesinhaJoy2, operatorHub.kSeven);
-    scoreL1.whileTrue(new InstantCommand(()-> algaSubsystem.startAlga(9.5)));
+    //OperatorHub 1 Button 1
+    JoystickButton initRamp = new JoystickButton(mesinhaJoy2, operatorHub.kSeven);
+    initRamp.onTrue(initializeRamp);
 
     //Pick Algae - testado 
     JoystickButton pickAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kThree);
@@ -433,12 +438,12 @@ public class RobotContainer
   
     
     JoystickButton selectonCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSix);
-    //selectonCoralStation.whileTrue(new InstantCommand(ledControl::blueLed));
-    //selectonCoralStation.whileFalse(new InstantCommand(ledControl::whiteLed));
+    selectonCoralStation.whileTrue(new InstantCommand(ledControl::setBlueLed));
+    selectonCoralStation.whileFalse(new InstantCommand(ledControl::setWhiteLed));
     
     JoystickButton positionCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSeven);
-    //positionCoralStation.whileTrue(new InstantCommand(ledControl::purpleLed));
-    //positionCoralStation.whileFalse(new InstantCommand(ledControl::orangeLed));
+    positionCoralStation.whileTrue(new InstantCommand(ledControl::setPurpleLed));
+    positionCoralStation.whileFalse(new InstantCommand(ledControl::setOrangeLed));
 
 
     
