@@ -16,6 +16,7 @@ public class LedControl extends SubsystemBase
   // Store what the last hue of the first pixel is
   private int m_rainbowFirstPixelHue;
   /** Creates a new LedControl. */
+  private boolean ledsOn = true;
   public LedControl() 
   {
     // PWM port 9
@@ -39,10 +40,13 @@ public class LedControl extends SubsystemBase
   {
     // This method will be called once per scheduler run
 
-    //rainbow();
-
-    greenLed();
-    m_led.setData(m_ledBuffer);
+    if (ledsOn)
+    {
+      rainbow();
+      ledsOn = false;
+    }
+    
+    
   }
 
   // Sets the LED color to red

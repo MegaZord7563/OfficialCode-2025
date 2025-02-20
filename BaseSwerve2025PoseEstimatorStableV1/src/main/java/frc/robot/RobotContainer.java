@@ -373,7 +373,8 @@ public class RobotContainer
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
     climb.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))
-                                                              .onlyIf(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber())));
+                    .alongWith(new InstantCommand(ledControl::rainbow))
+                    .onlyIf(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber())));
     
     JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
     climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));
@@ -453,6 +454,15 @@ public class RobotContainer
     backAlgae.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
                                             .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
   
+    JoystickButton selectonCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSix);
+    selectonCoralStation.whileTrue(new InstantCommand(ledControl::blueLed));
+    selectonCoralStation.whileFalse(new InstantCommand(ledControl::whiteLed));
+    
+    JoystickButton positionCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSeven);
+    positionCoralStation.whileTrue(new InstantCommand(ledControl::purpleLed));
+    positionCoralStation.whileFalse(new InstantCommand(ledControl::orangeLed));
+
+
     
      //outTakeTrapForward.whileTrue(new RunCommand (()-> outTakeCmd.selectForward()));
      //outTakeTrapForward.whileFalse(new RunCommand(() -> outTakeCmd.selectStopForward()));

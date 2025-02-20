@@ -10,6 +10,8 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.LedControl;
+import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.Coral.CoralSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 public class LiftCommand extends Command
@@ -41,6 +43,7 @@ public class LiftCommand extends Command
 
   // Create the subsystem
   private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
+  private final ArticuladorCoralSubsystem artCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
   private final LedControl ledControl = RobotContainer.ledControl;
 
   /** Creates a new AngleCmd. */
@@ -90,12 +93,12 @@ public class LiftCommand extends Command
       
       //if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
       finish =true;
-      ledControl.greenLed();
+      if(artCoralSubsystem.sensorCoral())ledControl.greenLed();
     }
     if (l2)
     {
       System.out.println("L2 SELECTED");
-      ledControl.yellowLed();
+      if(artCoralSubsystem.sensorCoral())ledControl.yellowLed();
       
       liftSubsystem.runMotor(l2Setpoint, false);
       
@@ -106,14 +109,14 @@ public class LiftCommand extends Command
     if (l3)
     {
       System.out.println("L3 SELECTED");
-      ledControl.orangeLed();
+      if(artCoralSubsystem.sensorCoral())ledControl.orangeLed();
       liftSubsystem.runMotor(l3Setpoint, false);
       if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
       
     }
     if (l4)
     {
-      ledControl.redLed();
+      if(artCoralSubsystem.sensorCoral())ledControl.redLed();
       System.out.println("L4 SELECTED");
       liftSubsystem.runMotor(l4Setpoint , false);
       if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
@@ -136,6 +139,7 @@ public class LiftCommand extends Command
     // Stop the lift
     //liftSubsystem.stopMotor();
     // Print the end of the command
+    ledControl.stopLed();
     System.out.println("Lift Command Done!");
   }
 
