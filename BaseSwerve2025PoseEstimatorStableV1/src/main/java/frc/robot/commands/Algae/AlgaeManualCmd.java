@@ -2,29 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.AlgaeCoral;
+package frc.robot.commands.Algae;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Utils.OperatorHub;
-import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Algae.AlgaSubsystem;
 import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
-import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
-import frc.robot.subsystems.Coral.CoralSubsystem;
-import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+
+
 public class AlgaeManualCmd extends Command 
 {
 
 
     private final AlgaSubsystem algaSubsystem = RobotContainer.algaSubsystem;
     private final ArticuladorAlgaeSubsystem aAlgaeSubsystem = RobotContainer.articuladorAlgaeSubsystem;
-    //private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-    //private final LedControl ledControl = RobotContainer.ledControl;
-    
 
     private final OperatorHub operatorHub ;
 
@@ -32,17 +25,14 @@ public class AlgaeManualCmd extends Command
     boolean trava ;
     boolean travaC = false;
 
-    boolean leftScore = false;
-    boolean rigthScore = false;
-
     private double encoderPosition;
 
-    private double encoderPositionC;
 
   /** Creates a new AlgaeCoralManualCmd. */
   public AlgaeManualCmd(OperatorHub operatorHub) 
   {
     this.operatorHub=operatorHub;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(algaSubsystem,aAlgaeSubsystem);
   }
@@ -50,7 +40,7 @@ public class AlgaeManualCmd extends Command
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //System.out.println("AlgaeCoralManual Command Initialized");
+    System.out.println("AlgaeManual Command Initialized");
     finish = false;
   }
 
@@ -59,8 +49,7 @@ public class AlgaeManualCmd extends Command
   public void execute() {
     //Selective Key Coral/Algae
     if (!operatorHub.getSelectOne()){
-      //Algae Articulator
-      //Up
+      //Algae Articulator Up
       if(operatorHub.getBlackAxisUp(0.75))
       {
         aAlgaeSubsystem.setVelocity(0.1);
@@ -68,7 +57,7 @@ public class AlgaeManualCmd extends Command
         trava =true;
         System.out.println("BlackAxisUp");
       }
-      //Down
+      //Algae Articulator Down
       else if(operatorHub.getBlackAxisDown(-0.75))
       {
         aAlgaeSubsystem.setVelocity(-0.1);
@@ -76,7 +65,7 @@ public class AlgaeManualCmd extends Command
         trava =true;
         System.out.println("BlackAxisDown");
       }
-      //Center Position
+      //Algae Articulator Center Position
       else if(operatorHub.getBlackAxisUpDownHome()&&!aAlgaeSubsystem.isHomed().get()&&trava)
       {
         System.out.println("BlackAxisHome");
@@ -87,15 +76,6 @@ public class AlgaeManualCmd extends Command
       {
         //finish = true;
       }
-
-
-    /* 
-
-
-      SmartDashboard.putBoolean("LeftScore", leftScore);
-      SmartDashboard.putBoolean("RightScore", rigthScore);
-    }
-    */
     }
 
     }
