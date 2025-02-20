@@ -8,7 +8,6 @@ package frc.robot;
 
 //Java Imports
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -34,7 +33,7 @@ import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
 import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.OperatorHub;
 import frc.robot.Utils.TouchScreenInterface;
-import frc.robot.commands.AlgaeCoral.AlgaeManualCmd;
+import frc.robot.commands.Algae.AlgaeManualCmd;
 import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
@@ -47,7 +46,6 @@ import frc.robot.commands.lift.LiftCommand;
 
 import frc.robot.commands.lift.LiftManualCmd;
 import frc.robot.commands.pathPlanner.PathAfterFind;
-import frc.robot.commands.pathPlanner.PathFindingCommand;
 import frc.robot.commands.score.HomingPosition;
 import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
@@ -152,7 +150,7 @@ public class RobotContainer
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
   public static LeaveCmd leaveCmd = new LeaveCmd();
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(swerveDrive,0.5);
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(0.5);
   public static SensorAlignLeftCmd sensorAlignLeft = new SensorAlignLeftCmd(swerveDrive);
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
@@ -247,8 +245,6 @@ public class RobotContainer
     PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
     
    
-
-
     //Add options to the chooser
     chooserAuto.addOption("NovoAuto", autoPath);
 

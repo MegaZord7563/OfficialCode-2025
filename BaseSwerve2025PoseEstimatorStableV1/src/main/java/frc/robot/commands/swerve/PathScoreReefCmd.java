@@ -4,27 +4,20 @@
 
 package frc.robot.commands.swerve;
 
-
+//PathPlanner imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+
 // WPI imports
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.PathPlannerConstants;
 // Robot imports
 import frc.robot.RobotContainer;
-import frc.robot.Limelight.AimingUtils;
 import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.SelectScore;
-import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
-import frc.robot.commands.pathPlanner.PathFindingCommand;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -32,8 +25,8 @@ public class PathScoreReefCmd extends Command
 {
   // Instantiate the object
   private static SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-      private  Pose2d targetPosition = new Pose2d(0, 0, null);
-      private  Pose2d currentPosition = new Pose2d(0, 0, null);
+  private  Pose2d targetPosition = new Pose2d(0, 0, null);
+
   
     private static String limelightName = "limelight-front";
   
@@ -61,9 +54,6 @@ public class PathScoreReefCmd extends Command
   
     //Path Variables:
   
-    private  double positionX;
-    private  double positionY;
-    private  double rotation;
     private double setEndVelocity = 0;
   
     private final double maxVelocity;
@@ -71,9 +61,8 @@ public class PathScoreReefCmd extends Command
   
     //double kX, double kY , double kRot
     /** Creates a new AimAndRangeCmd. */
-    public PathScoreReefCmd(SwerveSubsystem swerveDrive, double maxVelocity)
+    public PathScoreReefCmd( double maxVelocity)
     {
-    this.swerveDrive = swerveDrive;
     this.maxVelocity = maxVelocity;
 
     addRequirements(swerveDrive);
@@ -110,7 +99,6 @@ public class PathScoreReefCmd extends Command
     kL = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL);
 
 
-    currentPosition =robotPosition();
     // Get raw AprilTag/Fiducial data
     if (kA)
     {

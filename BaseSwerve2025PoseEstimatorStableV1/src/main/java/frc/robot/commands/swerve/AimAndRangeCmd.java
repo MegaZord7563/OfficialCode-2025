@@ -8,15 +8,12 @@ package frc.robot.commands.swerve;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 // WPI imports
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 // Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.Limelight.AimingUtils;
 import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.SelectScore;
-import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.commands.pathPlanner.PathFindingCommand;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -190,9 +187,6 @@ public class AimAndRangeCmd extends Command
    if (!finish) 
    {
 
-    pathFindingCommand.setX(targetPosition.getX());
-    pathFindingCommand.setY(targetPosition.getY());
-    pathFindingCommand.setRot(targetPosition.getRotation().getDegrees());
 
     System.out.println("targetPosition.getX()" + targetPosition.getX());
     System.out.println("targetPosition.getY()" + targetPosition.getY());

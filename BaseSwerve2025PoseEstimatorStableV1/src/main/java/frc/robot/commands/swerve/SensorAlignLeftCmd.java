@@ -5,7 +5,6 @@
 package frc.robot.commands.swerve;
 
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -14,8 +13,8 @@ import frc.robot.subsystems.Swerve.SwerveSubsystem;
 public class SensorAlignLeftCmd extends Command {
   private final SwerveSubsystem swerveDrive;
   private boolean finish = false;
-  private final double kMaxSpeed2Steer = 0.15; 
-  private PIDController pidSteer = new PIDController(0.1,0,0);
+  private final double speed = -0.05; 
+  //private PIDController pidSteer = new PIDController(0.1,0,0);
 
   double steerPosition;
 
@@ -37,7 +36,7 @@ public class SensorAlignLeftCmd extends Command {
   public void execute() 
   {
     if (!swerveDrive.getSensorLeft() && !swerveDrive.getSensorRight()) {
-        swerveDrive.driveToTarget(() -> 0.0, () -> -0.05, () -> 0.0, () -> true);
+        swerveDrive.driveToTarget(() -> 0.0, () -> speed, () -> 0.0, () -> true);
 
       }
       
