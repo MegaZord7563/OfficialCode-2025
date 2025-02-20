@@ -11,32 +11,51 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.cameraserver.CameraServer;
 //WPILIB Imports
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.util.PixelFormat;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 //Robot Imports
 import frc.robot.Constants.OIConstants.JoystickDriverConstants;
-import frc.robot.Constants.OIConstants.JoystickOperatorConstants;
-import frc.robot.Constants.SubsystemsConstants.AlgaIntakeConstants;
+import frc.robot.Constants.OIConstants.MesinhaJoy1Constants;
+import frc.robot.Constants.OIConstants.MesinhaJoy2Constants;
 import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
-import frc.robot.Constants.SubsystemsConstants.RampConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.Utils.OperatorHub;
 import frc.robot.Utils.TouchScreenInterface;
+import frc.robot.commands.Algae.AlgaeManualCmd;
+import frc.robot.commands.Ramp.HomingEndGame;
+import frc.robot.commands.Ramp.InitializeRamp;
+import frc.robot.commands.Ramp.RampPickCoralCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
+import frc.robot.commands.coral.AcoralManualCmd;
+
+import frc.robot.commands.coral.CoralStationCmd;
+import frc.robot.commands.coral.PickL1Cmd;
 import frc.robot.commands.lift.LiftCommand;
-import frc.robot.commands.lift.LiftCommandAuto;
+
 import frc.robot.commands.lift.LiftManualCmd;
 import frc.robot.commands.pathPlanner.PathAfterFind;
-import frc.robot.commands.pathPlanner.PathFindingCommand;
 import frc.robot.commands.score.HomingPosition;
 import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
+import frc.robot.commands.swerve.LeaveCmd;
+import frc.robot.commands.swerve.PathScoreReefCmd;
+import frc.robot.commands.swerve.SensorAlignLeftCmd;
+import frc.robot.commands.swerve.SensorAlignRightCmd;
 import frc.robot.commands.swerve.TrackAlgae;
+import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Algae.AlgaSubsystem;
 import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
 import frc.robot.subsystems.Climber.EscaladorSubsystem;
@@ -55,12 +74,25 @@ import frc.robot.subsystems.lift.LiftSubsystem;
 public class RobotContainer 
 {
   // The robot's subsystems and commands are defined here...
+  //Operator Controller
+  public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
   
+  public static CommandXboxController driverJoystick = 
+                                      new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
+  
+  public static Joystick mesinhaJoy1 = 
+                          new Joystick(MesinhaJoy1Constants.kJoy1Port);
+  public static Joystick mesinhaJoy2 = 
+                          new Joystick(MesinhaJoy2Constants.kJoy2Port);
+
+  public static final OperatorHub operatorHub = 
+                                  new OperatorHub(mesinhaJoy1, mesinhaJoy2);
   /**
    * SUBSYSTEMS
    */
   //Put all subsystems here
   public static LimelightHelpers limelightHelpers = new LimelightHelpers();
+  public static LedControl ledControl = new LedControl();
   
   //Swerve Drive
   public static SwerveSubsystem swerveDrive = new SwerveSubsystem();
@@ -75,12 +107,11 @@ public class RobotContainer
   public static AlgaSubsystem algaSubsystem = new AlgaSubsystem();
   public static ArticuladorAlgaeSubsystem articuladorAlgaeSubsystem = new ArticuladorAlgaeSubsystem();
   
+  
   //Coral Subsystem
   public static CoralSubsystem coralSubsystem = new CoralSubsystem();
   public static ArticuladorCoralSubsystem articuladorCoralSubsystem = new ArticuladorCoralSubsystem();
   public static RampSubsystem rampSubsystem = new RampSubsystem();
-
-  public static TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
   
 /**
  * COMMANDS
@@ -88,29 +119,44 @@ public class RobotContainer
 
   //Lift Commands
   public  static LiftCommand liftCmd =new LiftCommand();
-  public static LiftCommandAuto liftAuto = new LiftCommandAuto();
-  public static LiftManualCmd liftManualCmd = new LiftManualCmd(0);
+ 
+  public static LiftManualCmd liftManualCmd = new LiftManualCmd(operatorHub);
+
+  //public static AlgaeCoralManualCmd algaeCoralManualCmd = new AlgaeCoralManualCmd(operatorHub);
 
   
   //Coral Commands
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
+  public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
+  public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
+  
+  public static AcoralManualCmd aCoralManualCmd = new AcoralManualCmd(operatorHub);
+ 
+  //Algae Coral Command
+  //
+  
+  public static AlgaeManualCmd algaeManual = new AlgaeManualCmd(operatorHub);
 
   /**
    * SEQUENTIAL COMMANDS
    */
   public static ScoreLevel scoreLevel = new ScoreLevel();
   public static HomingPosition homingPosition = new HomingPosition();
+  public static InitializeRamp initializeRamp = new InitializeRamp(); 
+  public static HomingEndGame homingEndGame = new HomingEndGame();
+  public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
+
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
-  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( 0, 0, 0);
+  public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
+  public static LeaveCmd leaveCmd = new LeaveCmd();
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1);
+  public static SensorAlignLeftCmd sensorAlignLeft = new SensorAlignLeftCmd(swerveDrive);
+  public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
   //PathFindingCommand
-  public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 
-                                                    1, 0.7, 2.83, 0);
 
-  public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 
-                                                    1, 2.198, 4.921, 180);
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
   public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
@@ -119,9 +165,10 @@ public class RobotContainer
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //public static XboxController driverJoystick;
   //Controllers
-  public static CommandXboxController driverJoystick;
+
   
-  public static CommandXboxController operatorJoystick;
+  // Creates UsbCamera 
+  UsbCamera usbCamera;
   
   
   /**
@@ -134,13 +181,23 @@ public class RobotContainer
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() 
   {
+   //Configure camera 
+  
+    usbCamera = CameraServer.startAutomaticCapture();
+    // Set the resolution
+    usbCamera.setResolution(640, 480);
+    // Set the frames per second  
+    usbCamera.setFPS(30);
+    // Set the pixel format
+    usbCamera.setPixelFormat(PixelFormat.kMJPEG);
+    
+    
     //liftCmd = new LiftCommand();
     //articulador1Cmd = new Articulador1Cmd();
     //scoreLevel = new ScoreLevel();
 
-     // First of All - Register Named Commands
-    NamedCommands.registerCommand("lift", liftAuto);
-    
+    NamedCommands.registerCommand("PathScoreReef", pathScoreReefCmd);
+    NamedCommands.registerCommand("lift", liftCmd);
   
     // Add commands to the subsystem
     
@@ -148,17 +205,33 @@ public class RobotContainer
     //Swerve Commands
     trackAlgaeCmd.addRequirements(swerveDrive);
     aimAndRangeCmd.addRequirements(swerveDrive);
+    leaveCmd.addRequirements(swerveDrive);
+    pathScoreReefCmd.addRequirements(swerveDrive);
+    sensorAlignLeft.addRequirements(swerveDrive);
+    sensorAlignRight.addRequirements(swerveDrive);
 
 
     //Lift Commands
     liftCmd.addRequirements(liftSubsystem);
-    liftAuto.addRequirements(liftSubsystem);
+    
+    //liftAuto.addRequirements(liftSubsystem);
+    
     liftManualCmd.addRequirements(liftSubsystem);
+    liftSubsystem.setDefaultCommand(liftManualCmd);
+
+    algaeManual.addRequirements(articuladorAlgaeSubsystem);
+    articuladorAlgaeSubsystem.setDefaultCommand(algaeManual);
+  
+    aCoralManualCmd.addRequirements(articuladorCoralSubsystem);
+    articuladorCoralSubsystem.setDefaultCommand(aCoralManualCmd);
+
 
     //Coral Commands
     articulador1Cmd.addRequirements(articuladorCoralSubsystem);
-   
-      
+
+    //algaSubsystem.setDefaultCommand(algaeCoralManual);
+
+
     // Build an auto chooser. This will use Commands.none() as the default option.
     chooserAuto = AutoBuilder.buildAutoChooser();
     
@@ -169,9 +242,6 @@ public class RobotContainer
     PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
     
    
-    
-    
-
     //Add options to the chooser
     chooserAuto.addOption("NovoAuto", autoPath);
 
@@ -187,8 +257,8 @@ public class RobotContainer
    
     
     // Instantiate Xbox Controller
-    driverJoystick= new CommandXboxController(JoystickDriverConstants.kDriverControllerPort);
-    operatorJoystick= new CommandXboxController(JoystickOperatorConstants.kOperatorControllerPort);
+    
+    
      //Add to choices to smart dashboard
     SmartDashboard.putData("Autonomous", chooserAuto);
 
@@ -214,14 +284,18 @@ public class RobotContainer
     swerveDrive.setDefaultCommand
                                   (new RunCommand
                                     (()-> swerveDrive.driveRobotOriented
-                                      ( ()->-driverJoystick.getLeftY(),
-                                        ()->-driverJoystick.getLeftX(),
+                                      ( ()->driverJoystick.getLeftY(),
+                                        ()->driverJoystick.getLeftX(),
                                         ()->-driverJoystick.getRightX(),
-                                        ()->!driverJoystick.getHID().getAButton()
+                                        ()->true
                                       ), 
                                       swerveDrive
-                                    )
-                                  ); 
+                                    )//.onlyIf(()-> !driverJoystick.getHID().getXButton())
+                          )
+                                  ; 
+    
+    
+    
                                                  
     
   }
@@ -237,61 +311,155 @@ public class RobotContainer
    */
   private void configureBindings() 
   {
-    //X positions of the Wheels 
-    //new JoystickButton(driverJoystick, Button.kX.value).whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
-    //driverJoystick.x().whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
-         
-     //driverJoystick.start().onTrue(new InstantCommand(swerveDrive::zeroHeading));
-     
+     /**
+      * XBOX CONTROLLER BUTTONS
+      */
 
-     ///*Changes robot speed - slowing down
-     //JoystickButton throttle1 = new JoystickButton (driverJoystick,XboxController.Button.kLeftBumper.value); 
-     //throttle1.onTrue(new InstantCommand(swerveDrive::robotSlower)); 
-
-     
+     //Changes robot speed - speeding up
      driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
      driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
      driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
      
-     driverJoystick.y().whileTrue(trackAlgaeCmd);
-
-     //driverJoystick.x().whileTrue(new InstantCommand(()->coralSubsystem.runMotor(50)));
-     //driverJoystick.x().whileFalse(new InstantCommand(()->coralSubsystem.runMotor(0)));
-
-     //driverJoystick.b().whileTrue(scoreLevel);
-
-     operatorJoystick.x().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity)));
-     operatorJoystick.x().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
-
-     operatorJoystick.y().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.setVelocity(AlgaIntakeConstants.articulatorVelocity * -1)));
-     operatorJoystick.y().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
-
-     operatorJoystick.b().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(AlgaIntakeConstants.pickAlgaePIDPosition)));
-     operatorJoystick.b().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
-
-     operatorJoystick.a().whileTrue(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(AlgaIntakeConstants.startAlgaePIDPosition)));
-     operatorJoystick.a().whileFalse(new InstantCommand(()->articuladorAlgaeSubsystem.runMotor(articuladorAlgaeSubsystem.getPosition())));
-
-     operatorJoystick.povDown().whileTrue(new InstantCommand(()->algaSubsystem.setVelocity(AlgaIntakeConstants.shooterAlgaeVelocity *-1)));
-     operatorJoystick.povDown().whileFalse(new InstantCommand(()->algaSubsystem.setVelocity(0)));
-
-     operatorJoystick.povUp().whileTrue((new InstantCommand(()->algaSubsystem.setVelocity(AlgaIntakeConstants.shooterAlgaeVelocity))));
-     operatorJoystick.povUp().whileFalse((new InstantCommand(()->algaSubsystem.setVelocity(0))));
-
-     operatorJoystick.povLeft().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity))));
-     operatorJoystick.povLeft().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
-
-     operatorJoystick.povRight().whileTrue((new InstantCommand(()->escaladorSubsystem.setVelocity(EscaladorConstants.escaladorVelocity*-1))));
-     operatorJoystick.povRight().whileFalse((new InstantCommand(()->escaladorSubsystem.setVelocity(0))));
-
-     operatorJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))));
-     operatorJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0))));
+     //set command to homing position
+     driverJoystick.y().whileTrue(homingPosition);
+     //set position to Score
+     driverJoystick.x().whileTrue(pathScoreReefCmd);
+     driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
 
 
-     operatorJoystick.back().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.startPosition))));
-     operatorJoystick.start().whileTrue((new InstantCommand(()->rampSubsystem.runMotor(RampConstants.pickPosition))));
+    //Prepare to Pick Coral
+     //driverJoystick.b().onTrue(coralStationCmd);
+     //set command to score level
+     driverJoystick.a().whileTrue(scoreLevel);
+
+    //Home backRobot
+     //driverJoystick.y().whileTrue(homingEndGame);
+
+     //Align robot to score Right
+     driverJoystick.povRight().whileTrue(sensorAlignRight);
+     //Align robot to score Left
+     driverJoystick.povLeft().whileTrue(sensorAlignLeft);
+     //Algae AI
+     driverJoystick.povUp().whileTrue(trackAlgaeCmd);
+
+
+     /**
+      * OPERATOR CONTROLS
+      */
+
+    JoystickButton leaveAlgaeReef = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
+
+    //Set command to climber
+    JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
+    climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition, true))
+            .onlyIf(()->rampSubsystem.isHomedBoolean()));
+
+    climb.onFalse(new InstantCommand(ledControl::setGreenLed)
+                    .onlyIf(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber())));
+    
+    //JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
+    //climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));
+    //driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))));
+    //driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0,false))));
+
+    //Initialize Ramp
+    //OperatorHub 2 Button 1
+    JoystickButton coralStation = new JoystickButton(mesinhaJoy1, operatorHub.kEight);
+    coralStation.onTrue(coralStationCmd);
+
+    //Pick Position L1
+    //OperatorHub 2 Button 6
+    JoystickButton homeEndGame = new JoystickButton(mesinhaJoy2, operatorHub.kNine);
+    homeEndGame.onTrue(homingEndGame);
+
+    //Score L1
+    //OperatorHub 1 Button 1
+    JoystickButton initRamp = new JoystickButton(mesinhaJoy2, operatorHub.kSeven);
+    initRamp.onTrue(initializeRamp);
+
+    //Pick Algae - testado 
+    JoystickButton pickAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kThree);
+    pickAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(85)));
+    
+    //Score Algae - testado
+    JoystickButton scoreAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
+    scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
+    
+    //Pick Coral
+   /*  JoystickButton pickCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
+    pickCoral.whileTrue(new ConditionalCommand(
+                              new InstantCommand(()-> coralSubsystem.runMotor(20)), 
+                              new InstantCommand(()->algaSubsystem.startAlga(9.5)), 
+                              ()-> operatorHub.getSelectOne()
+                            ));
+
+    pickCoral.whileFalse(new ConditionalCommand(
+                              new InstantCommand(()-> coralSubsystem.setVelocity(0))
+                                .onlyIf(()->(!operatorHub.getOne() && !operatorHub.getTwo())),
+                              new InstantCommand(()->algaSubsystem.resetEncoder())
+                                .onlyIf(()->(!operatorHub.getOne() && !operatorHub.getTwo())), 
+                              ()-> operatorHub.getSelectOne()
+                            ));*/
+
+
+   /*  shootCoral.whileTrue(new ConditionalCommand(
+                              new InstantCommand(()-> coralSubsystem.runMotor(-20)), 
+                              new InstantCommand(()-> algaSubsystem.startAlga(-9.5)), 
+                              ()-> operatorHub.getSelectOne()
+                            )); */
+    
+                            //JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+
+    JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+    shootCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+20.0))
+    .onlyIf(()->operatorHub.getSelectOne()));  
+
+    shootCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
+                                            .onlyIf(()->(operatorHub.getSelectOne() && operatorHub.getOne()))); 
+    
+    JoystickButton backCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
+    backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-20))
+                                            .onlyIf(()->operatorHub.getSelectOne()));  
+    
+
+    backCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
+                                            .onlyIf(()->(operatorHub.getSelectOne() && operatorHub.getTwo()))); 
+    
+
+    JoystickButton shootAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
+    shootAlgae.whileTrue(new RunCommand(()-> algaSubsystem.startAlga(algaSubsystem.getPosition() + 10))
+                                            .onlyIf(()-> !operatorHub.getSelectOne()).until(()->algaSubsystem.getPosition()==9.3));  
+    shootAlgae.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
+                                            .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getOne()))); 
+    
+    JoystickButton backAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+    backAlgae.whileTrue(new RunCommand(()-> algaSubsystem.startAlga(algaSubsystem.getPosition()-10))
+                                            .onlyIf(()-> !operatorHub.getSelectOne()).until(()->algaSubsystem.getPosition()== -9.3));  
+    backAlgae.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
+                                            .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
+  
+    
+    JoystickButton selectonCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSix);
+    selectonCoralStation.whileTrue(new InstantCommand(ledControl::setBlueLed));
+    selectonCoralStation.whileFalse(new InstantCommand(ledControl::setWhiteLed));
+    
+    JoystickButton positionCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSeven);
+    positionCoralStation.whileTrue(new InstantCommand(ledControl::setPurpleLed));
+    positionCoralStation.whileFalse(new InstantCommand(ledControl::setOrangeLed));
+
 
     
+     //outTakeTrapForward.whileTrue(new RunCommand (()-> outTakeCmd.selectForward()));
+     //outTakeTrapForward.whileFalse(new RunCommand(() -> outTakeCmd.selectStopForward()));
+
+     //set command to shoot coral
+     
+
+
+
+/* 
+
+     operatorJoystick.leftBumper().whileTrue(ramp'Coral');*/
      
     //find path
      //driverJoystick.y().onTrue(pathAfterFind);
@@ -308,9 +476,6 @@ public class RobotContainer
      
      //driverJoystick.y().onFalse(new InstantCommand(()-> pathAfterFindRed.endCommand()));
    
-
-    
-
    
   }
   

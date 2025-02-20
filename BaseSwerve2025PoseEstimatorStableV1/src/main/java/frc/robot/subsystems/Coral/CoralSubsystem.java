@@ -10,18 +10,16 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.revrobotics.Rev2mDistanceSensor;
-import com.revrobotics.Rev2mDistanceSensor.Port;
-import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
-import com.revrobotics.Rev2mDistanceSensor.Unit;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static edu.wpi.first.units.Units.*;
+
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
@@ -38,22 +36,9 @@ public class CoralSubsystem extends SubsystemBase
   //private SparkMaxConfig globalConfig = new SparkMaxConfig();
 
   private final TalonFX coralMotor;
-  private final DigitalInput sensor = new DigitalInput(0);
-
-  // The distance sensor
-  /**
-   * pin-out
-   * red = V+ 3.3V
-   * black = GND
-   * white = connect to SCL MXP port
-   * blue = connect to SDA MXP port
-   * 
-   */
-  private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
   
-
   /* Start at motion 0, use slot 2 */
-   //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
+  //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
 
  // private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
 
@@ -61,6 +46,8 @@ public class CoralSubsystem extends SubsystemBase
 
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
+
+
   
   // The lift encoder
   //private final RelativeEncoder coralEncoder;
@@ -76,22 +63,11 @@ public class CoralSubsystem extends SubsystemBase
     // Create the  motor
     coralMotor = new TalonFX (CoralIntakeConstants.kCoralMotorId,"rio");
  
-
-    /**
-     * Before measurements can be read from the sensor, setAutomaticMode(true)
-     * must be called. This starts a background thread which will periodically
-     * poll all enabled sensors and store their measured range.
-     */
-    // Create the distance sensor
-    distOnboard.setAutomaticMode(true);
-
-    //// Set the distance sensor units
-    distOnboard.setDistanceUnits(Unit.kMillimeters);
-    distOnboard.setMeasurementPeriod(0.2);
-    //
-    ////
-    distOnboard.setEnabled(true);
-    distOnboard.setRangeProfile(RangeProfile.kDefault);
+    SmartDashboard.putBoolean("L1", false);
+    SmartDashboard.putBoolean("L2", false);
+    SmartDashboard.putBoolean("L3", false);
+    SmartDashboard.putBoolean("L4", false);
+    
   
     // Create the  encoder
     //coralEncoder = coralMotor.getEncoder();
@@ -152,8 +128,8 @@ public class CoralSubsystem extends SubsystemBase
     globalConfig.Slot0.kI = CoralIntakeConstants.kI; //0; // no output for integrated error
     globalConfig.Slot0.kD = CoralIntakeConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
-    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(8))
-                        .withPeakReverseVoltage(Volts.of(8));
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(2))
+                        .withPeakReverseVoltage(Volts.of(-2));
 
     
      
@@ -176,7 +152,6 @@ public class CoralSubsystem extends SubsystemBase
     /* And initialize encoder position to 0 */
     resetEncoder();
     
-
   }
 
   /*// 
@@ -209,65 +184,26 @@ public class CoralSubsystem extends SubsystemBase
     
   }*/
 
-  /**
-     * Get the distance measured by the sensor.
-     * 
-     * @return The distance in millimeters.
-     */
-  public double getDistance() 
-  {
-    return distOnboard.getRange();
-  }
+  
 
   @Override
   public void periodic() 
 
   {
-    boolean sensorValue = sensor.get();
+
+  
+   
+    SmartDashboard.putNumber("CoralPosition", getPosition());
+
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Coral Velocity m/s", getVelocity());
 
-    /**
-     * Range returned from the distance sensor is valid if isRangeValid()
-     * returns true.
-     */
     
-    boolean isValid = distOnboard.isRangeValid();
 
-    SmartDashboard.putBoolean("Range Valid", isValid);
-
-    if(isValid) 
-    {
-      double distance = distOnboard.getRange();
-      SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
-      SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
-      // Check if the distance is within the operational range
-      if (distance >= 50 && distance <= 2000) 
-      {
-        SmartDashboard.putString("Operational Range", "Within Range");
     
-      } 
-      else 
-      {
-        SmartDashboard.putString("Operational Range", "Out of Range");
-    
-      }
-      
-    }
-    else 
-    {
-      SmartDashboard.putString("Operational Range", "Invalid Measurement");
-    }  
-
-    if (sensorValue)
-    {
-      SmartDashboard.putBoolean("Sensor value", sensorValue);
-    }
-    else
-    {
-      SmartDashboard.putBoolean("Sensor value", sensorValue);
-    }
   }
+
+  
 
   /**
    * Set the coral motor speed
@@ -289,9 +225,9 @@ public class CoralSubsystem extends SubsystemBase
   public void stopMotor()
   {
     coralMotor.setControl(m_brake);
-    
   }
 
+  
   /**
    * 
    * @return velocity m/s
@@ -302,6 +238,21 @@ public class CoralSubsystem extends SubsystemBase
   }
 
   /**
+   * 
+   * @return velocity m/s
+   */
+  public double getPosition()
+  {
+    return coralMotor.getPosition().getValueAsDouble();
+  }
+
+  public void setVelocity(double speed)
+  {
+    coralMotor.set(speed);
+  }
+
+
+  /**
    * @ reset encoder
    */
   public void resetEncoder()
@@ -309,6 +260,22 @@ public class CoralSubsystem extends SubsystemBase
     coralMotor.setPosition(0);
 
   }
+
+  /**
+   * 
+   * @return true if the coral is homed
+   */
+  public Supplier<Boolean> isHomed()
+  {
+    if (coralMotor.getPosition().getValueAsDouble() < 0.05)
+    {
+      return ()->true;
+    }
+      return ()->false;
+  }
+
+  
+  
  
   
 

@@ -6,7 +6,8 @@ package frc.robot.subsystems.Coral;
 
 
 
-import com.ctre.phoenix6.configs.Slot1Configs;
+import java.util.function.Supplier;
+
 //REV Imports
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -19,13 +20,13 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPILIB Imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
-import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 
 /** Add your docs here. */
 public class ArticuladorCoralSubsystem extends SubsystemBase 
@@ -40,6 +41,9 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
 
   // The alga PID controller
   private final SparkClosedLoopController coralPidController;
+
+  // The sensor
+  private final DigitalInput sensor = new DigitalInput(0);
   
 
   /** Creates a new coralSubsytem. */
@@ -78,9 +82,9 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     // Set the soft limits to stop the motor at -50 and 50 rotations
     config.softLimit
     .forwardSoftLimit(ArticuladorCoralConstants.kSoftLimitMax)
-    .forwardSoftLimitEnabled(false)
+    .forwardSoftLimitEnabled(true)
     .reverseSoftLimit(ArticuladorCoralConstants.kSoftLimitMin)
-    .reverseSoftLimitEnabled(false);
+    .reverseSoftLimitEnabled(true);
   
     // Configure the coral encoder 
     config.encoder
@@ -114,7 +118,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     // a closed loop slot to the maxMotion method to set the parameters for that slot.
     // In this case, we are setting the parameters for slot 2.
     .maxVelocity(10000, ClosedLoopSlot.kSlot1)
-    .maxAcceleration(12000, ClosedLoopSlot.kSlot1)
+    .maxAcceleration(20000, ClosedLoopSlot.kSlot1)
     .allowedClosedLoopError(0.5, ClosedLoopSlot.kSlot1)
     
     // Set MAXMotion parameters for velocity control in slot 2
@@ -133,9 +137,20 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
   @Override
   public void periodic() 
   {
+    boolean sensorValue = sensor.get();
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Articulardor Coral Position", getPosition());
     SmartDashboard.putNumber("Articulador Coral Velocity", coralEncoder.getVelocity());
+    SmartDashboard.putBoolean("Articulador Coral Homed", isHomed().get());
+    
+    if (sensorValue)
+    {
+      SmartDashboard.putBoolean("Sensor value", sensorValue);
+    }
+    else
+    {
+      SmartDashboard.putBoolean("Sensor value", sensorValue);
+    }
   }
 
   /**
@@ -190,5 +205,39 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     
   }
 
-  
+  public void setVelocity(double speed)
+  {
+    coralMotor.set(speed);
+  }
+
+  public Supplier<Boolean> isHomed()
+  {
+    if (coralEncoder.getPosition() <=3)
+    {
+      return ()->true;
+    }else 
+    {
+      return ()->false;
+    }
+  }
+
+  public Supplier<Boolean> isOnPosition()
+  {
+    if (coralEncoder.getPosition() <= 44)
+    {
+      return ()->true;
+    }else 
+    {
+      return ()->false;
+    }
+  }
+
+  /**
+   * Detect if the coral is in the intake position
+   * @return sensor state
+   */
+  public boolean sensorCoral ()
+  {
+    return sensor.get();
+  }
 }

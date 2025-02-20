@@ -10,10 +10,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 
-
-
-
-
 public class Articulador1Cmd extends Command
 {
      
@@ -30,10 +26,10 @@ public class Articulador1Cmd extends Command
 
     //setpoint in grades
    
-    private double l1Setpoint = 60.0;
-    private double l2Setpoint = 45.0;
-    private double l3Setpoint = 45.0;
-    private double l4Setpoint = 45.0;
+    private double l1Setpoint = 55.0;
+    private double l2Setpoint = 50.0;
+    private double l3Setpoint = 50.0;
+    private double l4Setpoint = 50.0;
 
 
     // Create the subsystem
@@ -77,6 +73,12 @@ public class Articulador1Cmd extends Command
     l4 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL4);
     
     
+    SmartDashboard.getBoolean("L1", l1);
+    SmartDashboard.getBoolean("L2", l2);
+    SmartDashboard.getBoolean("L3", l3);
+    SmartDashboard.getBoolean("L4", l4);
+
+
     // Move the articulator
     if (l1)
     {
@@ -110,6 +112,7 @@ public class Articulador1Cmd extends Command
     
 
      if(!l1 && !l2 && !l3 && !l4 )finish=true;
+     if(RobotContainer.driverJoystick.start().getAsBoolean())finish=true;
 
 
     

@@ -6,9 +6,10 @@ package frc.robot.subsystems.Algae;
 
 
 
+import java.util.function.Supplier;
+
 //REV Imports
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -24,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.ArticuladorAlgaeConstants;
-import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
 
 /** Add your docs here. */
 public class ArticuladorAlgaeSubsystem extends SubsystemBase 
@@ -91,10 +91,10 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
    
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
     // slot, as it will default to slot 0.
-    .pidf(ArticuladorAlgaeConstants.kPArticuladorAlgaeUp, 
-          ArticuladorAlgaeConstants.kIArticuladorAlgaeUp, 
-          ArticuladorAlgaeConstants.kDArticuladorAlgaeUp, 
-          ArticuladorAlgaeConstants.kArticuladorAlgaeUpFF);
+    .pidf(ArticuladorAlgaeConstants.kPslot0, 
+          ArticuladorAlgaeConstants.kIslot0, 
+          ArticuladorAlgaeConstants.kDslot0, 
+          ArticuladorAlgaeConstants.kFFslot0);
               
 
 
@@ -104,8 +104,8 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
     // a closed loop slot to the maxMotion method to set the parameters for that slot.
     // In this case, we are setting the parameters for slot 0.
     // Set MAXMotion parameters for velocity control in slot 1
-    .maxAcceleration(1000)
-    .maxVelocity(4000)
+    .maxAcceleration(35000)
+    .maxVelocity(35000)
     .allowedClosedLoopError(0.5);
     
     // Configure the algae motor - like burn flash
@@ -166,9 +166,49 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
     return algaeEncoder.getPosition();
   }
  
+
+
+  /**
+   * Return true if the algae is homed
+   * @return
+   */
+
+  public Supplier<Boolean> isHomed()
+  {
+    if (algaeEncoder.getPosition()<= 8)
+    {
+      return ()->true;
+
+    }
+    else 
+    {
+      return ()->false;
+    }
+    
+  }
+
+  /**
+   * Return true if the algae is in position
+   * @param position
+   * @return
+   */
+  public Supplier<Boolean> inPosition(double position)
+  {
+    if (algaeEncoder.getPosition()>= position)
+    {
+      return ()->true;
+
+    }
+    else 
+    {
+      return ()->false;
+    }
+    
+  }
+
   /**
    * Set the algae encoder position
-   * @param position
+   * @param positionFlag
    */
   public void resetEncoder()
   {

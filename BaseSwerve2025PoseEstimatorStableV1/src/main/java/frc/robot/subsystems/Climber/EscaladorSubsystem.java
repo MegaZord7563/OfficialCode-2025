@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.Climber;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 //WPILib imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,6 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //Java imports
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
+import com.revrobotics.Rev2mDistanceSensor.Unit;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -49,11 +54,23 @@ public class EscaladorSubsystem extends SubsystemBase
   // The Coral encoder
   private final RelativeEncoder escaladorEncoder;
 
+  //Difuse Sensor
+  private DigitalInput sensorClimber = new DigitalInput(3);
+
 
   // The alga PID controller
   private final SparkClosedLoopController escaladorPidController;
-  //Global config
-  //private TalonFXConfiguration globalConfig = new TalonFXConfiguration();
+  
+  // The distance sensor
+  /**
+   * pin-out
+   * red = V+ 3.3V
+   * black = GND
+   * white = connect to SCL MXP port
+   * blue = connect to SDA MXP port
+   * 
+   */
+  private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
 
   /** Creates a new EscaladorSubsystem. */
   public EscaladorSubsystem() 
@@ -68,6 +85,23 @@ public class EscaladorSubsystem extends SubsystemBase
 
     // Create the coral encoder
     escaladorEncoder = escaladorMotor.getEncoder();
+    /**
+     * Before measurements can be read from the sensor, setAutomaticMode(true)
+     * must be called. This starts a background thread which will periodically
+     * poll all enabled sensors and store their measured range.
+     */
+    // Create the distance sensor
+    distOnboard.setAutomaticMode(true);
+
+    //// Set the distance sensor units
+    distOnboard.setDistanceUnits(Unit.kMillimeters);
+    
+    distOnboard.setMeasurementPeriod(0.1);
+    //
+    ////
+    distOnboard.setEnabled(true);
+    
+    distOnboard.setRangeProfile(RangeProfile.kDefault);
 
     //Initialize motors
     initializeMotors();
@@ -84,7 +118,7 @@ public class EscaladorSubsystem extends SubsystemBase
      config
     .idleMode(EscaladorConstants.kIdleMode) //LiftConstants.kLiftIdleMode
     .smartCurrentLimit(EscaladorConstants.kCurrentLimit) //LiftConstants.kLiftCurrentLimit
-    .inverted(false);
+    .inverted(true);
 
     // Set the soft limits to stop the motor at -50 and 50 rotations
     config.softLimit
@@ -114,12 +148,12 @@ public class EscaladorSubsystem extends SubsystemBase
     // Set MAXMotion parameters for position control. We need to pass
     // a closed loop slot to the maxMotion method to set the parameters for that slot.
     // In this case, we are setting the parameters for slot 0.
-    .maxVelocity(5000)
-    .maxAcceleration(1000)
+    .maxVelocity(500.0)//m/s
+    .maxAcceleration(250)//m/s
     .allowedClosedLoopError(0.05)
     // Set MAXMotion parameters for velocity control in slot 2
     .maxAcceleration(500, ClosedLoopSlot.kSlot1)
-    .maxVelocity(6000, ClosedLoopSlot.kSlot1)
+    .maxVelocity(1000, ClosedLoopSlot.kSlot1)
     .allowedClosedLoopError(0.01, ClosedLoopSlot.kSlot1);
     
 
@@ -128,7 +162,24 @@ public class EscaladorSubsystem extends SubsystemBase
 
 
   }
-  
+
+  /**
+     * Get the distance measured by the sensor.
+     * 
+     * @return The distance in millimeters.
+     */
+    public double getDistance() 
+    {
+      return distOnboard.getRange();
+    }
+
+
+  // Check if the distance is within the operational range
+  public boolean isDistanceValid() 
+  {
+    double distance = getDistance();
+    return distance >= 50 && distance <= 150;
+  }
 
   /**
    * @ reset encoder
@@ -149,6 +200,38 @@ public class EscaladorSubsystem extends SubsystemBase
     SmartDashboard.putNumber("EscalatorCurrent", escaladorMotor.getOutputCurrent());
     SmartDashboard.putNumber("EscalatorVoltage", escaladorMotor.getAppliedOutput());
     SmartDashboard.putNumber("EscalatorTemperature",escaladorMotor.getMotorTemperature());
+
+    /**
+     * Range returned from the distance sensor is valid if isRangeValid()
+     * returns true.
+     */
+    
+     boolean isValid = distOnboard.isRangeValid();
+
+     SmartDashboard.putBoolean("Range Valid", isValid);
+ 
+     if(isValid) 
+     {
+       double distance = distOnboard.getRange();
+       SmartDashboard.putNumber("Range Onboard", distOnboard.getRange());
+       SmartDashboard.putNumber("Timestamp Onboard", distOnboard.getTimestamp());
+       // Check if the distance is within the operational range
+       if (distance >= 50 && distance <= 150) 
+       {
+         SmartDashboard.putString("Operational Range", "Within Range");
+     
+       } 
+       else 
+       {
+         SmartDashboard.putString("Operational Range", "Out of Range");
+     
+       }
+       
+     }
+     else 
+     {
+       SmartDashboard.putString("Operational Range", "Invalid Measurement");
+     }  
   }
 
   /**
@@ -156,38 +239,24 @@ public class EscaladorSubsystem extends SubsystemBase
    * @param targetSetpoint
    * @param isPositionControl
    */
-  public void runMotors( double targetSetpoint)
+  public void runMotors( double targetSetpoint,  boolean direction)
   {
     
     
-    /*if(position)
+    if(direction)
     {
-      //Set position control is slot 1
-      System.out.println("Switching to Position Control");
-      //escaladorLeaderMotor.setControl(m_positionVoltage.withPosition(setPoint));
-      
-      //Motion Magic - Set position control is slot 1
-      escaladorMotor.setControl(m_mmReq.withPosition(setPoint).withSlot(2));
-      System.out.println("Current Position: " + escaladorLeaderMotor.getPosition().getValue());
-    }
-    else
-    {
-      //Set velocity control is slot 0  
-      System.out.println("Switching to Velocity Control");
-      //escaladorLeaderMotor.setControl(m_velocityVoltage.withSlot(1).withVelocity(targetSetpoint));
-      //System.out.println("Target Velocity: " + targetSetpoint);
-      System.out.println("Current Velocity: " + escaladorLeaderMotor.getVelocity().getValue());
-    }*/
-
-    
-      System.out.println("Escalador Position Control Enabled");
-      /*coralPidController.setReference(targetPosition, 
-                                            ControlType.kPosition,
-                                            ClosedLoopSlot.kSlot1);
-     */  
       escaladorPidController.setReference(targetSetpoint, ControlType.kPosition);
 
       System.out.println("Escaldor  Current Position: " + getPosition());
+    }
+    else
+    {
+      escaladorPidController.setReference(targetSetpoint, ControlType.kMAXMotionPositionControl);
+    }
+
+    
+      
+      
 
     
 
@@ -202,9 +271,15 @@ public class EscaladorSubsystem extends SubsystemBase
     escaladorPidController.setReference(0.0, ControlType.kPosition);
   }
 
-  public void setVelocity(double speed){
+  public void setVelocity(double speed)
+  {
     escaladorMotor.set(speed);
   }
+
+  public boolean getSensorClimber()
+  {
+    return sensorClimber.get();
+  } 
 
   /**
    * 

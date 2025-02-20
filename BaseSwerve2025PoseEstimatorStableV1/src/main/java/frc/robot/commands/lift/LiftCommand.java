@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
+import frc.robot.subsystems.LedControl;
+import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.Coral.CoralSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 public class LiftCommand extends Command
@@ -28,21 +31,20 @@ public class LiftCommand extends Command
     //setpoint in meters
    
 
-    private double l1SetpointClear = 0.5;///LiftConstants.kLiftGearRatio;
-    private double l2SetpointClear  = 0.8;///LiftConstants.kLiftGearRatio;
-    private double l3SetpointClear  = 1.0;///LiftConstants.kLiftGearRatio;
-    private double l4SetpointClear  = 1.2;///LiftConstants.kLiftGearRatio;
+    
 
-    private double l1Setpoint = 0.5; //l1SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l2Setpoint = 0.8; //l2SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l3Setpoint = 1.0; //l3SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l4Setpoint = 1.2; //l4SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l1Setpoint = 0.00; //l1SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l2Setpoint = 0.45; //l2SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l3Setpoint = 0.85; //l3SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l4Setpoint = 1.46; //l4SetpointClear/LiftConstants.kLiftGearRatio;
 
     
     
 
   // Create the subsystem
   private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
+  private final ArticuladorCoralSubsystem artCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
+  private final LedControl ledControl = RobotContainer.ledControl;
 
   /** Creates a new AngleCmd. */
   public LiftCommand() 
@@ -74,6 +76,7 @@ public class LiftCommand extends Command
   @Override
   public void execute() 
   {
+    // Get the encoder position
     encoderPosition = liftSubsystem.getPosition();
     // Get the button values
     l1 = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL1);
@@ -86,29 +89,38 @@ public class LiftCommand extends Command
     if (l1)
     {
       System.out.println("L1 SELECTED");
-      liftSubsystem.runMotor(l1Setpoint, false);
+      //liftSubsystem.runMotor(l1Setpoint, false);
       
-      if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
-      //{finish =true;}
+      //if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
+      finish =true;
+      if(!artCoralSubsystem.sensorCoral())ledControl.setWhiteLed();
     }
     if (l2)
     {
       System.out.println("L2 SELECTED");
+      if(!artCoralSubsystem.sensorCoral())ledControl.setBlueLed();
+      
       liftSubsystem.runMotor(l2Setpoint, false);
+      
       if (l2Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l2Setpoint * (1+tolerance)) finish=true;
      
+
     }
     if (l3)
     {
       System.out.println("L3 SELECTED");
+      if(!artCoralSubsystem.sensorCoral())ledControl.setGreenLed();
       liftSubsystem.runMotor(l3Setpoint, false);
       if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
+      
     }
     if (l4)
     {
+      if(!artCoralSubsystem.sensorCoral())ledControl.setRedLed();
       System.out.println("L4 SELECTED");
       liftSubsystem.runMotor(l4Setpoint , false);
       if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
+      
     }
 
     
@@ -116,6 +128,7 @@ public class LiftCommand extends Command
     
     
     if(!l1 && !l2 && !l3 && !l4)finish=true;
+    if(RobotContainer.driverJoystick.start().getAsBoolean())finish=true;
 
   }    
 
@@ -126,6 +139,7 @@ public class LiftCommand extends Command
     // Stop the lift
     //liftSubsystem.stopMotor();
     // Print the end of the command
+    ledControl.setBlackLed();
     System.out.println("Lift Command Done!");
   }
 

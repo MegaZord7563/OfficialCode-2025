@@ -51,9 +51,14 @@ public class Robot extends TimedRobot
     }*/
 
     m_robotContainer = new RobotContainer();
+
+    // instantiate the command used for the autonomous period
     
+    //Reset all encoders
     RobotContainer.liftSubsystem.resetEncoder();
+    RobotContainer.articuladorCoralSubsystem.resetEncoder();
     RobotContainer.articuladorAlgaeSubsystem.resetEncoder();
+    RobotContainer.rampSubsystem.resetEncoder();
     RobotContainer.escaladorSubsystem.resetEncoder();
   }
   
@@ -95,11 +100,14 @@ public class Robot extends TimedRobot
     //This is a test to see if we can get the limelight values when the robot is disabled
     LimelightHelpers.getLatestResults(DriveConstants.limelightFront);
     LimelightHelpers.getLatestResults(DriveConstants.limelightBack);
+    
 
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -112,6 +120,10 @@ public class Robot extends TimedRobot
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    
+
+    //if (m_autonomousCommand != null) RobotContainer.initializeRamp.schedule();
   }
 
   /** This function is called periodically during autonomous. */
@@ -119,7 +131,8 @@ public class Robot extends TimedRobot
   public void autonomousPeriodic() {}
 
   @Override
-  public void teleopInit() {
+  public void teleopInit() 
+  {
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -127,8 +140,8 @@ public class Robot extends TimedRobot
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    
+    //RobotContainer.homingEndGame.schedule();
+    RobotContainer.initializeRamp.schedule();
     
   }
 

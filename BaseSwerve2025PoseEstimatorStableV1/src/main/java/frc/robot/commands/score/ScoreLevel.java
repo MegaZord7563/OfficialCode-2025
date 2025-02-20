@@ -5,14 +5,12 @@
 package frc.robot.commands.score;
 
 //WPI Imports
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 
 //Robot imports
 import frc.robot.RobotContainer;
-import frc.robot.Constants.SubsystemsConstants.CoralIntakeConstants;
+
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
@@ -46,7 +44,7 @@ public class ScoreLevel extends SequentialCommandGroup
     addCommands
     (
         liftCmd,
-        //new WaitCommand(0.5),
+        //new WaitCommand(3.0),
         articulador1Cmd
         /*new WaitCommand(0.50),
         new InstantCommand(() -> coralSubsystem.runMotor(10.0 )),

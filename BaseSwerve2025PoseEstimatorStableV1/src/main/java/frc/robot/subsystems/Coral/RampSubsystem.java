@@ -6,6 +6,9 @@ package frc.robot.subsystems.Coral;
 
 
 
+import java.util.function.Supplier;
+
+
 //REV Imports
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -67,12 +70,19 @@ public class RampSubsystem extends SubsystemBase
      config
     .idleMode(RampConstants.kRampIdleMode) //LiftConstants.kLiftIdleMode
     .smartCurrentLimit(RampConstants.kRampCurrentLimit) //LiftConstants.kLiftCurrentLimit
-    .inverted(false);
+    .inverted(true);
 
     // Configure the ramp encoder 
     config.encoder
     .positionConversionFactor(RampConstants.kRampPositionConversionFactor)
     .velocityConversionFactor(RampConstants.kRampVelocityConversionFactor);
+
+    config.softLimit
+    .forwardSoftLimit(RampConstants.kSoftLimitMax)
+    .forwardSoftLimitEnabled(true)
+    .reverseSoftLimit(RampConstants.kSoftLimitMin)
+    .reverseSoftLimitEnabled(true);
+
 
     config.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -80,10 +90,20 @@ public class RampSubsystem extends SubsystemBase
    
     // Set the PID gains for the turning motor. Note these are example gains, and you may need to tune them for your own robot!
     // slot, as it will default to slot 0.
-    .pidf(RampConstants.kPRampUp, 
-          RampConstants.kIRampUp, 
-          RampConstants.kDRampUp, 
-          RampConstants.kRampUpFF);
+    .pidf(RampConstants.kPslot0, 
+          RampConstants.kIslot0, 
+          RampConstants.kDslot0, 
+          RampConstants.kFFslot0);
+
+    //Max motion config
+    config.closedLoop.maxMotion
+    // Set MAXMotion parameters for position control. We need to pass
+    // a closed loop slot to the maxMotion method to set the parameters for that slot.
+    // In this case, we are setting the parameters for slot 0.
+    // Set MAXMotion parameters for velocity control in slot 1
+    .maxAcceleration(35000)
+    .maxVelocity(35000)
+    .allowedClosedLoopError(0.5);
      
 
     // Configure the ramp motor - like burn flash
@@ -99,6 +119,7 @@ public class RampSubsystem extends SubsystemBase
   {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Ramp Position", getPosition());
+    SmartDashboard.putNumber("Ramp Current", rampMotor.getOutputCurrent());
   }
 
   /**
@@ -113,9 +134,8 @@ public class RampSubsystem extends SubsystemBase
                                             ControlType.kPosition,
                                             ClosedLoopSlot.kSlot1);
      */  
-      rampPidController.setReference(targetPosition, 
-                                            ControlType.kPosition);
-      System.out.println("Current Position: " + rampEncoder.getPosition());
+      rampPidController.setReference(targetPosition, ControlType.kMAXMotionPositionControl);
+      System.out.println("Ramp Current Position: " + rampEncoder.getPosition());
     
     
   }
@@ -126,7 +146,27 @@ public class RampSubsystem extends SubsystemBase
    */
   public void stopMotor()
   {
-    rampPidController.setReference(0, ControlType.kDutyCycle);
+    rampPidController.setReference(0, ControlType.kMAXMotionPositionControl);
+    
+  }
+
+  /**
+   * Hold the ramp motor
+   * @
+   */
+  public void holdMotor()
+  {
+   rampPidController.setReference(rampEncoder.getPosition(), ControlType.kMAXMotionPositionControl);
+    
+  }
+
+  /**
+   * turn on the ramp motor
+   * @
+   */
+  public void setSpeed(double speed)
+  {
+    rampMotor.set(speed) ;
     
   }
 
@@ -138,7 +178,61 @@ public class RampSubsystem extends SubsystemBase
   {
     return rampEncoder.getPosition();
   }
- 
+
+  /**
+   * Return true if the ramp is on position
+   * @return 
+   */
+  public Supplier<Boolean> inPosition(double position)
+    {
+      if (rampEncoder.getPosition() >= position)
+      {
+        return ()->true;
+
+      }
+      else 
+      {
+
+        return ()->false;
+
+      }
+    }
+
+  /**
+   * Return true if the ramp is homed
+   * @return 
+   */
+  public Supplier<Boolean> isHomed()
+  {
+    if (rampEncoder.getPosition() <= 0.5) 
+    {
+      return ()->true;
+
+    }
+    else 
+    {
+
+      return ()->false;
+
+    }
+
+  }
+
+  public boolean isHomedBoolean()
+  {
+    if (rampEncoder.getPosition() <= 0.5) 
+    {
+      return true;
+
+    }
+    else 
+    {
+
+      return false;
+
+    }
+
+  }
   /**
    * 
    * @ reset encoder

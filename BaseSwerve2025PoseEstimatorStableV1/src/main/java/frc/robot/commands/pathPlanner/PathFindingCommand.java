@@ -21,9 +21,9 @@ public class PathFindingCommand extends Command {
 
   //Creates variables
   public Command pathFindingCommand;
-  private final double positionX;
-  private final double positionY;
-  private final double rotation;
+  private  double positionX;
+  private  double positionY;
+  private  double rotation;
   private double setEndVelocity = 0;
 
   private final double maxVelocity;
@@ -31,14 +31,10 @@ public class PathFindingCommand extends Command {
   
 
   /** Creates a new AngleCmd. */
-  public PathFindingCommand(SwerveSubsystem swerveDrive, double maxVelocity, 
-                            double positionX, double positionY, double rotation) {
+  public PathFindingCommand (SwerveSubsystem swerveDrive, double maxVelocity) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveDrive = swerveDrive;
     this.maxVelocity = maxVelocity;
-    this.positionX = positionX;
-    this.positionY = positionY;
-    this.rotation = rotation;
 
 
     addRequirements(swerveDrive);
@@ -69,9 +65,6 @@ public class PathFindingCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-
-
     if(pathFindingCommand.isFinished()){
         finish = true;
     }
@@ -81,6 +74,17 @@ public class PathFindingCommand extends Command {
     setEndVelocity = setVelocity;
   }
 
+  public void setX(double x){
+    x = positionX;
+  }
+
+  public void setY(double y){
+    y = positionY;
+  }
+
+  public void setRot(double rot){
+    rot = rotation;
+  }
   public void endCommand (){
     pathFindingCommand.cancel();
     PPHolonomicDriveController.overrideXYFeedback(()->swerveDrive.getPoseEstimator().getX(), ()->swerveDrive.getPoseEstimator().getY());

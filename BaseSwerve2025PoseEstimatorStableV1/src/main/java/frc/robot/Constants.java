@@ -270,8 +270,8 @@ import edu.wpi.first.math.util.Units;
   //Path Planner Constants
   public static final class PathPlannerConstants
   {
-    public static final double kPTranslationPath = 0.95;//Anterior 0.125,
-      public static final double kPRotationPath = .70;
+    public static final double kPTranslationPath = 5;//Anterior 0.125,
+      public static final double kPRotationPath = .40;
 
       public static final PPHolonomicDriveController AutoConfig = new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
         new PIDConstants(kPTranslationPath, 0.0, 0.0), // Translation PID constants
@@ -297,7 +297,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kLiftPulleyRatio = 20.0/42.0;
      
       //public static final double kLiftPulleyRatio = 42.0/20.0;
-      public static final double kLiftTuboDiam = 0.0381;
+      public static final double kLiftTuboDiam = 0.0381; //0.033 
       public static final double  kLiftGearRatio = 1.0/3.0*kLiftPulleyRatio*kLiftTuboDiam*Math.PI;
 
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
@@ -308,7 +308,7 @@ import edu.wpi.first.math.util.Units;
       public static final double KA = 0.01;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP = 20.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP = 30.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -384,7 +384,7 @@ import edu.wpi.first.math.util.Units;
       public static final double KA = 0.11;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP =1.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP =2.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -441,10 +441,10 @@ import edu.wpi.first.math.util.Units;
       public static final double kAlgaVelocityConversionFactor = kAlgaPositionConversionFactor /60.0;//rotation to m/s
 
       //Alga PID
-      public static final double kP = 0.5;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kP = 1;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kI = 0;
       public static final double kD = 0;
-      public static final double kFF = 1.0/473.0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       public static final double kMinOutput = -1;
       public static final double kMaxOutput = 1;
 
@@ -458,16 +458,16 @@ import edu.wpi.first.math.util.Units;
 
       // TO DO: This must be tuned to specific robot
       public static final double  kGearRatio = 1.0/12.0;
-      public static final double kPulleyRatio = 124/44;
-      public static final double kWheelDiameter = 0.2;
+      public static final double kPulleyRatio = 42.0/96.0;
+      
       
       //SoftLimit
       public static final double kSoftLimitMin = 0;
-      public static final double kSoftLimitMax = 3.75;
+      public static final double kSoftLimitMax = 80;
 
       //ArticuladorAlgae SparkMax
       public static final IdleMode kArticuladorAlgaeIdleMode = IdleMode.kBrake;
-      public static final int kArticuladorAlgaeCurrentLimit = 40;
+      public static final int kArticuladorAlgaeCurrentLimit = 60;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kArticuladorAlgaeEncoderPositionPIDMinInput =0 ;
       public static final double kArticuladorAlgaeEncoderPositionPIDMaxInput= 2 * Math.PI;
@@ -475,22 +475,22 @@ import edu.wpi.first.math.util.Units;
       //ArticuladorAlgae Encoder
       
       //TO DO: This must be tuned to specific robot
-      public static final double kArticuladorAlgaePositionConversionFactor = Math.PI* kGearRatio *kPulleyRatio; //rotation to Meters
+      public static final double kArticuladorAlgaePositionConversionFactor = 360*kGearRatio *kPulleyRatio; //rotation to graus
       public static final double kArticuladorAlgaeVelocityConversionFactor = kArticuladorAlgaePositionConversionFactor/60.0; //rotation to m/s
 
       //ArticuladorAlgae PID Up
-      public static final double kPArticuladorAlgaeUp = 0.1;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kIArticuladorAlgaeUp = 0;
-      public static final double kDArticuladorAlgaeUp = 0;
-      public static final double kArticuladorAlgaeUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
-      public static final double kArticuladorAlgaeMinOutput = -1;
-      public static final double kArticuladorAlgaeMaxOutput = 1;
+      public static final double kPslot0 = 0.01;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIslot0 = 0;
+      public static final double kDslot0 = 0;
+      public static final double kFFslot0 = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kMinOutputSlot0 = -1;
+      public static final double kMaxOutputSlot0 = 1;
 
       //ArticuladorAlgae PID Down
-      public static final double kPArticuladorAlgaeDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kIArticuladorAlgaeDown = 0;
-      public static final double kDArticuladorAlgaeDown = 0.7;
-      public static final double kArticuladorAlgaeDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kPslot1 = 0.01;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIslot1 = 0;
+      public static final double kDslot1 = 0;
+      public static final double kFFslot1 = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       
     } 
 
@@ -550,7 +550,7 @@ import edu.wpi.first.math.util.Units;
 
 
     public static final double kSoftLimitMin = 0;
-    public static final double kSoftLimitMax = 91;
+    public static final double kSoftLimitMax = 71;
       
     } 
 
@@ -563,39 +563,42 @@ import edu.wpi.first.math.util.Units;
 
       //  TO DO: This must be tuned to specific robot
       public static final double kGearRatio = 1.0/9.0; // 
-      public static final double kPulleyRatio = 64.0/31.0;
-      public static final double kWheelDiameter = 0.013; //meters
+      public static final double kPulleyRatio = 20.0/42.0;
+      
       
 
       //Ramp SparkMax
       public static final IdleMode kRampIdleMode = IdleMode.kBrake;
-      public static final int kRampCurrentLimit = 40;
+      public static final int kRampCurrentLimit = 60;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kRampEncoderPositionPIDMinInput =0 ;
       public static final double kRampEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       //Ramp Encoder
       //TO DO: This must be tuned to specific robot
-      public static final double kRampPositionConversionFactor = Math.PI* kGearRatio * kPulleyRatio; //rotation to Meters
+      public static final double kRampPositionConversionFactor = 360* kGearRatio * kPulleyRatio; //rotation to Meters
       public static final double kRampVelocityConversionFactor = kRampPositionConversionFactor/60.0; //rotation to m/s
 
       //Ramp PID Up
-      public static final double kPRampUp = 0.075;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kIRampUp = 0;
-      public static final double kDRampUp = 0;
-      public static final double kRampUpFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
-      public static final double kRampMinOutput = -1;
-      public static final double kRampMaxOutput = 1;
+      public static final double kPslot0 = 0.040;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIslot0  = 0;
+      public static final double kDslot0  = 0;
+      public static final double kFFslot0  = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kMinOutputslot0  = -1;
+      public static final double kMaxOutputslot0  = 1;
 
       //Ramp PID Down
-      public static final double kPRampDown = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
-      public static final double kIRampDown = 0;
-      public static final double kDRampDown = 0.7;
-      public static final double kRampDownFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
+      public static final double kPslot1 = 1.3;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kIslot1 = 0;
+      public static final double kDslot1 = 0.7;
+      public static final double kFFslot1 = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
 
       
       public static final double startPosition= 0;
       public static final double pickPosition= -4;
+
+      public static double kSoftLimitMax = 110;
+      public static double kSoftLimitMin = 0;
     } 
 
 
@@ -603,7 +606,7 @@ import edu.wpi.first.math.util.Units;
     public static final class EscaladorConstants
     {
       //Escalador Motor ports
-      public static final int kMotor1Id = 15;
+      public static final int kMotor1Id = 26;//02/18/2025 estava igual ao modulo serve front left
       //public static final int kMotor2Id = 25;
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
 
@@ -612,7 +615,7 @@ import edu.wpi.first.math.util.Units;
 
       //Climber SparkMax
       public static final IdleMode kIdleMode = IdleMode.kBrake;
-      public static final int kCurrentLimit = 60;
+      public static final int kCurrentLimit = 95;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kEncoderPositionPIDMinInput =0 ;
       public static final double kEncoderPositionPIDMaxInput= 2 * Math.PI;
@@ -623,21 +626,21 @@ import edu.wpi.first.math.util.Units;
       public static final double kVelocityConversionFactor = kPositionConversionFactor/60.0; //rotation to m/s
 
       //Climber PID 
-      public static final double kP = 4;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kP = 25;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kI= 0;
       public static final double kD = 0;
       public static final double kFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
       public static final double kMinOutput = -1;
       public static final double kMaxOutput = 1;
-    public static double kSoftLimitMax;
-    public static double kSoftLimitMin;
+      public static double kSoftLimitMax;
+      public static double kSoftLimitMin;
 
       
     //Escalator
 
     public static final double escaladorVelocity= 0.8;
 
-    public static final double escaladorClimbPosition= 1.06;
+    public static final double escaladorClimbPosition= 1.18;
       
 
     /* 
@@ -728,17 +731,16 @@ import edu.wpi.first.math.util.Units;
 
       public static final class MesinhaJoy1Constants {
         //First part of operator Hub
-        public static final int kJoy1Port = 2;
+        public static final int kJoy1Port = 1;
         public static final double kOperatorDeathBand = 0.05;
-        public static final int kThree = 10;      //ok
-        public static final int kFive = 9;        //ok
-        public static final int kSix = 1;         //ok
-        public static final int kSeven = 4;       //ok   
-        public static final int kEight = 8;       //ok  
-        public static final int kTen = 3;         //ok
-        public static final int kEleven = 6;      //ok 
-        public static final int kThirteen = 2;    //ok
-        public static final int kFourteen = 5;    //ok 
+        public static final int kOne = 9;      //ok
+        public static final int kTwo = 10;        //ok
+        public static final int kThree = 12;         //ok
+        public static final int kFour = 11;       //ok   
+        public static final int kFive = 6;       //ok  
+        public static final int kSix = 8;         //ok
+        public static final int kSeven = 7;      //ok 
+        public static final int kEight = 1; 
 
         public static final int kBlackAxisUp = 0;     //ok
         public static final int kBlackAxisSides = 1;  //ok 
@@ -746,19 +748,12 @@ import edu.wpi.first.math.util.Units;
 
       public static final class MesinhaJoy2Constants {
         //Second part of operator Hub
-        public static final int kJoy2Port = 1;
+        public static final int kJoy2Port = 2;
         public static final double kOperatorDeathBand = 0.05;
-        public static final int kOne = 12;      //ok
-        public static final int kTwo = 11;      //ok
-        public static final int kFour = 3;      //ok 
-        public static final int kNine = 2;      //ok
-        public static final int kTwelve = 1;    //ok
-
-        public static final int kKey1 = 5;        //ok
-        public static final int kKey2Left = 6;    //ok
-        public static final int kKey2Right = 7;   //ok  
-        public static final int kKey3 = 4;        //ok    
-                   
+        public static final int kOne = 3;      //ok
+        public static final int kTwo = 2;      //ok
+        public static final int kThree = 1; 
+        public static final int kFour = 6;      //ok 
         
         public static final int kRedAxisUp = 0;     //ok
         public static final int kRedAxisSides = 1;  //ok

@@ -30,9 +30,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -128,8 +128,8 @@ public class SwerveSubsystem extends SubsystemBase
   private double allianceHeading = 0;
 
       
-  boolean deploy = true;
-  int countDeploy = 0;
+  private boolean deploy = true;
+  private int countDeploy = 0;
 
   /* Here we use SwerveDrivePoseEstimator so that we can fuse odometry readings. The numbers used
   below are robot specific, and should be tuned. */
@@ -140,7 +140,14 @@ public class SwerveSubsystem extends SubsystemBase
   // Create a NetworkTable publisher to publish the pose to NetworkTables
   StructPublisher<Pose2d> publisher = NetworkTableInstance.getDefault()
   .getStructTopic("MyPose", Pose2d.struct).publish();
-                
+  
+  //optical sensors
+  private DigitalInput sensorLeft = new DigitalInput(2);
+  private DigitalInput sensorRight = new DigitalInput(1);
+
+  private boolean sensorLeftLate;
+  private boolean sensorRightLate;
+
 
   
   public SwerveSubsystem() 
@@ -153,7 +160,19 @@ public class SwerveSubsystem extends SubsystemBase
     var alliance2 = DriverStation.getAlliance();
     if (alliance2.get() == DriverStation.Alliance.Red) 
     {
+      allianceHeading = 0;
+      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,-0.2595,0.405,0,0,0);
+      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,0.1705,0.100,0,0,180);
+      System.out.println("limelight settings Red");
+       
+    }else
+    {
+      //blue
       allianceHeading = 180;
+      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,-0.2595,0.405,0,0,180);
+      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,0.1705,0.100,0,0,0);
+      System.out.println("limelight settings Blue");
+
     }
 
     //Initialize pose estimator ALWAYS towards to red wall
@@ -241,15 +260,16 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic() 
   {
-    // This method will be called once per scheduler run
-        
+    
     
     this.updatePoseEstimator();
   
     this.addPoseVision();
+   
     
 
-    // Output the pose to SmartDashboard
+
+    // Output  to SmartDashboard
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
     SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
     SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
@@ -259,7 +279,9 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putBoolean("First Gear", throttleSlow);
     SmartDashboard.putBoolean("Second Gear", throttleFast);
     SmartDashboard.putBoolean("Third Gear", throttleMax);
-    //SmartDashboard.putNumber("Pigeon", frontLeftModule.getDriveVelocityMPS());
+    
+    SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());
+    SmartDashboard.putBoolean("Sensor Right value", getSensorRight());
     
 
     if(deploy)
@@ -326,6 +348,8 @@ public class SwerveSubsystem extends SubsystemBase
     builder.addDoubleProperty("Robot Angle", () -> gyro.getRotation2d().getDegrees(), null);
     }
   });*/
+    getSensorLeft();
+    getSensorRight();
 
   }
 
@@ -604,7 +628,7 @@ public void stopModules ()
 
     for (int i = 0; i < 3; i++) 
     {
-      System.out.println("Velocity 80% Max");
+      System.out.println("Velocity 100% Max");
       
     }
   }
@@ -784,15 +808,15 @@ public void stopModules ()
   {
     
     // 1. Get real-time joystick inputs
-    double xSpeed = xSpdFunction.get();
-    double ySpeed = ySpdFunction.get();  
+    double xSpeed = -xSpdFunction.get();
+    double ySpeed = -ySpdFunction.get();  
     double turningSpeed = turningSpdFunction.get();
     boolean fieldOriented = fieldOrientedFunction.get();
 
     // 2. Apply deadband
-    xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
-    ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-    turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+    //xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+   // ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+    //turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
     // 3. Make the driving smoother
     xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
@@ -804,12 +828,12 @@ public void stopModules ()
     var swerveModuleStates =  DriveConstants.
                               kDriveKinematics.
                               toSwerveModuleStates
-                              (fieldOriented ? 
+                              (fieldOriented ?
                                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, 
                                                                       ySpeed, 
                                                                       turningSpeed, 
                                                                       gyro.getRotation2d()) 
-                                : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
+                              : new ChassisSpeeds(xSpeed, ySpeed, turningSpeed)                               
                               );//Do this if fielOrientation is false 
 
     
@@ -819,6 +843,77 @@ public void stopModules ()
     this.setModuleStates(swerveModuleStates);//*/  
 
     
+  }
+
+  /**
+   * False if target is on the left side of the robot
+   * @return
+   */
+  public boolean getSensorLeft()
+  {
+    return sensorLeft.get();
+  } 
+
+  /**
+   * False if target is on the right side of the robot
+   * @return
+   */
+  public boolean getSensorRight()
+  {
+    return sensorRight.get();
+  }
+
+/* 
+  public boolean getSensorLeftLate()
+  {
+    new Thread(() -> {
+      try {
+          Thread.sleep(500); //avoid to block the rest of our code from running
+          sensorLeftLate = getSensorLeft();
+      } catch (Exception e) {
+      }
+  }).start();
+
+  return sensorLeftLate;
+  }
+
+  public boolean getSensorRightLate()
+  {
+    new Thread(() -> {
+      try {
+          Thread.sleep(500); //avoid to block the rest of our code from running
+          sensorRightLate = getSensorRight();
+      } catch (Exception e) {
+      }
+  }).start();
+
+  return sensorRightLate;
+  }
+*/
+
+  public boolean getSensorRightLate()
+  {
+    Timer.delay(0.5);
+    sensorRightLate = getSensorRight();
+  return sensorRightLate;
+  }
+
+
+  public boolean getSensorLeftLate()
+  {
+    Timer.delay(0.5);
+    sensorLeftLate = getSensorLeft();
+  return sensorLeftLate;
+  }
+  
+
+  /**
+   * Get the gyro yaw
+   * @return
+   */
+  public Rotation2d getGyroRotation2d()
+  {
+    return gyro.getRotation2d();
   }
 
 }
