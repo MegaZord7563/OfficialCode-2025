@@ -30,6 +30,7 @@ public class AcoralManualCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+   // System.out.println("EntrouComandoManualCoral");
     finish = false;
   }
 
@@ -40,7 +41,6 @@ public class AcoralManualCmd extends Command {
       //Up
 
       if(operatorHub.getSelectOne()){ 
-      System.out.println("EntrouComandoManualCoral");
 
       if(operatorHub.getBlackAxisUp(0.75))
       {

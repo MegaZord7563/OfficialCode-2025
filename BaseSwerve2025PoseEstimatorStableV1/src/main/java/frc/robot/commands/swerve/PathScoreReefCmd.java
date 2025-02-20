@@ -9,7 +9,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 // WPI imports
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.PathPlannerConstants;
@@ -25,12 +25,9 @@ public class PathScoreReefCmd extends Command
 {
   // Instantiate the object
   private static SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-  private  Pose2d targetPosition = new Pose2d(0, 0, null);
-
+  private  Pose2d targetPosition = new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(0.1));
   
-    private static String limelightName = "limelight-front";
-  
-    public Command pathFindingCommand;
+    public Command pathScoreReefCmd = RobotContainer.pathScoreReefCmd;
   
     // Variables
     //private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
@@ -57,6 +54,8 @@ public class PathScoreReefCmd extends Command
     private double setEndVelocity = 0;
   
     private final double maxVelocity;
+
+    private boolean runPath = false;
   
   
     //double kX, double kY , double kRot
@@ -73,10 +72,10 @@ public class PathScoreReefCmd extends Command
   public void initialize() 
   {
       // Switch to pipeline 1
-    LimelightHelpers.setPipelineIndex(limelightName, 0);
     System.out.println("Aim and Range Command Started!!");
     // Set variables
     finish = false;
+    runPath = false;
 
   }
 
@@ -85,6 +84,9 @@ public class PathScoreReefCmd extends Command
   public void execute() 
   {
 
+    if(!RobotContainer.driverJoystick.getHID().getXButton()){
+        endCommand();
+    }
     kA = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kA);
     kB = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kB);  
     kC = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kC);
@@ -102,71 +104,76 @@ public class PathScoreReefCmd extends Command
     // Get raw AprilTag/Fiducial data
     if (kA)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 1);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
         System.out.println("Position A selected !!");
+        runPath = true;
     }
     else if (kB)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 2);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        runPath = true;
     }
     else if (kC)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 3);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        runPath = true;
     }
     else if (kD)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 4);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        runPath = true;
     }
     else if (kE)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 5);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        runPath = true;
     }
     else if (kF)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 6);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        runPath = true;
     }
     else if (kG)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 7);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
         System.out.println("Position G selected !!");
+        runPath = true;
 
     }
     else if (kH)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 8);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
         System.out.println("Position H selected !!");
+        runPath = true;
     }
     else if (kI)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 9);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        runPath = true;
     }
     else if (kJ)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 10);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        runPath = true;
     }
     else if (kK)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 11);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
+        runPath = true;
     }
     else if (kL)
     {
-        //AimingUtils.trackReefPosition(limelightName, 0, 12);
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
-    }else {finish = true;}
+        runPath = true;
+    }else {
+
+    finish = true;
+    runPath = false;
+
+    }
     
    // Check if a valid detection was found
-   if (!finish) 
+   if (runPath) 
    {
     Pose2d targetPose = new Pose2d(targetPosition.getX(), targetPosition.getY(),targetPosition.getRotation());
 
@@ -177,65 +184,52 @@ public class PathScoreReefCmd extends Command
             PathPlannerConstants.maxAngularAccelerationRadPerSecSq);
       
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
-    pathFindingCommand = AutoBuilder.pathfindToPose(
+    pathScoreReefCmd = AutoBuilder.pathfindToPose(
             targetPose,
             constraints,
             setEndVelocity// Goal end velocity in meters/sec
     );
 
-    pathFindingCommand.schedule();
+    pathScoreReefCmd.schedule();
+
 
 
     }
 
-    if(pathFindingCommand.isFinished()){
-      finish = true;
-  }
-    
+
+
   }
 
+public void endCommand(){
+    pathScoreReefCmd.cancel();
+    PPHolonomicDriveController.overrideXYFeedback(() -> swerveDrive.getPoseEstimator().getX(), ()-> swerveDrive.getPoseEstimator().getY());
+    PPHolonomicDriveController.overrideRotationFeedback(()-> swerveDrive.getPoseEstimator().getRotation().getRadians());
+    finish = true;
+}
 
-  /**
-   * Method to get the robot's current position
-   * @return robotPosition
-   */
-  public Pose2d robotPosition()
-  {
 
-    Pose2d currentPose = swerveDrive.getPoseEstimator();
+public boolean getRunPath(){
+return runPath;
+}
 
-    return currentPose;
-  }
+
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) 
   {
     System.out.println("Aim and Range Command Done!!");
-
-    //PathCommand
-
     PPHolonomicDriveController.clearXYFeedbackOverride();
     PPHolonomicDriveController.clearRotationFeedbackOverride();
     swerveDrive.stopModules();
 
   }
-  /* 
-    public void endCommand (){
-    pathFindingCommand.cancel();
-    PPHolonomicDriveController.overrideXYFeedback(()->swerveDrive.getPoseEstimator().getX(), ()->swerveDrive.getPoseEstimator().getY());
-    PPHolonomicDriveController.overrideRotationFeedback(()-> swerveDrive.getPoseEstimator().getRotation().getRadians());
-    System.out.println("EndCommand");
-    finish = true;
-  }*/
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() 
   {
-    // Optionally, add a condition to end the command
-   
-        
-        return finish;
+        return finish ;
   }
 
 }

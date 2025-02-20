@@ -215,6 +215,23 @@ public class RampSubsystem extends SubsystemBase
       return ()->false;
 
     }
+
+  }
+
+  public boolean isHomedBoolean()
+  {
+    if (rampEncoder.getPosition() <= 0.5) 
+    {
+      return true;
+
+    }
+    else 
+    {
+
+      return false;
+
+    }
+
   }
   /**
    * 

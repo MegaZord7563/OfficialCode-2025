@@ -8,6 +8,7 @@ package frc.robot;
 
 //Java Imports
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -155,9 +156,7 @@ public class RobotContainer
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
   //PathFindingCommand
-  //public static PathFindingCommand pathFindingCmd = new PathFindingCommand(swerveDrive, 1);
 
-  //public static PathFindingCommand pathFindingCmd2 = new PathFindingCommand(swerveDrive, 1);
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
   public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
@@ -192,15 +191,13 @@ public class RobotContainer
     // Set the pixel format
     usbCamera.setPixelFormat(PixelFormat.kMJPEG);
     
-
-
-    
     
     //liftCmd = new LiftCommand();
     //articulador1Cmd = new Articulador1Cmd();
     //scoreLevel = new ScoreLevel();
 
-      
+    NamedCommands.registerCommand("PathScoreReef", pathScoreReefCmd);
+    NamedCommands.registerCommand("lift", liftCmd);
   
     // Add commands to the subsystem
     
@@ -314,11 +311,6 @@ public class RobotContainer
    */
   private void configureBindings() 
   {
-    //X positions of the Wheels 
-    //new JoystickButton(driverJoystick, Button.kX.value).whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
-    //driverJoystick.x().whileTrue(new RunCommand(() -> swerveDrive.setX(),swerveDrive));
-         
-    
      /**
       * XBOX CONTROLLER BUTTONS
       */
@@ -330,37 +322,24 @@ public class RobotContainer
      
      //set command to homing position
      driverJoystick.start().whileTrue(homingPosition);
-     
-     //set command to track algae
-    // driverJoystick.x().whileTrue(aimAndRangeCmd);
+     //set position to Score
      driverJoystick.x().whileTrue(pathScoreReefCmd);
+     driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
 
-     //driverJoystick.b().whileTrue(trackAlgaeCmd);
 
+    //Prepare to Pick Coral
      driverJoystick.b().onTrue(coralStationCmd);
-     //driverJoystick.y().whileTrue(sensorAlignRight);
-
-
      //set command to score level
      driverJoystick.a().whileTrue(scoreLevel);
-
-     
-     //driverJoystick.b().onTrue(coralStationCmd);
-     
+    //Home backRobot
      driverJoystick.y().whileTrue(homingEndGame);
+     //Align robot to score Right
+     driverJoystick.povRight().whileTrue(sensorAlignRight);
+     //Align robot to score Left
+     driverJoystick.povLeft().whileTrue(sensorAlignLeft);
+     //Algae AI
+     driverJoystick.povUp().whileTrue(trackAlgaeCmd);
 
-
-     //lift manual control up and down	
-     //driverJoystick.povUp().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(0.3)));
-     //driverJoystick.povUp().whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
-
-     //driverJoystick.povDown().whileTrue(new InstantCommand(() -> liftSubsystem.setSpeed(-0.3)));
-     //driverJoystick.povDown().whileFalse(new InstantCommand(() -> liftSubsystem.holdMotor()));
-     
-     //driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))));
-     //driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0,false))));
-
-     
 
      /**
       * OPERATOR CONTROLS
@@ -368,8 +347,10 @@ public class RobotContainer
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
-    climb.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))
-                    .alongWith(new InstantCommand(ledControl::rainbow))
+    climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition, true))
+            .onlyIf(()->rampSubsystem.isHomedBoolean()));
+
+    climb.onFalse(new InstantCommand(ledControl::greenLed)
                     .onlyIf(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber())));
     
     JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
