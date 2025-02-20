@@ -4,12 +4,9 @@
 
 package frc.robot.commands.Ramp;
 
-import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
-import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 import frc.robot.subsystems.Coral.RampSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */

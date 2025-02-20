@@ -450,6 +450,7 @@ public class RobotContainer
     backAlgae.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
                                             .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
   
+    
     JoystickButton selectonCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSix);
     //selectonCoralStation.whileTrue(new InstantCommand(ledControl::blueLed));
     //selectonCoralStation.whileFalse(new InstantCommand(ledControl::whiteLed));

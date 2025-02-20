@@ -5,8 +5,7 @@
 package frc.robot.commands.score;
 
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+
 //CommandBase Imports
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 //Robot imports
 import frc.robot.RobotContainer;
-import frc.robot.commands.lift.LiftManualCmd;
 import frc.robot.commands.swerve.LeaveCmd;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;

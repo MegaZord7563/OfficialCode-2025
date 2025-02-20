@@ -8,18 +8,12 @@ package frc.robot.subsystems.Coral;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.revrobotics.Rev2mDistanceSensor;
-import com.revrobotics.Rev2mDistanceSensor.Port;
-import com.revrobotics.Rev2mDistanceSensor.RangeProfile;
-import com.revrobotics.Rev2mDistanceSensor.Unit;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static edu.wpi.first.units.Units.*;
@@ -43,13 +37,8 @@ public class CoralSubsystem extends SubsystemBase
 
   private final TalonFX coralMotor;
   
-
-
-  
-  
-
   /* Start at motion 0, use slot 2 */
-   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
+  //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
 
  // private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(0);
 

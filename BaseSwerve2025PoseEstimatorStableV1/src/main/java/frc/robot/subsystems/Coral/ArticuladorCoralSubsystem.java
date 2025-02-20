@@ -8,7 +8,6 @@ package frc.robot.subsystems.Coral;
 
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.configs.Slot1Configs;
 //REV Imports
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -28,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
-import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 
 /** Add your docs here. */
 public class ArticuladorCoralSubsystem extends SubsystemBase 

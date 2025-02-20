@@ -10,14 +10,10 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.SoftLimitConfig;
 
 //WPILIB Imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,7 +24,7 @@ import java.util.function.Supplier;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
-import frc.robot.Utils.Conversions;
+
 
 /** Add your docs here. */
 public class LiftSubsystem extends SubsystemBase 
@@ -40,7 +36,7 @@ public class LiftSubsystem extends SubsystemBase
 
   /* Start at motion 0, use slot 2 */
   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
-  private final DynamicMotionMagicVoltage m_mmReq1 = new DynamicMotionMagicVoltage(0,0,0, 0  );  
+  //private final DynamicMotionMagicVoltage m_mmReq1 = new DynamicMotionMagicVoltage(0,0,0, 0  );  
  
 
   //private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);

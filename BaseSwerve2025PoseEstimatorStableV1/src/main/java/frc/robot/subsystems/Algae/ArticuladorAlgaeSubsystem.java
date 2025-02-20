@@ -10,7 +10,6 @@ import java.util.function.Supplier;
 
 //REV Imports
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -26,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.ArticuladorAlgaeConstants;
-import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
 
 /** Add your docs here. */
 public class ArticuladorAlgaeSubsystem extends SubsystemBase 

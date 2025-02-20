@@ -8,7 +8,6 @@ package frc.robot.commands.swerve;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 // WPI imports
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -27,7 +26,7 @@ public class LeaveCmd extends Command
  private static boolean getPose = false;  
 
   //Max speed variables
-  private final double kMaxSpeed2Drive = 0.15;                   // Simple speed limit so we don't drive too fast
+  //private final double kMaxSpeed2Drive = 0.15;                   // Simple speed limit so we don't drive too fast
   
 
   //PID offset variables
