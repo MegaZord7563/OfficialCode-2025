@@ -451,12 +451,12 @@ public class RobotContainer
                                             .onlyIf(()->(!operatorHub.getSelectOne() && !operatorHub.getTwo()))); 
   
     JoystickButton selectonCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSix);
-    selectonCoralStation.whileTrue(new InstantCommand(ledControl::blueLed));
-    selectonCoralStation.whileFalse(new InstantCommand(ledControl::whiteLed));
+    //selectonCoralStation.whileTrue(new InstantCommand(ledControl::blueLed));
+    //selectonCoralStation.whileFalse(new InstantCommand(ledControl::whiteLed));
     
     JoystickButton positionCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSeven);
-    positionCoralStation.whileTrue(new InstantCommand(ledControl::purpleLed));
-    positionCoralStation.whileFalse(new InstantCommand(ledControl::orangeLed));
+    //positionCoralStation.whileTrue(new InstantCommand(ledControl::purpleLed));
+    //positionCoralStation.whileFalse(new InstantCommand(ledControl::orangeLed));
 
 
     
