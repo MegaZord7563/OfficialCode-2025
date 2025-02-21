@@ -52,6 +52,7 @@ public class PathScoreReefCmd extends Command
     private boolean kK = false;
     private boolean kL = false;
     private boolean kCoralStaton1 =false;
+    private boolean kBButton =false;
   
   
     //Path Variables:
@@ -107,6 +108,7 @@ public class PathScoreReefCmd extends Command
     
     kCoralStaton1 = RobotContainer.operatorHub.getSelectTwo();
 
+    //kBButton =RobotContainer.driverJoystick.getHID().getBButton();
 
     // Get raw AprilTag/Fiducial data
     if (kCoralStaton1) 

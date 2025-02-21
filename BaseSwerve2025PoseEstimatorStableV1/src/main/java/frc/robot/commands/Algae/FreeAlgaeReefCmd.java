@@ -28,7 +28,7 @@ public class FreeAlgaeReefCmd extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
                 new RunCommand(() -> aCoralSubsystem.runMotor(72))
-                .alongWith(new RunCommand(() -> liftSubsystem.runMotor(0.55, false)))
+                .alongWith(new RunCommand(() -> liftSubsystem.runMotor(0.6, false)))
                 //new LeaveCmd()
               );
   }

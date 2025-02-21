@@ -52,6 +52,7 @@ import frc.robot.commands.score.HomingPosition;
 import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
 import frc.robot.commands.swerve.LeaveCmd;
+import frc.robot.commands.swerve.PathCoralStationCmd;
 import frc.robot.commands.swerve.PathScoreReefCmd;
 import frc.robot.commands.swerve.SensorAlignLeftCmd;
 import frc.robot.commands.swerve.SensorAlignRightCmd;
@@ -147,6 +148,7 @@ public class RobotContainer
   public static HomingEndGame homingEndGame = new HomingEndGame();
   public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
   public static FreeAlgaeReefCmd  freeAlgaeReefCmd = new FreeAlgaeReefCmd();
+  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(1.0);
 
 
   //Swerve commands
@@ -192,6 +194,9 @@ public class RobotContainer
     usbCamera.setFPS(30);
     // Set the pixel format
     usbCamera.setPixelFormat(PixelFormat.kMJPEG);
+    
+    //usbCamera.setExposureAuto();
+    //usbCamera.setExposureManual(0);
     
     
     //liftCmd = new LiftCommand();
@@ -353,6 +358,10 @@ public class RobotContainer
      driverJoystick.x().whileTrue(pathScoreReefCmd);
      driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
 
+    driverJoystick.b().whileTrue(pathCoralStationCmd);
+    driverJoystick.b().whileFalse(new InstantCommand (()->pathCoralStationCmd.endCommand()));
+
+    //driverJoystick.b().whileTrue(pathScoreReefCmd.onlyIf(()->!driverJoystick.getHID().getXButton()));
 
     //Prepare to Pick Coral
      //driverJoystick.b().onTrue(coralStationCmd);
@@ -381,10 +390,13 @@ public class RobotContainer
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
     climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition, true))
             .onlyIf(()->rampSubsystem.isHomedBoolean()));
-
-    climb.onFalse(new InstantCommand(ledControl::setGreenLed)
+/* 
+    climb.whileFalse(new InstantCommand(ledControl::setGreenLed)
                     .onlyIf(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber())));
-    
+//*/
+    Trigger prepareClimb = new Trigger(()->escaladorSubsystem.isDistanceValid() && escaladorSubsystem.getSensorClimber());
+    prepareClimb.onTrue(new InstantCommand(ledControl::setGreenLed));
+
     //JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
     //climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));
     //driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))));

@@ -120,6 +120,7 @@ public class SwerveSubsystem extends SubsystemBase
   private boolean throttleSlow=false;
   private boolean throttleFast=false;
   private boolean throttleMax=false;
+  private boolean throttleLift = false;
   private boolean isBlue = false;
 
   //PathPlanner Config
@@ -281,6 +282,8 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putBoolean("First Gear", throttleSlow);
     SmartDashboard.putBoolean("Second Gear", throttleFast);
     SmartDashboard.putBoolean("Third Gear", throttleMax);
+    SmartDashboard.putBoolean("ThrottleLift", throttleLift);
+    
     
     SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());
     SmartDashboard.putBoolean("Sensor Right value", getSensorRight());
@@ -637,6 +640,21 @@ public void stopModules ()
     }
   }
 
+  public void robotLiftVelocity()
+  {
+    
+    throttleSlow=false;
+    throttleFast=false;
+    throttleMax=false;
+    throttleLift = true;
+
+    for (int i = 0; i < 3; i++) 
+    {
+      System.out.println("Velocity 100% Max");
+      
+    }
+  }
+
 
   // Improved "setX()" to use `setModuleStates()`
   public void setX() 
@@ -731,6 +749,9 @@ public void stopModules ()
     { 
       throttle = 0.8;
       
+    }
+    else if (throttleLift){
+      throttle = 0.1;
     }
 
     // 2. Apply deadband
@@ -858,6 +879,8 @@ public void stopModules ()
     return sensorLeft.get();
   } 
 
+
+
   /**
    * False if target is on the right side of the robot
    * @return
@@ -919,5 +942,6 @@ public void stopModules ()
   {
     return gyro.getRotation2d();
   }
+
 
 }
