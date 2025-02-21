@@ -148,14 +148,14 @@ public class RobotContainer
   public static HomingEndGame homingEndGame = new HomingEndGame();
   public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
   public static FreeAlgaeReefCmd  freeAlgaeReefCmd = new FreeAlgaeReefCmd();
-  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(1.0);
+  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(0.5);
 
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
   public static LeaveCmd leaveCmd = new LeaveCmd();
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.0);
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(0.5);
   public static SensorAlignLeftCmd sensorAlignLeft = new SensorAlignLeftCmd(swerveDrive);
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
@@ -361,7 +361,7 @@ public class RobotContainer
     driverJoystick.b().whileTrue(pathCoralStationCmd);
     driverJoystick.b().whileFalse(new InstantCommand (()->pathCoralStationCmd.endCommand()));
 
-    //driverJoystick.b().whileTrue(pathScoreReefCmd.onlyIf(()->!driverJoystick.getHID().getXButton()));
+    driverJoystick.povUp().whileTrue(leaveCmd);
 
     //Prepare to Pick Coral
      //driverJoystick.b().onTrue(coralStationCmd);
