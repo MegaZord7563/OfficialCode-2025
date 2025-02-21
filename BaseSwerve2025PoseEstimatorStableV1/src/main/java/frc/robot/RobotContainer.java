@@ -35,6 +35,7 @@ import frc.robot.Limelight.LimelightHelpers;
 import frc.robot.Utils.OperatorHub;
 import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.Algae.AlgaeManualCmd;
+import frc.robot.commands.Algae.FreeAlgaeReefCmd;
 import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
@@ -145,13 +146,14 @@ public class RobotContainer
   public static InitializeRamp initializeRamp = new InitializeRamp(); 
   public static HomingEndGame homingEndGame = new HomingEndGame();
   public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
+  public static FreeAlgaeReefCmd  freeAlgaeReefCmd = new FreeAlgaeReefCmd();
 
 
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
   public static LeaveCmd leaveCmd = new LeaveCmd();
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1);
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.0);
   public static SensorAlignLeftCmd sensorAlignLeft = new SensorAlignLeftCmd(swerveDrive);
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
@@ -212,7 +214,9 @@ public class RobotContainer
 
 
     //Lift Commands
-    liftCmd.addRequirements(liftSubsystem);
+    liftCmd.addRequirements(liftSubsystem,ledControl,articuladorCoralSubsystem);
+
+    homingPosition.addRequirements(liftSubsystem,articuladorCoralSubsystem);
     
     //liftAuto.addRequirements(liftSubsystem);
     
@@ -223,7 +227,18 @@ public class RobotContainer
     articuladorAlgaeSubsystem.setDefaultCommand(algaeManual);
   
     aCoralManualCmd.addRequirements(articuladorCoralSubsystem);
+    coralStationCmd.addRequirements(articuladorCoralSubsystem);
+
     articuladorCoralSubsystem.setDefaultCommand(aCoralManualCmd);
+
+    pickL1Cmd.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
+    homingEndGame.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
+    initializeRamp.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
+    rampCoral.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
+    scoreLevel.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
+
+        
+    freeAlgaeReefCmd.addRequirements(articuladorCoralSubsystem,liftSubsystem);
 
 
     //Coral Commands
@@ -316,9 +331,21 @@ public class RobotContainer
       */
 
      //Changes robot speed - speeding up
-     driverJoystick.leftBumper().whileTrue(new InstantCommand(swerveDrive::robotSlower)); 
-     driverJoystick.rightBumper().whileTrue(new InstantCommand(swerveDrive::robotFast)); 
-     driverJoystick.leftBumper().and(driverJoystick.rightBumper()).whileFalse(new InstantCommand(swerveDrive::robotMaxSpeed)); 
+      driverJoystick.leftBumper().whileTrue(
+                                            new InstantCommand(() -> {swerveDrive.robotSlower();
+                                                                      ledControl.setWhiteLed();
+                                                                      })); 
+     driverJoystick.rightBumper().whileTrue(
+                                            new InstantCommand(() -> {swerveDrive.robotFast();
+                                                                      ledControl.setPinkLed();
+                                                                      })); 
+
+
+
+     driverJoystick.leftBumper().and(driverJoystick.rightBumper())  
+                                .whileFalse(new InstantCommand(()->{swerveDrive.robotMaxSpeed();
+                                                                    ledControl.setRedLed();
+                                                                    })); 
      
      //set command to homing position
      driverJoystick.y().whileTrue(homingPosition);
@@ -348,6 +375,7 @@ public class RobotContainer
       */
 
     JoystickButton leaveAlgaeReef = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
+    leaveAlgaeReef.whileTrue(freeAlgaeReefCmd);
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
@@ -440,12 +468,12 @@ public class RobotContainer
   
     
     JoystickButton selectonCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSix);
-    selectonCoralStation.whileTrue(new InstantCommand(ledControl::setBlueLed));
-    selectonCoralStation.whileFalse(new InstantCommand(ledControl::setWhiteLed));
+    //selectonCoralStation.whileTrue(new InstantCommand(ledControl::setBlueLed));
+    //selectonCoralStation.whileFalse(new InstantCommand(ledControl::setWhiteLed));
     
     JoystickButton positionCoralStation = new JoystickButton(mesinhaJoy1, operatorHub.kSeven);
-    positionCoralStation.whileTrue(new InstantCommand(ledControl::setPurpleLed));
-    positionCoralStation.whileFalse(new InstantCommand(ledControl::setOrangeLed));
+    //positionCoralStation.whileTrue(new InstantCommand(ledControl::setPurpleLed));
+    //positionCoralStation.whileFalse(new InstantCommand(ledControl::setOrangeLed));
 
 
     

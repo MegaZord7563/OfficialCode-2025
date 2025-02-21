@@ -44,6 +44,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import frc.robot.Constants;
 import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.subsystems.LedControl;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 
@@ -161,16 +162,16 @@ public class SwerveSubsystem extends SubsystemBase
     if (alliance2.get() == DriverStation.Alliance.Red) 
     {
       allianceHeading = 0;
-      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,-0.2595,0.405,0,0,0);
-      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,0.1705,0.100,0,0,180);
+      LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,0.2595,0.405,0,0,0);
+      LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,-0.1705,0.100,0,0,180);
       System.out.println("limelight settings Red");
        
     }else
     {
       //blue
       allianceHeading = 180;
-      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,-0.2595,0.405,0,0,180);
-      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,0.1705,0.100,0,0,0);
+      LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,0.2595,0.405,0,0,0);
+      LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,-0.1705,0.100,0,0,180);
       System.out.println("limelight settings Blue");
 
     }
@@ -192,6 +193,7 @@ public class SwerveSubsystem extends SubsystemBase
     
     //camera pose set up - to initialize cameras according to its assembling on the robot
     //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,-0.13,0,0.685,0,0,0);
+    //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.13,0,0.685,0,0,0);
 
     /* delay 1 s and then reset gyro */
     /*
@@ -594,6 +596,8 @@ public void stopModules ()
       System.out.println("Speed up velocity - 30%");
       
     }
+
+    
    
 
   }

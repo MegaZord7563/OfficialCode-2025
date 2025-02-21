@@ -68,16 +68,16 @@ public class SelectScore
                 poseToScore = new Pose2d(3.657,3.861,Rotation2d.fromDegrees(180));
             }
             else if (touch.getButtonValue(VirtualButton.kC)){
-                poseToScore = new Pose2d(3.991,3.448,Rotation2d.fromDegrees(240));
+                poseToScore = new Pose2d(3.60,2.99,Rotation2d.fromDegrees(63));
             }
             else if (touch.getButtonValue(VirtualButton.kD)){
-                poseToScore = new Pose2d(4.156,3.163,Rotation2d.fromDegrees(240));
+                poseToScore = new Pose2d(3.92,2.87,Rotation2d.fromDegrees(63));
             }
             else if (touch.getButtonValue(VirtualButton.kE)){
-                poseToScore = new Pose2d(4.822,3.1639,Rotation2d.fromDegrees(300));
+                poseToScore = new Pose2d(5.04,2.79,Rotation2d.fromDegrees(122));
             }
             else if (touch.getButtonValue(VirtualButton.kF)){
-                poseToScore = new Pose2d(4.986,3.448,Rotation2d.fromDegrees(300));
+                poseToScore = new Pose2d(5.23,2.94,Rotation2d.fromDegrees(130));
             }
             else if (touch.getButtonValue(VirtualButton.kG)){
                 poseToScore = new Pose2d(5.85,3.82,Rotation2d.fromDegrees(180));

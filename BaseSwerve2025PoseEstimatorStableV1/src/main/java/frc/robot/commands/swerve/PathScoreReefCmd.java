@@ -10,12 +10,14 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+
 // WPI imports
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.PathPlannerConstants;
 // Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.Utils.OperatorHub;
 import frc.robot.Utils.SelectScore;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
@@ -26,6 +28,8 @@ public class PathScoreReefCmd extends Command
   // Instantiate the object
   private static SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
   private  Pose2d targetPosition = new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(0.1));
+
+  private static OperatorHub operatorHub=RobotContainer.operatorHub;
   
     public Command pathScoreReefCmd = RobotContainer.pathScoreReefCmd;
   
@@ -47,6 +51,7 @@ public class PathScoreReefCmd extends Command
     private boolean kJ = false;
     private boolean kK = false;
     private boolean kL = false;
+    private boolean kCoralStaton1 =false;
   
   
     //Path Variables:
@@ -72,7 +77,7 @@ public class PathScoreReefCmd extends Command
   public void initialize() 
   {
       // Switch to pipeline 1
-    System.out.println("Aim and Range Command Started!!");
+    System.out.println("PathScoreReef Command Started!!");
     // Set variables
     finish = false;
     runPath = false;
@@ -99,10 +104,18 @@ public class PathScoreReefCmd extends Command
     kJ = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kJ);
     kK = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kK);
     kL = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL);
+    
+    kCoralStaton1 = RobotContainer.operatorHub.getSelectTwo();
 
 
     // Get raw AprilTag/Fiducial data
-    if (kA)
+    if (kCoralStaton1) 
+    {
+        System.out.println("Coral Station 1 selected !!");
+        targetPosition = new Pose2d(1.05, 0.86, Rotation2d.fromDegrees(54));
+        runPath = true;
+    }
+    else if (kA)
     {
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
         System.out.println("Position A selected !!");
@@ -165,7 +178,8 @@ public class PathScoreReefCmd extends Command
     {
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
         runPath = true;
-    }else {
+    }else
+    {
 
     finish = true;
     runPath = false;
@@ -200,6 +214,7 @@ public class PathScoreReefCmd extends Command
 
   }
 
+// End path command
 public void endCommand(){
     pathScoreReefCmd.cancel();
     PPHolonomicDriveController.overrideXYFeedback(() -> swerveDrive.getPoseEstimator().getX(), ()-> swerveDrive.getPoseEstimator().getY());
@@ -208,7 +223,8 @@ public void endCommand(){
 }
 
 
-public boolean getRunPath(){
+public boolean getRunPath()
+{
 return runPath;
 }
 
@@ -218,7 +234,7 @@ return runPath;
   @Override
   public void end(boolean interrupted) 
   {
-    System.out.println("Aim and Range Command Done!!");
+    System.out.println("Path Score Command Done!!");
     PPHolonomicDriveController.clearXYFeedbackOverride();
     PPHolonomicDriveController.clearRotationFeedbackOverride();
     swerveDrive.stopModules();

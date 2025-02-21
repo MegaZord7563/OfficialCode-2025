@@ -31,7 +31,7 @@ public class LeaveCmd extends Command
 
   //PID offset variables
                    // how hard to turn toward the target
-  private final double kPdrive = 2.0; //0.26 
+  private final double kPdrive = 1.0; //0.26 
   
   //PID controller
   private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
@@ -77,7 +77,7 @@ public class LeaveCmd extends Command
     
    }
 
-   double drive_cmd = pidDrive.calculate(robotPosition().getX(),initialPosition+0.1);
+   double drive_cmd = pidDrive.calculate(robotPosition().getX(),initialPosition + 0.1);
     
     // Drive the swerve subsystem with the calculated speeds
     swerveDrive.driveToTarget(() -> drive_cmd, () -> 0.0, () -> 0.0, () -> false);
@@ -121,7 +121,7 @@ public class LeaveCmd extends Command
   {
     swerveDrive.stopModules();
     System.out.println("Leave Command Done!!");
-    getPose = true;
+    //getPose = true;
   }
 
   // Returns true when the command should end.
