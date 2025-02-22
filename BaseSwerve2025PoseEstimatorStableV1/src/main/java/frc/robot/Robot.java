@@ -122,7 +122,7 @@ public class Robot extends TimedRobot
     }
 
     
-
+    RobotContainer.initializeRamp.schedule();
     //if (m_autonomousCommand != null) RobotContainer.initializeRamp.schedule();
   }
 

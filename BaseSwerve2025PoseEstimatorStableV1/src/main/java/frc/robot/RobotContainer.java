@@ -239,6 +239,9 @@ public class RobotContainer
     NamedCommands.registerCommand("aCoral2", aCoralL2);
     NamedCommands.registerCommand("aCoral3", aCoralL3);
     NamedCommands.registerCommand("aCoral4", aCoralL4);
+
+    NamedCommands.registerCommand("homeEndGame", homingEndGame);
+    NamedCommands.registerCommand("coralStationCmd", coralStationCmd);
   
     NamedCommands.registerCommand("shootCoral", shootCoralAuto);
     NamedCommands.registerCommand("homingPosition", homingPosition);
@@ -300,11 +303,14 @@ public class RobotContainer
 
     PathPlannerAuto auto1Piece = new PathPlannerAuto("Auto1Piece"); 
     
+    PathPlannerAuto auto2Piece = new PathPlannerAuto("Auto2Piece"); 
    
     //Add options to the chooser
     chooserAuto.addOption("NovoAuto", autoPath);
 
     chooserAuto.addOption("Auto1Piece", auto1Piece);
+
+    chooserAuto.addOption("Auto2Piece", auto2Piece);
 
     chooserAuto.addOption("AutoTest", autoTest);
 

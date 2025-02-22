@@ -13,19 +13,25 @@
         {
           "type": "named",
           "data": {
-            "name": "liftAutoL3"
+            "name": "liftL4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "aCoral3"
+            "name": "aCoral4"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "shootCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Leave"
           }
         },
         {
