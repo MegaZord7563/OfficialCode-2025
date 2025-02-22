@@ -36,6 +36,7 @@ import frc.robot.Utils.OperatorHub;
 import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.Algae.AlgaeManualCmd;
 import frc.robot.commands.Algae.FreeAlgaeReefCmd;
+import frc.robot.commands.AutoScoreTeleop.AutoScoreCmd;
 import frc.robot.commands.AutonomousCmd.ArticuladorCoralAutoCmd;
 import frc.robot.commands.AutonomousCmd.LiftAutoCmd;
 import frc.robot.commands.AutonomousCmd.ShootCoralAutoCmd;
@@ -154,9 +155,6 @@ public class RobotContainer
   public static FreeAlgaeReefCmd  freeAlgaeReefHighCmd = new FreeAlgaeReefCmd(72,0.8);
   public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(72,0.2);
   
-  
-
-
   //Swerve commands
   public static TrackAlgae trackAlgaeCmd = new TrackAlgae(); 
   public static AimAndRangeCmd aimAndRangeCmd = new AimAndRangeCmd( );
@@ -187,6 +185,10 @@ public class RobotContainer
   public  static ArticuladorCoralAutoCmd aCoralL4 = new ArticuladorCoralAutoCmd(false,false,false,true);
 
   public static ShootCoralAutoCmd shootCoralAuto = new ShootCoralAutoCmd();
+
+  //AutoScoreTeleop
+  public static AutoScoreCmd autoScoreCmd = new AutoScoreCmd();
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //public static XboxController driverJoystick;
@@ -408,7 +410,7 @@ public class RobotContainer
     driverJoystick.b().whileTrue(pathCoralStationCmd);
     driverJoystick.b().whileFalse(new InstantCommand (()->pathCoralStationCmd.endCommand()));
 
-    driverJoystick.povUp().whileTrue(leaveCmd);
+    driverJoystick.povUp().whileTrue(autoScoreCmd);
 
     //Prepare to Pick Coral
      //driverJoystick.b().onTrue(coralStationCmd);
@@ -430,10 +432,11 @@ public class RobotContainer
       * OPERATOR CONTROLS
       */
 
+      
+    driverJoystick.povDown().whileTrue(freeAlgaeReefLowCmd); //Botão Mesinha
+
     JoystickButton leaveAlgaeReef = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
     leaveAlgaeReef.whileTrue(freeAlgaeReefHighCmd);
-
-    driverJoystick.povDown().whileTrue(freeAlgaeReefLowCmd);
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
