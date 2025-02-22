@@ -7,6 +7,7 @@ package frc.robot.commands.swerve;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 // WPI imports
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
@@ -17,31 +18,23 @@ public class LeaveCmd extends Command
 {
   // Instantiate the object
   private final static SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-    
-
-  
-
-  // Variables
-  //private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
- private static boolean getPose = false;  
-
-  //Max speed variables
-  //private final double kMaxSpeed2Drive = 0.15;                   // Simple speed limit so we don't drive too fast
-  
+ 
+  private static boolean getPose = false;  
 
   //PID offset variables
                    // how hard to turn toward the target
   private final double kPdrive = 1.0; //0.26 
   
   //PID controller
-  private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
-  private double initialPosition = 0;
-  private double initialAngle = 0;
+  //private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
+  private double initialPosition ;
+  private double currentPosition;
   
-  private final double speed = -0.1; 
+  private final double speed = 0.2; 
 
   private boolean finish = false;
-  
+
+  private final Timer timer = new Timer();
 
 
   //double kX, double kY , double kRot
@@ -60,6 +53,8 @@ public class LeaveCmd extends Command
       // Switch to pipeline 1
     
     System.out.println("Leave Command Started!!");
+    timer.reset();
+    timer.start();
     //pidDrive.setTolerance(0.02);
 
     
@@ -71,18 +66,35 @@ public class LeaveCmd extends Command
   @Override
   public void execute() 
   {
-    if (getPose) {
+    currentPosition = this.robotPosition().getX();
+    if (getPose) 
+    {
       initialPosition = robotPosition().getX();
-      initialAngle = robotPosition().getRotation().getDegrees();
+     
       getPose = false;
-  }
+    }
 
-  double drive_cmd = pidDrive.calculate(robotPosition().getX(), initialPosition - 0.1); // Move backward
+    if (currentPosition > (initialPosition+0.2))
+    {
+      finish = true;
+    }
+    else
+    {
+      finish = false;
+    }
+  //double drive_cmd = pidDrive.calculate(robotPosition().getX(), initialPosition - 0.1); // Move backward
+  swerveDrive.driveToTarget(() -> -speed, () -> 0.0, () -> 0.0, () -> false);
+  
+ /* 
+  if (timer.hasElapsed(2.0)) 
+  {
+    finish = true;
+ }*/
 
   
 
   // Drive the swerve subsystem with the calculated speeds
-  swerveDrive.driveToTarget(() -> drive_cmd, () -> 0.0, () -> 0.0, () -> false);
+  //swerveDrive.driveToTarget(() -> drive_cmd, () -> 0.0, () -> 0.0, () -> false);
 
   // Uncomment and use this if you need to check the position to finish the command
   
@@ -113,9 +125,10 @@ public class LeaveCmd extends Command
   @Override
   public void end(boolean interrupted) 
   {
+    //timer.stop();
     swerveDrive.stopModules();
     System.out.println("Leave Command Done!!");
-    getPose = true;
+    
   }
 
   // Returns true when the command should end.
@@ -126,7 +139,7 @@ public class LeaveCmd extends Command
         // For example, you can check if the robot is close enough to the target
         
         
-        return pidDrive.atSetpoint();
+        return finish;
   }
 
 }
