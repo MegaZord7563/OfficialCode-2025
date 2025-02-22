@@ -122,6 +122,7 @@ public class SwerveSubsystem extends SubsystemBase
   private boolean throttleMax=false;
   private boolean throttleLift = false;
   private boolean isBlue = false;
+  private boolean blueAlliance =false;
 
   //PathPlanner Config
   RobotConfig config;
@@ -163,6 +164,7 @@ public class SwerveSubsystem extends SubsystemBase
     if (alliance2.get() == DriverStation.Alliance.Red) 
     {
       allianceHeading = 0;
+      blueAlliance = false;
       LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,0.2595,0.405,0,0,0);
       LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,-0.1705,0.100,0,0,180);
       System.out.println("limelight settings Red");
@@ -171,6 +173,7 @@ public class SwerveSubsystem extends SubsystemBase
     {
       //blue
       allianceHeading = 180;
+      blueAlliance = true;
       LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,0.2595,0.405,0,0,0);
       LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,-0.1705,0.100,0,0,180);
       System.out.println("limelight settings Blue");
@@ -492,7 +495,11 @@ public class SwerveSubsystem extends SubsystemBase
 
   }
 
-   
+  //
+   public boolean getBlueAlliance()
+   {
+      return blueAlliance;
+   }
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() 
@@ -742,7 +749,7 @@ public void stopModules ()
     else if (throttleFast)
     {
     
-      throttle =0.5;
+      throttle =0.6;
       
     }
     else if (throttleMax) 

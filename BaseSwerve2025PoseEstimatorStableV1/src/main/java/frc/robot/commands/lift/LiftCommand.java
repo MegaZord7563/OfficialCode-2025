@@ -145,7 +145,7 @@ public class LiftCommand extends Command
     //liftSubsystem.stopMotor();
     // Print the end of the command
     ledControl.setBlackLed();
-    swerveDrive.robotFast();
+    
     System.out.println("Lift Command Done!");
   }
 

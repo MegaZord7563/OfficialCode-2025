@@ -36,8 +36,9 @@ public class LeaveCmd extends Command
   //PID controller
   private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
   private double initialPosition = 0;
+  private double initialAngle = 0;
   
-  private final double speed = -0.05; 
+  private final double speed = -0.1; 
 
   private boolean finish = false;
   
@@ -70,30 +71,22 @@ public class LeaveCmd extends Command
   @Override
   public void execute() 
   {
-  //
-   if (getPose) 
-   {
-    initialPosition = robotPosition().getX();
-      
-    getPose=false;
-    
-   }
-
-   //double drive_cmd = pidDrive.calculate(robotPosition().getX(),initialPosition + 0.1);
-    
-    // Drive the swerve subsystem with the calculated speeds
-    //swerveDrive.driveToTarget(() -> drive_cmd, () -> 0.0, () -> 0.0, () -> false);
-    swerveDrive.driveToTarget(() -> speed, () -> 0.0, () -> 0.0, () -> false);
-
-
-    if(robotPosition().getX() > initialPosition + 0.1)
-    {
-      finish = true;
-    }
-    //testar metodo
-
-    //swerveDrive.drive(new ChassisSpeeds(drive_cmd,0.0, 0.0));
+    if (getPose) {
+      initialPosition = robotPosition().getX();
+      initialAngle = robotPosition().getRotation().getDegrees();
+      getPose = false;
   }
+
+  double drive_cmd = pidDrive.calculate(robotPosition().getX(), initialPosition - 0.1); // Move backward
+
+  
+
+  // Drive the swerve subsystem with the calculated speeds
+  swerveDrive.driveToTarget(() -> drive_cmd, () -> 0.0, () -> 0.0, () -> false);
+
+  // Uncomment and use this if you need to check the position to finish the command
+  
+}
     
       
   
@@ -122,7 +115,7 @@ public class LeaveCmd extends Command
   {
     swerveDrive.stopModules();
     System.out.println("Leave Command Done!!");
-    //getPose = true;
+    getPose = true;
   }
 
   // Returns true when the command should end.
@@ -133,7 +126,7 @@ public class LeaveCmd extends Command
         // For example, you can check if the robot is close enough to the target
         
         
-        return finish;
+        return pidDrive.atSetpoint();
   }
 
 }

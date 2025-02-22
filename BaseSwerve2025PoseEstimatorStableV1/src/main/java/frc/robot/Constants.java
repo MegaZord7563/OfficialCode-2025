@@ -270,15 +270,15 @@ import edu.wpi.first.math.util.Units;
   //Path Planner Constants
   public static final class PathPlannerConstants
   {
-    public static final double kPTranslationPath = 5;//Anterior 0.125,
-      public static final double kPRotationPath = .40;
+    public static final double kPTranslationPath = 10;//Anterior 0.125,
+      public static final double kPRotationPath = 1.6;
 
       public static final PPHolonomicDriveController AutoConfig = new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
         new PIDConstants(kPTranslationPath, 0.0, 0.0), // Translation PID constants
         new PIDConstants(kPRotationPath, 0.0, 0.0) // Rotation PID constants
       );
 
-      public static final double maxAccelerationPath = 4.0;
+      public static final double maxAccelerationPath = 3.0;
       public static final double maxAngularVelocityRadPerSec = Units.degreesToRadians(540);
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
   }

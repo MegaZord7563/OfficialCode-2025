@@ -29,7 +29,7 @@ public class PathCoralStationCmd extends Command
   private static SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
   private  Pose2d targetPosition = new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(0.1));
 
-  private static OperatorHub operatorHub=RobotContainer.operatorHub;
+  
   
     public Command pathCoralStationCmd = RobotContainer.pathCoralStationCmd;
   
@@ -81,6 +81,8 @@ public class PathCoralStationCmd extends Command
     {
         endCommand();
     }
+    // Select the target position whether it is Coral Station 1 or Coral Station 2
+    targetPosition = swerveDrive.getBlueAlliance() ? targetPosition1() : targetPosition2();
         
   
 
@@ -88,6 +90,7 @@ public class PathCoralStationCmd extends Command
 
     // Get raw AprilTag/Fiducial data
     
+      //Blue Coral Station 1
         System.out.println("Coral Station 1 selected !!");
         targetPosition = new Pose2d(1.05, 0.86, Rotation2d.fromDegrees(54));
        
@@ -119,6 +122,20 @@ public class PathCoralStationCmd extends Command
 
 
   }
+//Helper method  select the target position
+public Pose2d targetPosition1()
+{
+    //Blue Coral Station 1
+    System.out.println("Coral Station 1 selected !!");
+    return targetPosition = new Pose2d(1.05, 0.86, Rotation2d.fromDegrees(54));
+}
+
+public Pose2d targetPosition2()
+{
+    //Blue Coral Station 2
+    System.out.println("Coral Station 2 selected !!");
+    return targetPosition = new Pose2d(1.05, -0.86, Rotation2d.fromDegrees(-54));
+}
 
 // End path command
 public void endCommand()

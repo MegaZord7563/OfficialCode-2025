@@ -4,11 +4,13 @@
 
 package frc.robot.commands.Algae;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.commands.swerve.LeaveCmd;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.Coral.CoralSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -19,17 +21,30 @@ public class FreeAlgaeReefCmd extends SequentialCommandGroup
 
   private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
   private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
+  private final CoralSubsystem coralSubsystem = RobotContainer.coralSubsystem;
+
   /** Creates a new FreeAlgaeReffCmd. */
-  public FreeAlgaeReefCmd() 
+  public FreeAlgaeReefCmd(double angle , double position) 
   {
     // Create the subsystem
     
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-                new RunCommand(() -> aCoralSubsystem.runMotor(72))
-                .alongWith(new RunCommand(() -> liftSubsystem.runMotor(0.6, false)))
+      new ParallelCommandGroup(
+        new RunCommand(() -> coralSubsystem.setVelocity(0.5)),
+
+        new RunCommand(() ->aCoralSubsystem.runMotor(angle)),
+
+        new RunCommand(() -> liftSubsystem.runMotor(position, false))
+      )
+/* 
+                new RunCommand(() -> aCoralSubsystem.runMotor(angle))
+                .alongWith(new RunCommand(() -> liftSubsystem.runMotor(position, false)))
+*/
+  
                 //new LeaveCmd()
               );
   }
 }
+
