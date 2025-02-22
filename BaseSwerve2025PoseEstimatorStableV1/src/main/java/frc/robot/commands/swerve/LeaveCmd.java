@@ -27,8 +27,8 @@ public class LeaveCmd extends Command
   
   //PID controller
   //private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
-  private double initialPosition ;
-  private double currentPosition;
+  private double initialPosition=0;
+  private double currentPosition=0;
   
   private final double speed = 0.2; 
 
@@ -75,15 +75,18 @@ public class LeaveCmd extends Command
     }
 
     if (currentPosition > (initialPosition+0.2))
+    
     {
+      System.out.println("Current Position: " + currentPosition + " Initial Position: " + initialPosition);
       finish = true;
     }
     else
     {
+      swerveDrive.driveToTarget(() -> -speed, () -> 0.0, () -> 0.0, () -> false);
       finish = false;
     }
   //double drive_cmd = pidDrive.calculate(robotPosition().getX(), initialPosition - 0.1); // Move backward
-  swerveDrive.driveToTarget(() -> -speed, () -> 0.0, () -> 0.0, () -> false);
+ 
   
  /* 
   if (timer.hasElapsed(2.0)) 

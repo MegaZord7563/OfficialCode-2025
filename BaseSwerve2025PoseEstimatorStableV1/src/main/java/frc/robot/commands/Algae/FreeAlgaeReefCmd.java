@@ -37,7 +37,8 @@ public class FreeAlgaeReefCmd extends SequentialCommandGroup
         new RunCommand(() ->aCoralSubsystem.runMotor(angle)),
 
         new RunCommand(() -> liftSubsystem.runMotor(position, false))
-      )
+      ), 
+      new RunCommand(() -> coralSubsystem.stopMotor())
 /* 
                 new RunCommand(() -> aCoralSubsystem.runMotor(angle))
                 .alongWith(new RunCommand(() -> liftSubsystem.runMotor(position, false)))

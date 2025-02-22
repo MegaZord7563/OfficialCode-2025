@@ -402,7 +402,7 @@ public class RobotContainer
     driverJoystick.b().whileTrue(pathCoralStationCmd);
     driverJoystick.b().whileFalse(new InstantCommand (()->pathCoralStationCmd.endCommand()));
 
-    //driverJoystick.povUp().whileTrue(leaveCmd);
+    driverJoystick.povUp().whileTrue(leaveCmd);
 
     //Prepare to Pick Coral
      //driverJoystick.b().onTrue(coralStationCmd);

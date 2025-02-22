@@ -897,49 +897,7 @@ public void stopModules ()
     return sensorRight.get();
   }
 
-/* 
-  public boolean getSensorLeftLate()
-  {
-    new Thread(() -> {
-      try {
-          Thread.sleep(500); //avoid to block the rest of our code from running
-          sensorLeftLate = getSensorLeft();
-      } catch (Exception e) {
-      }
-  }).start();
 
-  return sensorLeftLate;
-  }
-
-  public boolean getSensorRightLate()
-  {
-    new Thread(() -> {
-      try {
-          Thread.sleep(500); //avoid to block the rest of our code from running
-          sensorRightLate = getSensorRight();
-      } catch (Exception e) {
-      }
-  }).start();
-
-  return sensorRightLate;
-  }
-*/
-
-  public boolean getSensorRightLate()
-  {
-    Timer.delay(0.5);
-    sensorRightLate = getSensorRight();
-  return sensorRightLate;
-  }
-
-
-  public boolean getSensorLeftLate()
-  {
-    Timer.delay(0.5);
-    sensorLeftLate = getSensorLeft();
-  return sensorLeftLate;
-  }
-  
 
   /**
    * Get the gyro yaw
