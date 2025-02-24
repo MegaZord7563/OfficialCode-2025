@@ -121,7 +121,7 @@ public class Robot extends TimedRobot
       m_autonomousCommand.schedule();
     }
 
-    
+    RobotContainer.coralSubsystem.runMotor(0);
     RobotContainer.initializeRamp.schedule();
     //if (m_autonomousCommand != null) RobotContainer.initializeRamp.schedule();
   }

@@ -242,6 +242,9 @@ public class RobotContainer
 
     NamedCommands.registerCommand("homeEndGame", homingEndGame);
     NamedCommands.registerCommand("coralStationCmd", coralStationCmd);
+
+    NamedCommands.registerCommand("coralStationNoSensor", new InstantCommand(() ->articuladorCoralSubsystem.runMotor(70))
+                              .alongWith(new InstantCommand(() ->coralSubsystem.runMotor(coralSubsystem.getPosition()))));
   
     NamedCommands.registerCommand("shootCoral", shootCoralAuto);
     NamedCommands.registerCommand("homingPosition", homingPosition);
@@ -399,11 +402,11 @@ public class RobotContainer
                                                                     ledControl.setRedLed();
                                                                     })); 
      
-     //set command to homing position
-     driverJoystick.y().whileTrue(homingPosition);
-     //set position to Score
-     driverJoystick.x().whileTrue(pathScoreReefCmd);
-     driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
+    //set command to homing position
+    driverJoystick.y().whileTrue(homingPosition);
+    //set position to Score
+    driverJoystick.x().whileTrue(pathScoreReefCmd);
+    driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
 
     driverJoystick.b().whileTrue(pathCoralStationCmd);
     driverJoystick.b().whileFalse(new InstantCommand (()->pathCoralStationCmd.endCommand()));

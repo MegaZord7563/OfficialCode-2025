@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Algae;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -32,13 +33,13 @@ public class FreeAlgaeReefCmd extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ParallelCommandGroup(
-        new RunCommand(() -> coralSubsystem.setVelocity(0.5)),
+        new InstantCommand(() -> coralSubsystem.setVelocity(0.5)),
 
-        new RunCommand(() ->aCoralSubsystem.runMotor(angle)),
+        new InstantCommand(() ->aCoralSubsystem.runMotor(angle)),
 
-        new RunCommand(() -> liftSubsystem.runMotor(position, false))
+        new InstantCommand(() -> liftSubsystem.runMotor(position, false))
       ), 
-      new RunCommand(() -> coralSubsystem.stopMotor())
+      new InstantCommand(() -> coralSubsystem.stopMotor())
 /* 
                 new RunCommand(() -> aCoralSubsystem.runMotor(angle))
                 .alongWith(new RunCommand(() -> liftSubsystem.runMotor(position, false)))

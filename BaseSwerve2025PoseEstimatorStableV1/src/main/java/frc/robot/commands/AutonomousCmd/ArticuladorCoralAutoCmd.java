@@ -18,6 +18,7 @@ public class ArticuladorCoralAutoCmd extends Command
     private boolean l2 = false;
     private boolean l3 = false;
     private boolean l4 = false;
+
     private boolean finish = false;
     
     private double encoderPosition = 0;

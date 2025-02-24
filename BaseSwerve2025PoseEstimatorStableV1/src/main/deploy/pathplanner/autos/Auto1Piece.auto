@@ -7,31 +7,32 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GoToF"
+            "pathName": "GoToE"
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "liftL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "aCoral4"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "liftL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "aCoral4"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "shootCoral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Leave"
           }
         },
         {

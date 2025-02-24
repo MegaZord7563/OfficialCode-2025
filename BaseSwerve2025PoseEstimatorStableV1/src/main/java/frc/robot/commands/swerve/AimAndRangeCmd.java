@@ -23,11 +23,11 @@ public class AimAndRangeCmd extends Command
 {
   // Instantiate the object
   private final static SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-    private  Pose2d targetPosition = new Pose2d(0, 0, null);
-    private  Pose2d currentPosition = new Pose2d(0, 0, null);
-    private static String limelightName = "limelight-front";
+  private  Pose2d targetPosition = new Pose2d(0, 0, null);
+    
+  private static String limelightName = "limelight-front";
 
-  private PathFindingCommand pathFindingCommand = new PathFindingCommand(swerveDrive, 1);
+ 
 
   // Variables
   //private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
@@ -116,7 +116,7 @@ public class AimAndRangeCmd extends Command
     kL = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL);
 
 
-    currentPosition =robotPosition();
+    
     // Get raw AprilTag/Fiducial data
     if (kA)
     {
@@ -195,11 +195,16 @@ public class AimAndRangeCmd extends Command
     double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
     // try to drive forward until the target area reaches our desired area
     //double drive_cmd = MathUtil.clamp(pidDrive.calculate(distanceToTarget, kDistanceSetpoint),-kMaxSpeed2Drive,kMaxSpeed2Drive);
-    //double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(robotPosition().getX(),targetPosition.getX());
+    double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(robotPosition().getX(),targetPosition.getX());
 
-    //double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(robotPosition().getRotation().getDegrees(),targetPosition.getRotation().getDegrees());
+    double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(robotPosition().getRotation().getDegrees(),targetPosition.getRotation().getDegrees());
     // Drive the swerve subsystem with the calculated speeds
-    swerveDrive.driveToTarget(() -> 0.0, () -> steer_cmd, () -> 0.0, () -> true);
+    
+    // try to drive forward until the target area reaches our desired area
+    //double drive_cmd = MathUtil.clamp(pidDrive.calculate(distanceToTarget, kDistanceSetpoint),-kMaxSpeed2Drive,kMaxSpeed2Drive);
+   
+    // Drive the swerve subsystem with the calculated speeds
+    swerveDrive.driveToTarget(() -> drive_cmd, () -> steer_cmd, () -> rot_cmd, () -> true);
 
     //System.out.println("steer cmd"+steer_cmd);
     //System.out.println("target Y"+targetPosition.getY());

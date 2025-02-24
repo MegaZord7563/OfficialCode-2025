@@ -21,14 +21,26 @@ public class LeaveCmd extends Command
  
   private static boolean getPose = false;  
 
-  //PID offset variables
-                   // how hard to turn toward the target
-  private final double kPdrive = 1.0; //0.26 
+  //Max speed variables
+  private final double kMaxSpeed2Drive = 0.15;                   // Simple speed limit so we don't drive too fast
+  private final double kMaxSpeed2Steer = 0.15; 
+  private final double kMaxSpeed2Rot = 0.05; 
+
+ 
   
+  //PID offset variables
+  private final double kPsteer = 0.26;                    // how hard to turn toward the target
+  private final double kPdrive = 2.0; //0.26 
+  private final double kProt = 0.01; //0.26 
   //PID controller
-  //private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
-  private double initialPosition=0;
-  private double currentPosition=0;
+  private PIDController pidDrive =  new PIDController(kPdrive, 0, 0);
+  private PIDController pidSteer = new PIDController(kPsteer,0,0);
+  private PIDController pidRot = new PIDController(kProt,0,0);
+
+  private double kXposition=0;
+  private double kYposition=0;	
+  private double kRotPosition=0;
+  private double currentXposition=0;
   
   private final double speed = 0.2; 
 
@@ -66,69 +78,48 @@ public class LeaveCmd extends Command
   @Override
   public void execute() 
   {
-    currentPosition = this.robotPosition().getX();
+    currentXposition = swerveDrive.getPoseEstimator().getX();
     if (getPose) 
     {
-      initialPosition = robotPosition().getX();
+      kXposition = swerveDrive.getPoseEstimator().getX();
+      kYposition = swerveDrive.getPoseEstimator().getY();
+      kRotPosition = swerveDrive.getPoseEstimator().getRotation().getDegrees();
      
       getPose = false;
     }
 
-    if (currentPosition > (initialPosition+0.2))
+    /*double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(swerveDrive.getPoseEstimator().getX(),kYposition);
+    double drive_cmd = kMaxSpeed2Drive *pidDrive.calculate(swerveDrive.getPoseEstimator().getX(),(kXposition+0.2));
+    double rot_cmd = kMaxSpeed2Rot *pidRot.calculate(swerveDrive.getPoseEstimator().getRotation().getDegrees(),kRotPosition);*/
+
+    //swerveDrive.driveToTarget(() -> -drive_cmd, () ->0.0, () -> 0.0, () -> false);
+       
+    if (currentXposition > (kXposition + 0.2)||timer.hasElapsed(0.5))
     
     {
-      System.out.println("Current Position: " + currentPosition + " Initial Position: " + initialPosition);
+      System.out.println("Current Position: " + currentXposition + " Initial Position: " + kXposition);
       finish = true;
+      System.out.println("Leave Command time is up!!");
     }
     else
     {
-      swerveDrive.driveToTarget(() -> -speed, () -> 0.0, () -> 0.0, () -> false);
+
+      swerveDrive.driveToTarget(() -> speed, () -> 0.0, () -> 0.0, () -> false);
       finish = false;
     }
-  //double drive_cmd = pidDrive.calculate(robotPosition().getX(), initialPosition - 0.1); // Move backward
- 
-  
- /* 
-  if (timer.hasElapsed(2.0)) 
-  {
-    finish = true;
- }*/
 
-  
-
-  // Drive the swerve subsystem with the calculated speeds
-  //swerveDrive.driveToTarget(() -> drive_cmd, () -> 0.0, () -> 0.0, () -> false);
-
-  // Uncomment and use this if you need to check the position to finish the command
-  
-}
-    
-      
-  
-
-  //Helper method to calculate robot position
-
-  /**
-   * Method to get the robot's current position
-   * @return robotPosition
-   */
-  public Pose2d robotPosition()
-  {
-
-    // Get the current robot pose from the pose estimator
-    Pose2d currentPose = swerveDrive.getPoseEstimator();
-
-    // Get the robot's current position
-    
-    return currentPose;
+    // Check if 0.5 seconds have passed or the robot has moved 0.1 meters
+    /*if (timer.hasElapsed(1.0) || pidDrive.atSetpoint()) 
+    {
+      finish = true;
+      System.out.println("Leave Command time is up!!");
+    }*/
   }
- 
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) 
   {
-    //timer.stop();
+    timer.stop();
     swerveDrive.stopModules();
     System.out.println("Leave Command Done!!");
     
