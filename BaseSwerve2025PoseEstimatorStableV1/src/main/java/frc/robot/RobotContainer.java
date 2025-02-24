@@ -42,6 +42,7 @@ import frc.robot.commands.AutonomousCmd.ShootCoralAutoCmd;
 import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
 import frc.robot.commands.Ramp.RampPickCoralCmd;
+import frc.robot.commands.ScoreAuto.ScoreAutoCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.coral.AcoralManualCmd;
 
@@ -153,6 +154,8 @@ public class RobotContainer
   public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
   public static FreeAlgaeReefCmd  freeAlgaeReefHighCmd = new FreeAlgaeReefCmd(72,0.8);
   public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(72,0.2);
+
+  public static ScoreAutoCmd  scoreAutoCmd = new ScoreAutoCmd();
   
   
 
@@ -166,9 +169,9 @@ public class RobotContainer
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
   //PathFindingCommand
-  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(1.5);
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.5);
-  public static PathProcessorCmd pathProcessorCmd = new PathProcessorCmd(1.5);
+  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(1.0);
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.0);
+  public static PathProcessorCmd pathProcessorCmd = new PathProcessorCmd(1.0);
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
   public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
@@ -276,7 +279,7 @@ public class RobotContainer
     aCoralManualCmd.addRequirements(articuladorCoralSubsystem);
     coralStationCmd.addRequirements(articuladorCoralSubsystem);
 
-    articuladorCoralSubsystem.setDefaultCommand(aCoralManualCmd);
+    //articuladorCoralSubsystem.setDefaultCommand(aCoralManualCmd);
 
     pickL1Cmd.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
     homingEndGame.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
@@ -404,6 +407,8 @@ public class RobotContainer
      
     //set command to homing position
     driverJoystick.y().whileTrue(homingPosition);
+
+    driverJoystick.start().whileTrue(scoreAutoCmd);
     //set position to Score
     driverJoystick.x().whileTrue(pathScoreReefCmd);
     driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
@@ -411,7 +416,7 @@ public class RobotContainer
     driverJoystick.b().whileTrue(pathCoralStationCmd);
     driverJoystick.b().whileFalse(new InstantCommand (()->pathCoralStationCmd.endCommand()));
 
-    driverJoystick.povUp().whileTrue(leaveCmd);
+    driverJoystick.povDown().whileTrue(leaveCmd);
 
     //Prepare to Pick Coral
      //driverJoystick.b().onTrue(coralStationCmd);
@@ -436,7 +441,7 @@ public class RobotContainer
     JoystickButton leaveAlgaeReef = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
     leaveAlgaeReef.whileTrue(freeAlgaeReefHighCmd);
 
-    driverJoystick.povDown().whileTrue(freeAlgaeReefLowCmd);
+    //driverJoystick.povUp().whileTrue(freeAlgaeReefLowCmd);
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
@@ -476,6 +481,9 @@ public class RobotContainer
     //Score Algae - testado
     JoystickButton scoreAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
     scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
+
+    JoystickButton artCoralManual = new JoystickButton(mesinhaJoy1, operatorHub.kSelectOne);
+    artCoralManual.whileTrue(aCoralManualCmd);
     
     //Pick Coral
    /*  JoystickButton pickCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);

@@ -42,7 +42,7 @@ public class LeaveCmd extends Command
   private double kRotPosition=0;
   private double currentXposition=0;
   
-  private final double speed = 0.2; 
+  private final double speed = 0.05; 
 
   private boolean finish = false;
 
@@ -94,7 +94,7 @@ public class LeaveCmd extends Command
 
     //swerveDrive.driveToTarget(() -> -drive_cmd, () ->0.0, () -> 0.0, () -> false);
        
-    if (currentXposition > (kXposition + 0.2)||timer.hasElapsed(0.5))
+    if (currentXposition > (kXposition + 0.1)||timer.hasElapsed(0.25))
     
     {
       System.out.println("Current Position: " + currentXposition + " Initial Position: " + kXposition);

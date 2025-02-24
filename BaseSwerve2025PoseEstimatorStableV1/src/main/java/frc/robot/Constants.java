@@ -550,7 +550,7 @@ import edu.wpi.first.math.util.Units;
 
 
     public static final double kSoftLimitMin = 0;
-    public static final double kSoftLimitMax = 71;
+    public static final double kSoftLimitMax = 75;
       
     } 
 

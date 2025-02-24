@@ -32,21 +32,20 @@ public class FreeAlgaeReefCmd extends SequentialCommandGroup
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ParallelCommandGroup(
+      new ParallelCommandGroup
+      (
         new InstantCommand(() -> coralSubsystem.setVelocity(0.5)),
 
-        new InstantCommand(() ->aCoralSubsystem.runMotor(angle)),
+        new RunCommand(() ->aCoralSubsystem.runMotor(angle)).until(() ->aCoralSubsystem.getAngle(angle)),
 
-        new InstantCommand(() -> liftSubsystem.runMotor(position, false))
+        new RunCommand(() -> liftSubsystem.runMotor(position, false)).until(()-> liftSubsystem.getPositionAsBoolean(position))
       ), 
-      new InstantCommand(() -> coralSubsystem.stopMotor())
-/* 
-                new RunCommand(() -> aCoralSubsystem.runMotor(angle))
-                .alongWith(new RunCommand(() -> liftSubsystem.runMotor(position, false)))
-*/
-  
-                //new LeaveCmd()
-              );
+
+      new InstantCommand(() -> coralSubsystem.setVelocity(0.0)),
+      new InstantCommand(()-> coralSubsystem.resetEncoder()),
+      new InstantCommand(()-> coralSubsystem.runMotor(0.0))
+
+    );
   }
 }
 

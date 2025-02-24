@@ -232,6 +232,17 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     }
   }
 
+  public boolean getAngle(double angle)
+  {
+    if (coralEncoder.getPosition() >= angle)
+    {
+      return true;
+    }else 
+    {
+      return false;
+    }
+  }
+
   /**
    * Detect if the coral is in the intake position
    * @return sensor state
