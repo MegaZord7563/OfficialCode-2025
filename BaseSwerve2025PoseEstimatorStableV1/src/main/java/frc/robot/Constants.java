@@ -278,7 +278,7 @@ import edu.wpi.first.math.util.Units;
         new PIDConstants(kPRotationPath, 0.0, 0.0) // Rotation PID constants
       );
 
-      public static final double maxAccelerationPath = 5.0;//3.0
+      public static final double maxAccelerationPath = 2.0;//5.0 //3.0
       public static final double maxAngularVelocityRadPerSec = Units.degreesToRadians(540);
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
   }
@@ -308,7 +308,7 @@ import edu.wpi.first.math.util.Units;
       public static final double KA = 0.01;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP = 30.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP = 50.0;//35//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -528,10 +528,10 @@ import edu.wpi.first.math.util.Units;
       public static final double kslot0MaxOutput = 1;
 
        //ArticuladorCoral PID Up
-       public static final double kSslot1 = 0.25; // Add 0.25 V output to overcome static friction
-       public static final double kVslot1 = 0.12; // A velocity target of 1 rps results in 0.12 V output
-       public static final double kAslot1 = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-       public static final double kPslot1 = 0.15;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+       public static final double kSslot1 = 0.0;//0.25; // Add 0.25 V output to overcome static friction
+       public static final double kVslot1 = 0.0;//0.12; // A velocity target of 1 rps results in 0.12 V output
+       public static final double kAslot1 = 0.0;//0.01; // An acceleration of 1 rps/s requires 0.01 V output
+       public static final double kPslot1 = 0.1;//0.15//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
        public static final double kIslot1 = 0;
        public static final double kDslot1 = 0;
        public static final double kFFslot1 = 0; // = input = 0 to position control and 1.0/473.0 to velocity control

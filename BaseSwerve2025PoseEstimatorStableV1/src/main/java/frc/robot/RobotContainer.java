@@ -14,7 +14,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.cameraserver.CameraServer;
 //WPILIB Imports
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,13 +40,11 @@ import frc.robot.commands.AutonomousCmd.LiftAutoCmd;
 import frc.robot.commands.AutonomousCmd.ShootCoralAutoCmd;
 import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
-import frc.robot.commands.Ramp.RampPickCoralCmd;
 import frc.robot.commands.ScoreAuto.ScoreAutoCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.coral.AcoralManualCmd;
 
 import frc.robot.commands.coral.CoralStationCmd;
-import frc.robot.commands.coral.PickL1Cmd;
 import frc.robot.commands.lift.LiftCommand;
 
 import frc.robot.commands.lift.LiftManualCmd;
@@ -134,7 +131,7 @@ public class RobotContainer
   
   //Coral Commands
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
-  //public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
+
   public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
   
   public static AcoralManualCmd aCoralManualCmd = new AcoralManualCmd(operatorHub);
@@ -169,9 +166,9 @@ public class RobotContainer
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
   //PathFindingCommand
-  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(1.0);
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.0);
-  public static PathProcessorCmd pathProcessorCmd = new PathProcessorCmd(1.0);
+  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(1.5);
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.5);
+  public static PathProcessorCmd pathProcessorCmd = new PathProcessorCmd(1.5);
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
   public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
@@ -248,6 +245,7 @@ public class RobotContainer
 
     NamedCommands.registerCommand("coralStationNoSensor", new InstantCommand(() ->articuladorCoralSubsystem.runMotor(70))
                               .alongWith(new InstantCommand(() ->coralSubsystem.runMotor(coralSubsystem.getPosition()))));
+    NamedCommands.registerCommand("seguraCoral", new InstantCommand(() ->coralSubsystem.runMotor(coralSubsystem.getPosition())));
   
     NamedCommands.registerCommand("shootCoral", shootCoralAuto);
     NamedCommands.registerCommand("homingPosition", homingPosition);

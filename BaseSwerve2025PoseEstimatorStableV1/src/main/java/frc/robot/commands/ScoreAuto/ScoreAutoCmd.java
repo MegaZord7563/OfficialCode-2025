@@ -47,7 +47,8 @@ public class ScoreAutoCmd extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands
     (
-    new PathCoralStationCmd(2.0),
+    new PathCoralStationCmd(2.0)
+    /* 
     new CoralStationCmd(),
     new PathScoreReefCmd(2.0),
 
@@ -57,7 +58,9 @@ public class ScoreAutoCmd extends SequentialCommandGroup
     ),
     new InstantCommand(() -> coralSubsystem.runMotor(coralSubsystem.getPosition()+30.0)),
     new HomingPosition()
+    */
     );
+
     System.out.println("Initialize Command Group Done!!!");
   }
 }

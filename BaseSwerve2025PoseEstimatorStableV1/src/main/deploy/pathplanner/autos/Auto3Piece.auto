@@ -15,9 +15,28 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "liftL2"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "liftL2"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "liftL4"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -27,12 +46,6 @@
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "liftL4"
-                }
-              },
               {
                 "type": "named",
                 "data": {
@@ -90,25 +103,44 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 0.75
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "parallel",
                       "data": {
-                        "name": "liftL4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "aCoral4"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "liftL4"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "aCoral4"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "seguraCoral"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
           }
         },
         {

@@ -743,18 +743,18 @@ public void stopModules ()
     //Selects speed
     if (throttleSlow)
     {
-      throttle =0.3;
+      throttle =0.65;
 
     }
     else if (throttleFast)
     {
     
-      throttle =0.6;
+      throttle =0.85;
       
     }
     else if (throttleMax) 
     { 
-      throttle = 0.8;
+      throttle = 1.0;
       
     }
     else if (throttleLift){
