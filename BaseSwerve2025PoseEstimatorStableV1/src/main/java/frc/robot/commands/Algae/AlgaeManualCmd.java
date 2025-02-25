@@ -48,11 +48,12 @@ public class AlgaeManualCmd extends Command
   @Override
   public void execute() {
     //Selective Key Coral/Algae
-    if (!operatorHub.getSelectOne()){
+    if (!operatorHub.getSelectOne())
+    {
       //Algae Articulator Up
       if(operatorHub.getBlackAxisUp(0.75))
       {
-        aAlgaeSubsystem.setVelocity(0.1);
+        aAlgaeSubsystem.setVelocity(-0.1);
         encoderPosition = aAlgaeSubsystem.getPosition();
         trava =true;
         System.out.println("BlackAxisUp");
@@ -60,7 +61,7 @@ public class AlgaeManualCmd extends Command
       //Algae Articulator Down
       else if(operatorHub.getBlackAxisDown(-0.75))
       {
-        aAlgaeSubsystem.setVelocity(-0.1);
+        aAlgaeSubsystem.setVelocity(0.1);
         encoderPosition = aAlgaeSubsystem.getPosition();
         trava =true;
         System.out.println("BlackAxisDown");
@@ -74,7 +75,7 @@ public class AlgaeManualCmd extends Command
       }
       else if (aAlgaeSubsystem.isHomed().get())
       {
-        //finish = true;
+        finish = true;
       }
     }
 
@@ -82,7 +83,11 @@ public class AlgaeManualCmd extends Command
   
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) 
+  {
+
+
+  }
 
   // Returns true when the command should end.
   @Override

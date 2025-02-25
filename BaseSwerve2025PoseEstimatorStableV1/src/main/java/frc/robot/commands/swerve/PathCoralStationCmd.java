@@ -91,8 +91,8 @@ public class PathCoralStationCmd extends Command
     // Get raw AprilTag/Fiducial data
     
       //Blue Coral Station 1
-        System.out.println("Coral Station 1 selected !!");
-        targetPosition = new Pose2d(1.18, 1.0, Rotation2d.fromDegrees(55));
+        //System.out.println("Coral Station 1 selected !!");
+        //targetPosition = new Pose2d(1.18, 1.0, Rotation2d.fromDegrees(55));
        
     
     
@@ -127,14 +127,14 @@ public Pose2d targetPosition1()
 {
     //Blue Coral Station 1
     System.out.println("Coral Station 1 selected !!");
-    return targetPosition = new Pose2d(1.05, 0.86, Rotation2d.fromDegrees(54));
+    return targetPosition = new Pose2d(1.18, 1.0, Rotation2d.fromDegrees(55));
 }
 
 public Pose2d targetPosition2()
 {
     //Blue Coral Station 2
     System.out.println("Coral Station 2 selected !!");
-    return targetPosition = new Pose2d(1.05, -0.86, Rotation2d.fromDegrees(-54));
+    return targetPosition = new Pose2d(1.05, -0.86, Rotation2d.fromDegrees(54));
 }
 
 // End path command

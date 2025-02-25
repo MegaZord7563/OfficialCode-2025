@@ -65,7 +65,10 @@ public class CoralStationCmd extends Command
   public void end(boolean interrupted) 
   {
     System.out.println("Articulador Coral Command Done");
+    //segura game piece
     coralSubsystem.runMotor(coralSubsystem.getPosition());
+    //close articulador quando peça chega
+    aCoralSubsystem.runMotor(0);
   }
 
   // Returns true when the command should end.

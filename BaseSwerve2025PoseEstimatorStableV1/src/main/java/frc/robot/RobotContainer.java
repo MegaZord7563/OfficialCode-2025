@@ -134,7 +134,7 @@ public class RobotContainer
   
   //Coral Commands
   public static Articulador1Cmd articulador1Cmd = new Articulador1Cmd();
-  public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
+  //public static RampPickCoralCmd rampCoral = new RampPickCoralCmd();
   public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
   
   public static AcoralManualCmd aCoralManualCmd = new AcoralManualCmd(operatorHub);
@@ -151,9 +151,9 @@ public class RobotContainer
   public static HomingPosition homingPosition = new HomingPosition();
   public static InitializeRamp initializeRamp = new InitializeRamp(); 
   public static HomingEndGame homingEndGame = new HomingEndGame();
-  public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
+  //public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
   public static FreeAlgaeReefCmd  freeAlgaeReefHighCmd = new FreeAlgaeReefCmd(72,0.8);
-  public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(72,0.2);
+  public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(72,0.5);
 
   public static ScoreAutoCmd  scoreAutoCmd = new ScoreAutoCmd();
   
@@ -279,12 +279,12 @@ public class RobotContainer
     aCoralManualCmd.addRequirements(articuladorCoralSubsystem);
     coralStationCmd.addRequirements(articuladorCoralSubsystem);
 
-    //articuladorCoralSubsystem.setDefaultCommand(aCoralManualCmd);
+    articuladorCoralSubsystem.setDefaultCommand(aCoralManualCmd);
 
-    pickL1Cmd.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
+    //pickL1Cmd.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
     homingEndGame.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
     initializeRamp.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
-    rampCoral.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
+    //rampCoral.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
     scoreLevel.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
 
         
@@ -430,8 +430,10 @@ public class RobotContainer
      driverJoystick.povRight().whileTrue(sensorAlignRight);
      //Align robot to score Left
      driverJoystick.povLeft().whileTrue(sensorAlignLeft);
-     //Algae AI
-     //driverJoystick.povUp().whileTrue(trackAlgaeCmd);
+
+     driverJoystick.povUp().whileTrue(freeAlgaeReefLowCmd);
+     driverJoystick.povUp().whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
+     
 
 
      /**
@@ -440,8 +442,9 @@ public class RobotContainer
 
     JoystickButton leaveAlgaeReef = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
     leaveAlgaeReef.whileTrue(freeAlgaeReefHighCmd);
+    leaveAlgaeReef.whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
 
-    //driverJoystick.povUp().whileTrue(freeAlgaeReefLowCmd);
+    
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
@@ -482,8 +485,8 @@ public class RobotContainer
     JoystickButton scoreAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
     scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
 
-    JoystickButton artCoralManual = new JoystickButton(mesinhaJoy1, operatorHub.kSelectOne);
-    artCoralManual.whileTrue(aCoralManualCmd);
+    //JoystickButton artCoralManual = new JoystickButton(mesinhaJoy1, operatorHub.kSelectOne);
+    //artCoralManual.whileTrue(aCoralManualCmd);
     
     //Pick Coral
    /*  JoystickButton pickCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
