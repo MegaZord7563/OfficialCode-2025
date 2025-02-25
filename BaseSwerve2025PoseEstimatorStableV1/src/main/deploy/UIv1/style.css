@@ -99,6 +99,10 @@ body {
 #K { top: 56%; left: 9%; }
 #L { top: 72%; left: 16%; }
 
+#L4 { top: 8%; left: 50%; }
+#L3 { top: 35%; left: 50%; }
+#L2 { top: 57%; left: 50%; }
+#L1 { top: 80%; left: 50%; }
 
 .checkBox {
     display: block;
