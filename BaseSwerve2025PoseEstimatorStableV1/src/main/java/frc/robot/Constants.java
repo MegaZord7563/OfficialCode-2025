@@ -278,7 +278,7 @@ import edu.wpi.first.math.util.Units;
         new PIDConstants(kPRotationPath, 0.0, 0.0) // Rotation PID constants
       );
 
-      public static final double maxAccelerationPath = 1.0;//5.0 //3.0
+      public static final double maxAccelerationPath = 0.5;//1.0//5.0 //3.0
       public static final double maxAngularVelocityRadPerSec = Units.degreesToRadians(540);
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
   }
@@ -308,7 +308,7 @@ import edu.wpi.first.math.util.Units;
       public static final double KA = 0.0;//0.01;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP = 45.0;//50//35// 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP = 50.0;//50//35// 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -640,7 +640,7 @@ import edu.wpi.first.math.util.Units;
 
     public static final double escaladorVelocity= 0.8;
 
-    public static final double escaladorClimbPosition= 1.18;
+    public static final double escaladorClimbPosition= 1.20;
       
 
     /* 

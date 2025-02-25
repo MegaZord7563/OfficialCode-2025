@@ -28,8 +28,8 @@ public class ArticuladorCoralAutoCmd extends Command
     //setpoint in grades
    
     private double l1Setpoint = 55.0;
-    private double l2Setpoint = 50.0;
-    private double l3Setpoint = 50.0;
+    private double l2Setpoint = 67.0;
+    private double l3Setpoint = 67.0;
     private double l4Setpoint = 62.0;
 
 

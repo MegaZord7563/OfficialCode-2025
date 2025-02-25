@@ -455,8 +455,9 @@ public class RobotContainer
     climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition, true))
             .onlyIf(()->rampSubsystem.isHomedBoolean()));
 
-    Trigger prepareClimb = new Trigger(()->escaladorSubsystem.isDistanceValid() && escaladorSubsystem.getSensorClimber());
+    Trigger prepareClimb = new Trigger(()->(escaladorSubsystem.isDistanceValid() && escaladorSubsystem.getSensorClimber()));
     prepareClimb.onTrue(new InstantCommand(ledControl::setGreenLed));
+    prepareClimb.onFalse(new InstantCommand(ledControl::setBlackLed));
 
      //Initialize Ramp
     //OperatorHub 2 Button 1
@@ -483,8 +484,8 @@ public class RobotContainer
 
         
     //Pick Coral
-   //JoystickButton resetEncoderCoral = new JoystickButton(mesinhaJoy1, operatorHub.kSelectThree);
-   //resetEncoderCoral.whileTrue(new InstantCommand(()-> articuladorCoralSubsystem.resetEncoder()));
+    JoystickButton resetEncoderCoral = new JoystickButton(mesinhaJoy1, operatorHub.kSelectThree);
+    resetEncoderCoral.whileTrue(new InstantCommand(()-> articuladorCoralSubsystem.resetEncoder()));
                             
 
     JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);

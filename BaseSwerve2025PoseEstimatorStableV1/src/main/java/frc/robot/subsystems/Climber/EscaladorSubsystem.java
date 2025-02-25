@@ -207,7 +207,7 @@ public class EscaladorSubsystem extends SubsystemBase
      * returns true.
      */
     
-     boolean isValid = distOnboard.isRangeValid();
+     boolean isValid = this.isDistanceValid();
 
      SmartDashboard.putBoolean("Range Valid", isValid);
  
