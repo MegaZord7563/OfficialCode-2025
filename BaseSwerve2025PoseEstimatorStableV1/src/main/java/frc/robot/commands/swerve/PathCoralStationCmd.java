@@ -92,7 +92,7 @@ public class PathCoralStationCmd extends Command
     
       //Blue Coral Station 1
         System.out.println("Coral Station 1 selected !!");
-        targetPosition = new Pose2d(1.05, 0.86, Rotation2d.fromDegrees(54));
+        targetPosition = new Pose2d(1.18, 1.0, Rotation2d.fromDegrees(55));
        
     
     
