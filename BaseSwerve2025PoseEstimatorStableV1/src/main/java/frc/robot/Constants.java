@@ -278,7 +278,7 @@ import edu.wpi.first.math.util.Units;
         new PIDConstants(kPRotationPath, 0.0, 0.0) // Rotation PID constants
       );
 
-      public static final double maxAccelerationPath = 2.0;//5.0 //3.0
+      public static final double maxAccelerationPath = 1.0;//5.0 //3.0
       public static final double maxAngularVelocityRadPerSec = Units.degreesToRadians(540);
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
   }
@@ -303,12 +303,12 @@ import edu.wpi.first.math.util.Units;
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
 
       
-      public static final double KS = 0.25;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
-      public static final double KV = 0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
-      public static final double KA = 0.01;  //0.27;
+      public static final double KS = 0.0;//0.25;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
+      public static final double KV = 0.0;//0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
+      public static final double KA = 0.0;//0.01;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP = 50.0;//35//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP = 45.0;//50//35// 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -317,9 +317,9 @@ import edu.wpi.first.math.util.Units;
       public static final double kMaxOutput = 1;
 
       //Motion Magic PID - TO DO
-      public static final double KS1 = 0.25;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
-      public static final double KV1 = 0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
-      public static final double KA1 = 0.01;  //0.27;
+      public static final double KS1 =0.0;//0.25;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
+      public static final double KV1 = 0.0;//0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
+      public static final double KA1 = 0.0;//0.01;  //0.27;
       public static final double kP1 = 2.4;
       public static final double kI1 =0.0;
       public static final double kD1=0.0;

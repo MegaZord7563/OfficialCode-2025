@@ -6,6 +6,7 @@ package frc.robot.commands.ScoreAuto;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.commands.coral.Articulador1Cmd;
@@ -28,9 +29,9 @@ public class ScoreAutoCmd extends SequentialCommandGroup
   
 
 
-  private static CoralStationCmd coralStationCmd = RobotContainer.coralStationCmd;
-  private static PathCoralStationCmd pathCoralStationCmd = RobotContainer.pathCoralStationCmd;
-  private static PathScoreReefCmd pathScoreReefCmd = RobotContainer.pathScoreReefCmd;
+  private static CoralStationCmd coralStationAuto = RobotContainer.coralStationCmd;
+  //private static PathCoralStationCmd pathCoralStationAuto = RobotContainer.pathCoralStationAuto;
+  //private static PathScoreReefCmd pathScoreReefAuto = RobotContainer.pathScoreReefAuto;
   private static LiftCommand liftCommand = RobotContainer.liftCmd;
   private static Articulador1Cmd articulador1Cmd = RobotContainer.articulador1Cmd;
   private static HomingPosition homingPosition = RobotContainer.homingPosition;
@@ -47,10 +48,10 @@ public class ScoreAutoCmd extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands
     (
-    new PathCoralStationCmd(2.0)
-    /* 
+    //pathCoralStationAuto,
+    
     new CoralStationCmd(),
-    new PathScoreReefCmd(2.0),
+   // pathScoreReefAuto,
 
     new ParallelCommandGroup(
     new LiftCommand(),
@@ -58,7 +59,7 @@ public class ScoreAutoCmd extends SequentialCommandGroup
     ),
     new InstantCommand(() -> coralSubsystem.runMotor(coralSubsystem.getPosition()+30.0)),
     new HomingPosition()
-    */
+  
     );
 
     System.out.println("Initialize Command Group Done!!!");

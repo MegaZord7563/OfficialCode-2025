@@ -152,7 +152,7 @@ public class RobotContainer
   public static FreeAlgaeReefCmd  freeAlgaeReefHighCmd = new FreeAlgaeReefCmd(72,0.8);
   public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(72,0.5);
 
-  public static ScoreAutoCmd  scoreAutoCmd = new ScoreAutoCmd();
+  //public static ScoreAutoCmd  scoreAutoCmd = new ScoreAutoCmd();
   
   
 
@@ -167,8 +167,14 @@ public class RobotContainer
   
   //PathFindingCommand
   public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(1.5);
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.5);
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.0);
+
+  //public static PathCoralStationCmd pathCoralStationAuto = new PathCoralStationCmd(1.5);
+  //public static PathScoreReefCmd pathScoreReefAuto = new PathScoreReefCmd(1.5);
+
   public static PathProcessorCmd pathProcessorCmd = new PathProcessorCmd(1.5);
+
+
 
   public static PathAfterFind pathAfterFind = new PathAfterFind(swerveDrive, 1, "PathAfterFind");
   public static PathAfterFind pathAfterFindRed = new PathAfterFind(swerveDrive, 1, "PathAfterFindRed");
@@ -393,7 +399,7 @@ public class RobotContainer
                                                                       })); 
      driverJoystick.rightBumper().whileTrue(
                                             new InstantCommand(() -> {swerveDrive.robotFast();
-                                                                      ledControl.setPinkLed();
+                                                                      ledControl.setYellowLed();
                                                                       })); 
 
 
@@ -406,7 +412,7 @@ public class RobotContainer
     //set command to homing position
     driverJoystick.y().whileTrue(homingPosition);
 
-    driverJoystick.start().whileTrue(scoreAutoCmd);
+    //driverJoystick.start().whileTrue(scoreAutoCmd);
     //set position to Score
     driverJoystick.x().whileTrue(pathScoreReefCmd);
     driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
@@ -448,19 +454,11 @@ public class RobotContainer
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
     climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition, true))
             .onlyIf(()->rampSubsystem.isHomedBoolean()));
-/* 
-    climb.whileFalse(new InstantCommand(ledControl::setGreenLed)
-                    .onlyIf(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber())));
-//*/
+
     Trigger prepareClimb = new Trigger(()->escaladorSubsystem.isDistanceValid() && escaladorSubsystem.getSensorClimber());
     prepareClimb.onTrue(new InstantCommand(ledControl::setGreenLed));
 
-    //JoystickButton climbHoming = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
-    //climbHoming.whileTrue(new InstantCommand(()->escaladorSubsystem.runMotors(0,false)));
-    //driverJoystick.rightBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition,true))));
-    //driverJoystick.leftBumper().whileTrue((new InstantCommand(()->escaladorSubsystem.runMotors(0,false))));
-
-    //Initialize Ramp
+     //Initialize Ramp
     //OperatorHub 2 Button 1
     JoystickButton coralStation = new JoystickButton(mesinhaJoy1, operatorHub.kEight);
     coralStation.onTrue(coralStationCmd);
@@ -483,33 +481,11 @@ public class RobotContainer
     JoystickButton scoreAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
     scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
 
-    //JoystickButton artCoralManual = new JoystickButton(mesinhaJoy1, operatorHub.kSelectOne);
-    //artCoralManual.whileTrue(aCoralManualCmd);
-    
+        
     //Pick Coral
-   /*  JoystickButton pickCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
-    pickCoral.whileTrue(new ConditionalCommand(
-                              new InstantCommand(()-> coralSubsystem.runMotor(20)), 
-                              new InstantCommand(()->algaSubsystem.startAlga(9.5)), 
-                              ()-> operatorHub.getSelectOne()
-                            ));
-
-    pickCoral.whileFalse(new ConditionalCommand(
-                              new InstantCommand(()-> coralSubsystem.setVelocity(0))
-                                .onlyIf(()->(!operatorHub.getOne() && !operatorHub.getTwo())),
-                              new InstantCommand(()->algaSubsystem.resetEncoder())
-                                .onlyIf(()->(!operatorHub.getOne() && !operatorHub.getTwo())), 
-                              ()-> operatorHub.getSelectOne()
-                            ));*/
-
-
-   /*  shootCoral.whileTrue(new ConditionalCommand(
-                              new InstantCommand(()-> coralSubsystem.runMotor(-20)), 
-                              new InstantCommand(()-> algaSubsystem.startAlga(-9.5)), 
-                              ()-> operatorHub.getSelectOne()
-                            )); */
-    
-                            //JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
+   //JoystickButton resetEncoderCoral = new JoystickButton(mesinhaJoy1, operatorHub.kSelectThree);
+   //resetEncoderCoral.whileTrue(new InstantCommand(()-> articuladorCoralSubsystem.resetEncoder()));
+                            
 
     JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
     shootCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+20.0))

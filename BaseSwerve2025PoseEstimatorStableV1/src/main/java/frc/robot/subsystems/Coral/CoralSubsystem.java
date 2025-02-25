@@ -128,8 +128,8 @@ public class CoralSubsystem extends SubsystemBase
     globalConfig.Slot0.kI = CoralIntakeConstants.kI; //0; // no output for integrated error
     globalConfig.Slot0.kD = CoralIntakeConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
-    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(4))
-                        .withPeakReverseVoltage(Volts.of(-4));
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(2))
+                        .withPeakReverseVoltage(Volts.of(-2));
 
     
      

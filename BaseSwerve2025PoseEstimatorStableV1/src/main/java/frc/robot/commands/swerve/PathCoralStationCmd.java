@@ -27,7 +27,7 @@ public class PathCoralStationCmd extends Command
 {
   // Instantiate the object
   private static SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
-  private  Pose2d targetPosition = new Pose2d(0.1, 0.1, Rotation2d.fromDegrees(0.1));
+  private  Pose2d targetPosition = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
 
   
   
