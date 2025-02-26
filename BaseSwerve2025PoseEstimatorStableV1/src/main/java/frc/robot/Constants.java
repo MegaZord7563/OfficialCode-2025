@@ -271,14 +271,15 @@ import edu.wpi.first.math.util.Units;
   public static final class PathPlannerConstants
   {
     public static final double kPTranslationPath = 10;//Anterior 0.125,
+    public static final double kITranslationPath = 0.08;
       public static final double kPRotationPath = 3.0; //3.0; 1.6
 
       public static final PPHolonomicDriveController AutoConfig = new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-        new PIDConstants(kPTranslationPath, 0.0, 0.0), // Translation PID constants
+        new PIDConstants(kPTranslationPath, kITranslationPath, 0), // Translation PID constants
         new PIDConstants(kPRotationPath, 0.0, 0.0) // Rotation PID constants
       );
 
-      public static final double maxAccelerationPath = 0.5;//1.0//5.0 //3.0
+      public static final double maxAccelerationPath = 1.75;//1.0//5.0 //3.0
       public static final double maxAngularVelocityRadPerSec = Units.degreesToRadians(540);
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
   }
@@ -580,7 +581,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kRampVelocityConversionFactor = kRampPositionConversionFactor/60.0; //rotation to m/s
 
       //Ramp PID Up
-      public static final double kPslot0 = 0.040;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kPslot0 = 0.15;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kIslot0  = 0;
       public static final double kDslot0  = 0;
       public static final double kFFslot0  = 0; // = input = 0 to position control and 1.0/473.0 to velocity control

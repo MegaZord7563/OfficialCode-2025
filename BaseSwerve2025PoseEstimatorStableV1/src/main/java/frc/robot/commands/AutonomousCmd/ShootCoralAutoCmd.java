@@ -32,7 +32,7 @@ public class ShootCoralAutoCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    coralSubsystem.runMotor(coralSubsystem.getPosition()+30.0);
+    coralSubsystem.runMotor(coralSubsystem.getPosition()+50.0);
     
   }
 

@@ -492,7 +492,6 @@ public class SwerveSubsystem extends SubsystemBase
         m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
       }
     }
-
   }
 
   //
@@ -743,18 +742,18 @@ public void stopModules ()
     //Selects speed
     if (throttleSlow)
     {
-      throttle =0.65;
+      throttle =0.25;
 
     }
     else if (throttleFast)
     {
     
-      throttle =0.85;
+      throttle =0.65;
       
     }
     else if (throttleMax) 
     { 
-      throttle = 1.0;
+      throttle = 0.9;
       
     }
     else if (throttleLift){

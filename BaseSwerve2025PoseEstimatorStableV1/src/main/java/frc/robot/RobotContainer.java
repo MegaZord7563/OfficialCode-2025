@@ -166,8 +166,8 @@ public class RobotContainer
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
   //PathFindingCommand
-  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(1.5);
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(1.0);
+  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(3);
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(3);
 
   //public static PathCoralStationCmd pathCoralStationAuto = new PathCoralStationCmd(1.5);
   //public static PathScoreReefCmd pathScoreReefAuto = new PathScoreReefCmd(1.5);
