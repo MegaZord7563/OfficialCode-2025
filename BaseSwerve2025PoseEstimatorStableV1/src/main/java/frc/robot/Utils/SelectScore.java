@@ -29,13 +29,13 @@ public class SelectScore
                 poseToScore = new Pose2d(13.98,5.13,Rotation2d.fromDegrees(-126));
             }
             else if (touch.getButtonValue(VirtualButton.kD)){
-                poseToScore = new Pose2d(13.68,5.35,Rotation2d.fromDegrees(-121));
+                poseToScore = new Pose2d(13.44,5.30,Rotation2d.fromDegrees(-108));
             }
             else if (touch.getButtonValue(VirtualButton.kE)){
-                poseToScore = new Pose2d(12.51,5.38,Rotation2d.fromDegrees(-58));
+                poseToScore = new Pose2d(12.53,5.36,Rotation2d.fromDegrees(-57));
             }
             else if (touch.getButtonValue(VirtualButton.kF)){
-                poseToScore = new Pose2d(12.14,5.21,Rotation2d.fromDegrees(-60));
+                poseToScore = new Pose2d(12.20,5.11,Rotation2d.fromDegrees(-58));
             }
             else if (touch.getButtonValue(VirtualButton.kG)){
                 poseToScore = new Pose2d(12.062,4.190,Rotation2d.fromDegrees(180));

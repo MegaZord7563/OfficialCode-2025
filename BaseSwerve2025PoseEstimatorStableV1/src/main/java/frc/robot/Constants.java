@@ -641,7 +641,7 @@ import edu.wpi.first.math.util.Units;
 
     public static final double escaladorVelocity= 0.8;
 
-    public static final double escaladorClimbPosition= 1.20;
+    public static final double escaladorClimbPosition= 1.18;
       
 
     /* 
@@ -755,6 +755,8 @@ import edu.wpi.first.math.util.Units;
         public static final int kTwo = 2;      //ok
         public static final int kThree = 1; 
         public static final int kFour = 6;      //ok 
+        
+        public static final int kseven = 7;      //ok 
         
         public static final int kRedAxisUp = 0;     //ok
         public static final int kRedAxisSides = 1;  //ok

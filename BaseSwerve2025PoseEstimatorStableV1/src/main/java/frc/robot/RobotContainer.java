@@ -435,8 +435,8 @@ public class RobotContainer
      //Align robot to score Left
      driverJoystick.povLeft().whileTrue(sensorAlignLeft);
 
-     driverJoystick.povUp().whileTrue(freeAlgaeReefLowCmd);
-     driverJoystick.povUp().whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
+     //driverJoystick.povUp().whileTrue(freeAlgaeReefLowCmd);
+     //driverJoystick.povUp().whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
      
 
 
@@ -444,10 +444,15 @@ public class RobotContainer
       * OPERATOR CONTROLS
       */
 
-    JoystickButton leaveAlgaeReef = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
-    leaveAlgaeReef.whileTrue(freeAlgaeReefHighCmd);
-    leaveAlgaeReef.whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
+    JoystickButton leaveAlgaeReefHigh = new JoystickButton (mesinhaJoy2, operatorHub.kTen);
+    leaveAlgaeReefHigh.whileTrue(freeAlgaeReefHighCmd);
+    leaveAlgaeReefHigh.whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
 
+    JoystickButton leaveAlgaeReefLow = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
+    leaveAlgaeReefLow.whileTrue(freeAlgaeReefLowCmd);
+    leaveAlgaeReefLow.whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
+
+    
     
 
     //Set command to climber
@@ -455,7 +460,7 @@ public class RobotContainer
     climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition, true))
             .onlyIf(()->rampSubsystem.isHomedBoolean()));
 
-    Trigger prepareClimb = new Trigger(()->(escaladorSubsystem.isDistanceValid() && escaladorSubsystem.getSensorClimber()));
+    Trigger prepareClimb = new Trigger(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber()));
     prepareClimb.onTrue(new InstantCommand(ledControl::setGreenLed));
     prepareClimb.onFalse(new InstantCommand(ledControl::setBlackLed));
 
