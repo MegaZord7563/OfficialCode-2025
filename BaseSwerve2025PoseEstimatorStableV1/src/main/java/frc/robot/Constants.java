@@ -616,7 +616,7 @@ import edu.wpi.first.math.util.Units;
 
       //Climber SparkMax
       public static final IdleMode kIdleMode = IdleMode.kBrake;
-      public static final int kCurrentLimit = 95;
+      //public static final int kCurrentLimit = 95;
       public static final ClosedLoopSlot pidSparkSlot = ClosedLoopSlot.kSlot0;
       public static final double kEncoderPositionPIDMinInput =0 ;
       public static final double kEncoderPositionPIDMaxInput= 2 * Math.PI;
@@ -627,7 +627,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kVelocityConversionFactor = kPositionConversionFactor/60.0; //rotation to m/s
 
       //Climber PID 
-      public static final double kP = 25;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kP = 50;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kI= 0;
       public static final double kD = 0;
       public static final double kFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
@@ -639,9 +639,11 @@ import edu.wpi.first.math.util.Units;
       
     //Escalator
 
-    public static final double escaladorVelocity= 0.8;
+    //public static final double escaladorVelocity= 0.8;
 
-    public static final double escaladorClimbPosition= 1.18;
+    public static final double escaladorClimbPosition= 1.13;
+
+    public static final double escaladorBackPosition= 0;
       
 
     /* 
@@ -665,12 +667,12 @@ import edu.wpi.first.math.util.Units;
 
       /* Current Limiting */
      //TalonFX
-      /*public static final int kCurrentLimit = 70; //supply current
+      public static final int kCurrentLimit = 70; //supply current
       public static final int kCurrentThreshold = 120; //stator current
       public static final double kCurrentThresholdTime = 0.1;
       public static final boolean kEnableCurrentLimit = true;
-      public static final double kClosedLoopRamp=0.25;
-      public static boolean kInverted = false;*/
+      public static final double kClosedLoopRamp = 0.25;
+      public static boolean kInverted = false;
 
     }
   } 
@@ -757,6 +759,7 @@ import edu.wpi.first.math.util.Units;
         public static final int kFour = 6;      //ok 
         
         public static final int kseven = 7;      //ok 
+        public static final int keight = 8;    
         
         public static final int kRedAxisUp = 0;     //ok
         public static final int kRedAxisSides = 1;  //ok

@@ -39,6 +39,7 @@ public class OperatorHub {
     public int kNine = MesinhaJoy2Constants.kFour;
 
     public int kTen = MesinhaJoy2Constants.kseven;
+    public int kEleven = MesinhaJoy2Constants.keight;
 
 
     public int kRedAxisUp = MesinhaJoy2Constants.kRedAxisUp;

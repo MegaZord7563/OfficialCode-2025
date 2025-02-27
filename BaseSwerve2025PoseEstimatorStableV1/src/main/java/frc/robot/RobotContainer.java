@@ -149,8 +149,8 @@ public class RobotContainer
   public static InitializeRamp initializeRamp = new InitializeRamp(); 
   public static HomingEndGame homingEndGame = new HomingEndGame();
   //public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
-  public static FreeAlgaeReefCmd  freeAlgaeReefHighCmd = new FreeAlgaeReefCmd(72,0.8);
-  public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(72,0.5);
+  public static FreeAlgaeReefCmd  freeAlgaeReefHighCmd = new FreeAlgaeReefCmd(72,0.65);
+  public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(72,0.35);
 
   //public static ScoreAutoCmd  scoreAutoCmd = new ScoreAutoCmd();
   
@@ -435,8 +435,8 @@ public class RobotContainer
      //Align robot to score Left
      driverJoystick.povLeft().whileTrue(sensorAlignLeft);
 
-     //driverJoystick.povUp().whileTrue(freeAlgaeReefLowCmd);
-     //driverJoystick.povUp().whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
+     driverJoystick.povUp().whileTrue(freeAlgaeReefLowCmd);
+     driverJoystick.povUp().whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
      
 
 
@@ -444,25 +444,27 @@ public class RobotContainer
       * OPERATOR CONTROLS
       */
 
-    JoystickButton leaveAlgaeReefHigh = new JoystickButton (mesinhaJoy2, operatorHub.kTen);
-    leaveAlgaeReefHigh.whileTrue(freeAlgaeReefHighCmd);
-    leaveAlgaeReefHigh.whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
+    JoystickButton leaveAlgaeReef = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
+    leaveAlgaeReef.whileTrue(freeAlgaeReefHighCmd);
+    leaveAlgaeReef.whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
 
-    JoystickButton leaveAlgaeReefLow = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
-    leaveAlgaeReefLow.whileTrue(freeAlgaeReefLowCmd);
-    leaveAlgaeReefLow.whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
-
-    
     
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
-    climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition, true))
+    climb.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))//EscaladorConstants.escaladorClimbPosition))
             .onlyIf(()->rampSubsystem.isHomedBoolean()));
+/*
+    Trigger afterClimb = new Trigger(()-> escaladorSubsystem.getPosition() >= EscaladorConstants.escaladorClimbPosition);
+    afterClimb.onTrue(new InstantCommand(()-> escaladorSubsystem.stopMotors()));
+ */
+    JoystickButton climbReverse = new JoystickButton (mesinhaJoy2, operatorHub.kEleven);
+    climbReverse.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorBackPosition))
+            .onlyIf(()->escaladorSubsystem.getPosition() <= 0.95));
 
     Trigger prepareClimb = new Trigger(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber()));
     prepareClimb.onTrue(new InstantCommand(ledControl::setGreenLed));
-    prepareClimb.onFalse(new InstantCommand(ledControl::setBlackLed));
+    prepareClimb.onFalse(new InstantCommand(ledControl::setRedLed));
 
      //Initialize Ramp
     //OperatorHub 2 Button 1
