@@ -337,7 +337,7 @@ public class LiftSubsystem extends SubsystemBase
 
   /**
    * 
-   * @return
+   * @return double
    */
   public double getPosition()
   {
@@ -345,6 +345,20 @@ public class LiftSubsystem extends SubsystemBase
     return liftMotor.getPosition().getValueAsDouble();
   }
  
+  /**
+   * Lift position
+   * @return boolean
+   */
+  public boolean getPositionAsBoolean (double setup)
+  {
+    
+    if (liftMotor.getPosition().getValueAsDouble()> setup)
+    {
+      return true;
+    }else 
+    { return false;
+    }
+  }
   /**
    * 
    * @ reset encoder

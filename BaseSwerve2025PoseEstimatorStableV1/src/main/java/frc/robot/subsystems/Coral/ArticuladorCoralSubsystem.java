@@ -84,7 +84,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     .forwardSoftLimit(ArticuladorCoralConstants.kSoftLimitMax)
     .forwardSoftLimitEnabled(true)
     .reverseSoftLimit(ArticuladorCoralConstants.kSoftLimitMin)
-    .reverseSoftLimitEnabled(true);
+    .reverseSoftLimitEnabled(false);
   
     // Configure the coral encoder 
     config.encoder
@@ -117,8 +117,8 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     // Set MAXMotion parameters for position control. We need to pass
     // a closed loop slot to the maxMotion method to set the parameters for that slot.
     // In this case, we are setting the parameters for slot 2.
-    .maxVelocity(10000, ClosedLoopSlot.kSlot1)
-    .maxAcceleration(20000, ClosedLoopSlot.kSlot1)
+    .maxVelocity(20000, ClosedLoopSlot.kSlot1)
+    .maxAcceleration(40000, ClosedLoopSlot.kSlot1)
     .allowedClosedLoopError(0.5, ClosedLoopSlot.kSlot1)
     
     // Set MAXMotion parameters for velocity control in slot 2
@@ -229,6 +229,17 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     }else 
     {
       return ()->false;
+    }
+  }
+
+  public boolean getAngle(double angle)
+  {
+    if (coralEncoder.getPosition() >= angle)
+    {
+      return true;
+    }else 
+    {
+      return false;
     }
   }
 

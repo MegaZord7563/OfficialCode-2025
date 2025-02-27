@@ -121,9 +121,9 @@ public class Robot extends TimedRobot
       m_autonomousCommand.schedule();
     }
 
-    
-
-    //if (m_autonomousCommand != null) RobotContainer.initializeRamp.schedule();
+    RobotContainer.coralSubsystem.runMotor(0);
+    RobotContainer.initializeRamp.schedule();
+    //if (m_autonomousCommand != null) RobotContainer.initializeRamp.cancel();
   }
 
   /** This function is called periodically during autonomous. */
@@ -141,7 +141,7 @@ public class Robot extends TimedRobot
       m_autonomousCommand.cancel();
     }
     //RobotContainer.homingEndGame.schedule();
-    RobotContainer.initializeRamp.schedule();
+    //RobotContainer.initializeRamp.schedule();
     
   }
 

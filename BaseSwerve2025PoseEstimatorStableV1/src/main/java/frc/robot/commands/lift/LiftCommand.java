@@ -12,6 +12,7 @@ import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 import frc.robot.subsystems.Coral.CoralSubsystem;
+import frc.robot.subsystems.Swerve.SwerveSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 public class LiftCommand extends Command
@@ -34,9 +35,9 @@ public class LiftCommand extends Command
     
 
     private double l1Setpoint = 0.00; //l1SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l2Setpoint = 0.45; //l2SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l3Setpoint = 0.85; //l3SetpointClear/LiftConstants.kLiftGearRatio;
-    private double l4Setpoint = 1.46; //l4SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l2Setpoint = 0.43; //l2SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l3Setpoint = 0.83; //l3SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l4Setpoint = 1.41; //l4SetpointClear/LiftConstants.kLiftGearRatio;
 
     
     
@@ -45,6 +46,7 @@ public class LiftCommand extends Command
   private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
   private final ArticuladorCoralSubsystem artCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
   private final LedControl ledControl = RobotContainer.ledControl;
+  private final SwerveSubsystem swerveDrive = RobotContainer.swerveDrive;
 
   /** Creates a new AngleCmd. */
   public LiftCommand() 
@@ -92,6 +94,7 @@ public class LiftCommand extends Command
       //liftSubsystem.runMotor(l1Setpoint, false);
       
       //if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
+      
       finish =true;
       if(!artCoralSubsystem.sensorCoral())ledControl.setWhiteLed();
     }
@@ -99,7 +102,7 @@ public class LiftCommand extends Command
     {
       System.out.println("L2 SELECTED");
       if(!artCoralSubsystem.sensorCoral())ledControl.setBlueLed();
-      
+      swerveDrive.robotLiftVelocity();
       liftSubsystem.runMotor(l2Setpoint, false);
       
       if (l2Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l2Setpoint * (1+tolerance)) finish=true;
@@ -110,6 +113,7 @@ public class LiftCommand extends Command
     {
       System.out.println("L3 SELECTED");
       if(!artCoralSubsystem.sensorCoral())ledControl.setGreenLed();
+      swerveDrive.robotLiftVelocity();
       liftSubsystem.runMotor(l3Setpoint, false);
       if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
       
@@ -118,6 +122,7 @@ public class LiftCommand extends Command
     {
       if(!artCoralSubsystem.sensorCoral())ledControl.setRedLed();
       System.out.println("L4 SELECTED");
+      swerveDrive.robotLiftVelocity();
       liftSubsystem.runMotor(l4Setpoint , false);
       if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
       
@@ -140,6 +145,7 @@ public class LiftCommand extends Command
     //liftSubsystem.stopMotor();
     // Print the end of the command
     ledControl.setBlackLed();
+    
     System.out.println("Lift Command Done!");
   }
 

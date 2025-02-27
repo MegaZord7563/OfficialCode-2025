@@ -200,13 +200,14 @@ public class EscaladorSubsystem extends SubsystemBase
     SmartDashboard.putNumber("EscalatorCurrent", escaladorMotor.getOutputCurrent());
     SmartDashboard.putNumber("EscalatorVoltage", escaladorMotor.getAppliedOutput());
     SmartDashboard.putNumber("EscalatorTemperature",escaladorMotor.getMotorTemperature());
+    SmartDashboard.putBoolean("EscalatorSensor", sensorClimber.get());
 
     /**
      * Range returned from the distance sensor is valid if isRangeValid()
      * returns true.
      */
     
-     boolean isValid = distOnboard.isRangeValid();
+     boolean isValid = this.isDistanceValid();
 
      SmartDashboard.putBoolean("Range Valid", isValid);
  

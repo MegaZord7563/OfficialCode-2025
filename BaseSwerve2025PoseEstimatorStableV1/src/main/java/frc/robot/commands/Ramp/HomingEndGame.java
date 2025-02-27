@@ -4,9 +4,12 @@
 
 package frc.robot.commands.Ramp;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Algae.ArticuladorAlgaeSubsystem;
 
 import frc.robot.subsystems.Coral.RampSubsystem;
@@ -21,6 +24,7 @@ public class HomingEndGame extends SequentialCommandGroup
   
   private static ArticuladorAlgaeSubsystem aAlgaeSubsystem = RobotContainer.articuladorAlgaeSubsystem;
   private static RampSubsystem rampSubsystem = RobotContainer.rampSubsystem;  
+  private static LedControl ledControl = RobotContainer.ledControl;  
 
   /** Creates a new InitialiazeRamp. */
   public HomingEndGame() 
@@ -41,7 +45,8 @@ public class HomingEndGame extends SequentialCommandGroup
       //Move the Algae to the 0 degrees position                         
       new RunCommand(()->aAlgaeSubsystem.runMotor(0))
                                       .onlyIf(()->rampSubsystem.isHomed().get())
-                                      .until(() -> aAlgaeSubsystem.isHomed().get())
+                                      .until(() -> aAlgaeSubsystem.isHomed().get()),
+      new InstantCommand(ledControl::setBlackLed)
       
 
     );

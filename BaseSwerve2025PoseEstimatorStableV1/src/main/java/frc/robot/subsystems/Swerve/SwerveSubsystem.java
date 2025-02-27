@@ -44,6 +44,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import frc.robot.Constants;
 import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.subsystems.LedControl;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 
@@ -119,7 +120,9 @@ public class SwerveSubsystem extends SubsystemBase
   private boolean throttleSlow=false;
   private boolean throttleFast=false;
   private boolean throttleMax=false;
+  private boolean throttleLift = false;
   private boolean isBlue = false;
+  private boolean blueAlliance =false;
 
   //PathPlanner Config
   RobotConfig config;
@@ -161,16 +164,18 @@ public class SwerveSubsystem extends SubsystemBase
     if (alliance2.get() == DriverStation.Alliance.Red) 
     {
       allianceHeading = 0;
-      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,-0.2595,0.405,0,0,0);
-      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,0.1705,0.100,0,0,180);
+      blueAlliance = false;
+      LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,0.2595,0.405,0,0,0);
+      LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,-0.1705,0.100,0,45,180);
       System.out.println("limelight settings Red");
        
     }else
     {
       //blue
       allianceHeading = 180;
-      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,-0.2595,0.405,0,0,180);
-      //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,0.1705,0.100,0,0,0);
+      blueAlliance = true;
+      LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,0.1355,0.2595,0.405,0,0,0);
+      LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.3255,-0.1705,0.100,0,45,180);
       System.out.println("limelight settings Blue");
 
     }
@@ -192,6 +197,7 @@ public class SwerveSubsystem extends SubsystemBase
     
     //camera pose set up - to initialize cameras according to its assembling on the robot
     //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,-0.13,0,0.685,0,0,0);
+    //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightBack,-0.13,0,0.685,0,0,0);
 
     /* delay 1 s and then reset gyro */
     /*
@@ -279,6 +285,8 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putBoolean("First Gear", throttleSlow);
     SmartDashboard.putBoolean("Second Gear", throttleFast);
     SmartDashboard.putBoolean("Third Gear", throttleMax);
+    SmartDashboard.putBoolean("ThrottleLift", throttleLift);
+    
     
     SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());
     SmartDashboard.putBoolean("Sensor Right value", getSensorRight());
@@ -484,10 +492,13 @@ public class SwerveSubsystem extends SubsystemBase
         m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
       }
     }
-
   }
 
-   
+  //
+   public boolean getBlueAlliance()
+   {
+      return blueAlliance;
+   }
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() 
@@ -594,6 +605,8 @@ public void stopModules ()
       System.out.println("Speed up velocity - 30%");
       
     }
+
+    
    
 
   }
@@ -625,6 +638,21 @@ public void stopModules ()
     throttleSlow=false;
     throttleFast=false;
     throttleMax=true;
+
+    for (int i = 0; i < 3; i++) 
+    {
+      System.out.println("Velocity 100% Max");
+      
+    }
+  }
+
+  public void robotLiftVelocity()
+  {
+    
+    throttleSlow=false;
+    throttleFast=false;
+    throttleMax=false;
+    throttleLift = true;
 
     for (int i = 0; i < 3; i++) 
     {
@@ -714,19 +742,22 @@ public void stopModules ()
     //Selects speed
     if (throttleSlow)
     {
-      throttle =0.3;
+      throttle =0.25;
 
     }
     else if (throttleFast)
     {
     
-      throttle =0.5;
+      throttle =0.65;
       
     }
     else if (throttleMax) 
     { 
-      throttle = 0.8;
+      throttle = 0.9;
       
+    }
+    else if (throttleLift){
+      throttle = 0.1;
     }
 
     // 2. Apply deadband
@@ -854,6 +885,8 @@ public void stopModules ()
     return sensorLeft.get();
   } 
 
+
+
   /**
    * False if target is on the right side of the robot
    * @return
@@ -863,49 +896,7 @@ public void stopModules ()
     return sensorRight.get();
   }
 
-/* 
-  public boolean getSensorLeftLate()
-  {
-    new Thread(() -> {
-      try {
-          Thread.sleep(500); //avoid to block the rest of our code from running
-          sensorLeftLate = getSensorLeft();
-      } catch (Exception e) {
-      }
-  }).start();
 
-  return sensorLeftLate;
-  }
-
-  public boolean getSensorRightLate()
-  {
-    new Thread(() -> {
-      try {
-          Thread.sleep(500); //avoid to block the rest of our code from running
-          sensorRightLate = getSensorRight();
-      } catch (Exception e) {
-      }
-  }).start();
-
-  return sensorRightLate;
-  }
-*/
-
-  public boolean getSensorRightLate()
-  {
-    Timer.delay(0.5);
-    sensorRightLate = getSensorRight();
-  return sensorRightLate;
-  }
-
-
-  public boolean getSensorLeftLate()
-  {
-    Timer.delay(0.5);
-    sensorLeftLate = getSensorLeft();
-  return sensorLeftLate;
-  }
-  
 
   /**
    * Get the gyro yaw
@@ -915,5 +906,6 @@ public void stopModules ()
   {
     return gyro.getRotation2d();
   }
+
 
 }

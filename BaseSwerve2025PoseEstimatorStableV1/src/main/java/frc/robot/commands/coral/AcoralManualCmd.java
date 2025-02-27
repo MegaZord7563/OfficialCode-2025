@@ -40,42 +40,47 @@ public class AcoralManualCmd extends Command {
       //Coral Articulator
       //Up
 
-      if(operatorHub.getSelectOne()){ 
+      if(operatorHub.getSelectOne())
+      { 
 
-      if(operatorHub.getBlackAxisUp(0.75))
-      {
-        aCoralSubsystem.setVelocity(0.1);
-        encoderPositionC = aCoralSubsystem.getPosition();
-        System.out.println("BlackAxisUp");
-        travaC =true;
-      }
-      //Down
-      else if(operatorHub.getBlackAxisDown(-0.75))
-      {
-        aCoralSubsystem.setVelocity(-0.1);
-        encoderPositionC = aCoralSubsystem.getPosition();
-        System.out.println("BlackAxisDown");
-        travaC =true;
-      }
-      //Center Position
-      else if(operatorHub.getBlackAxisUpDownHome()&&!aCoralSubsystem.isHomed().get()&&travaC)
-      {
-        aCoralSubsystem.runMotor(encoderPositionC);
-        System.out.println("BackAxisHome");
-        travaC=false;
-      }
+        if(operatorHub.getBlackAxisUp(0.75))
+        {
+          aCoralSubsystem.setVelocity(0.1);
+          encoderPositionC = aCoralSubsystem.getPosition();
+          System.out.println("BlackAxisUp");
+          travaC =true;
+        }
+        //Down
+        else if(operatorHub.getBlackAxisDown(-0.75))
+        {
+          aCoralSubsystem.setVelocity(-0.1);
+          encoderPositionC = aCoralSubsystem.getPosition();
+          System.out.println("BlackAxisDown");
+          travaC =true;
+        }
+        //Center Position
+        else if(operatorHub.getBlackAxisUpDownHome()&&!aCoralSubsystem.isHomed().get()&&travaC)
+        {
+          aCoralSubsystem.runMotor(encoderPositionC);
+          System.out.println("BackAxisHome");
+          travaC=false;
+        }
 
-      else if (aCoralSubsystem.isHomed().get())
-      {
-        finish = true;
-      }
+        else if (aCoralSubsystem.isHomed().get())
+        {
+          finish = true;
+        }
 
-    }
+      }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {  }
+  public void end(boolean interrupted) 
+  { 
+
+   
+  }
 
   // Returns true when the command should end.
   @Override

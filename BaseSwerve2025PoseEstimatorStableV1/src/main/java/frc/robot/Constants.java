@@ -140,9 +140,9 @@ import edu.wpi.first.math.util.Units;
         /**************************************
          * Specify the kinematics of our robot*
          * ************************************/
-      public static final double kTrackWidth = Units.inchesToMeters(23);
+      public static final double kTrackWidth =Units.inchesToMeters(21);
       // Distance between right and left wheels
-      public static final double kWheelBase = Units.inchesToMeters(19.5);
+      public static final double kWheelBase = Units.inchesToMeters(21);
       // Distance between front and back wheels
       public static final double kDriveRadius = Math.hypot(kTrackWidth/2, kWheelBase/2);
       // Distance from robot center to furthest module.
@@ -270,15 +270,16 @@ import edu.wpi.first.math.util.Units;
   //Path Planner Constants
   public static final class PathPlannerConstants
   {
-    public static final double kPTranslationPath = 5;//Anterior 0.125,
-      public static final double kPRotationPath = .40;
+    public static final double kPTranslationPath = 10;//Anterior 0.125,
+    public static final double kITranslationPath = 0.08;
+      public static final double kPRotationPath = 3.0; //3.0; 1.6
 
       public static final PPHolonomicDriveController AutoConfig = new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-        new PIDConstants(kPTranslationPath, 0.0, 0.0), // Translation PID constants
+        new PIDConstants(kPTranslationPath, kITranslationPath, 0), // Translation PID constants
         new PIDConstants(kPRotationPath, 0.0, 0.0) // Rotation PID constants
       );
 
-      public static final double maxAccelerationPath = 4.0;
+      public static final double maxAccelerationPath = 1.75;//1.0//5.0 //3.0
       public static final double maxAngularVelocityRadPerSec = Units.degreesToRadians(540);
       public static final double maxAngularAccelerationRadPerSecSq = Units.degreesToRadians(720);
   }
@@ -303,12 +304,12 @@ import edu.wpi.first.math.util.Units;
       public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
 
       
-      public static final double KS = 0.25;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
-      public static final double KV = 0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
-      public static final double KA = 0.01;  //0.27;
+      public static final double KS = 0.0;//0.25;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
+      public static final double KV = 0.0;//0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
+      public static final double KA = 0.0;//0.01;  //0.27;
 
       //TO DO: This must be tuned to specific robot
-      public static final double kP = 30.0;//<--MNL11/11/2024 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
+      public static final double kP = 50.0;//50//35// 0.0665;//ANTERIOR 0,0665 ; 0.05872615 // kP = 0.11 An error of 1 rps results in 0.11 V output
       public static final double kI =0.0;
       public static final double kD=0.0;
       
@@ -317,9 +318,9 @@ import edu.wpi.first.math.util.Units;
       public static final double kMaxOutput = 1;
 
       //Motion Magic PID - TO DO
-      public static final double KS1 = 0.25;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
-      public static final double KV1 = 0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
-      public static final double KA1 = 0.01;  //0.27;
+      public static final double KS1 =0.0;//0.25;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
+      public static final double KV1 = 0.0;//0.12; //1.51; // A velocity target of 1 rps results in 0.12 V output
+      public static final double KA1 = 0.0;//0.01;  //0.27;
       public static final double kP1 = 2.4;
       public static final double kI1 =0.0;
       public static final double kD1=0.0;
@@ -528,10 +529,10 @@ import edu.wpi.first.math.util.Units;
       public static final double kslot0MaxOutput = 1;
 
        //ArticuladorCoral PID Up
-       public static final double kSslot1 = 0.25; // Add 0.25 V output to overcome static friction
-       public static final double kVslot1 = 0.12; // A velocity target of 1 rps results in 0.12 V output
-       public static final double kAslot1 = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-       public static final double kPslot1 = 0.15;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+       public static final double kSslot1 = 0.0;//0.25; // Add 0.25 V output to overcome static friction
+       public static final double kVslot1 = 0.0;//0.12; // A velocity target of 1 rps results in 0.12 V output
+       public static final double kAslot1 = 0.0;//0.01; // An acceleration of 1 rps/s requires 0.01 V output
+       public static final double kPslot1 = 0.1;//0.15//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
        public static final double kIslot1 = 0;
        public static final double kDslot1 = 0;
        public static final double kFFslot1 = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
@@ -550,7 +551,7 @@ import edu.wpi.first.math.util.Units;
 
 
     public static final double kSoftLimitMin = 0;
-    public static final double kSoftLimitMax = 71;
+    public static final double kSoftLimitMax = 75;
       
     } 
 
@@ -580,7 +581,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kRampVelocityConversionFactor = kRampPositionConversionFactor/60.0; //rotation to m/s
 
       //Ramp PID Up
-      public static final double kPslot0 = 0.040;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kPslot0 = 0.15;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kIslot0  = 0;
       public static final double kDslot0  = 0;
       public static final double kFFslot0  = 0; // = input = 0 to position control and 1.0/473.0 to velocity control
@@ -640,7 +641,7 @@ import edu.wpi.first.math.util.Units;
 
     public static final double escaladorVelocity= 0.8;
 
-    public static final double escaladorClimbPosition= 1.18;
+    public static final double escaladorClimbPosition= 1.20;
       
 
     /* 

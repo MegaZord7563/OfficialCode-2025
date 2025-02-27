@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
+import frc.robot.subsystems.Coral.CoralSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CoralStationCmd extends Command 
@@ -17,6 +18,7 @@ public class CoralStationCmd extends Command
   /** Creates a new ArtiAlgaeCmd. */
 
   private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
+  private final CoralSubsystem coralSubsystem = RobotContainer.coralSubsystem;
 
   // Declare the double variables
   private double encoderPosition = 0;
@@ -63,7 +65,10 @@ public class CoralStationCmd extends Command
   public void end(boolean interrupted) 
   {
     System.out.println("Articulador Coral Command Done");
-    aCoralSubsystem.runMotor(0.0);
+    //segura game piece
+    coralSubsystem.runMotor(coralSubsystem.getPosition());
+    //close articulador quando peça chega
+    aCoralSubsystem.runMotor(0);
   }
 
   // Returns true when the command should end.

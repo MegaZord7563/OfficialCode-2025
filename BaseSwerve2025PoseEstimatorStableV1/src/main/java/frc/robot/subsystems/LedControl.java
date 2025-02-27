@@ -67,7 +67,7 @@ public class LedControl extends SubsystemBase
   
   
   }
-
+ 
   public void setOrangeLed()
   {
 
@@ -75,7 +75,7 @@ public class LedControl extends SubsystemBase
     {
       // Sets the specified LED to the RGB values for red
       // green e blue invertidos
-      m_ledBuffer.setRGB(i, 255, 0, 140);
+      m_ledBuffer.setRGB(i, 255, 0, 165);
 
     }
     m_led.setData(m_ledBuffer);
@@ -109,7 +109,7 @@ public class LedControl extends SubsystemBase
   {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
-      m_ledBuffer.setRGB(i, 255, 147, 0);
+      m_ledBuffer.setRGB(i, 255, 203, 192);
     }
    m_led.setData(m_ledBuffer);
   } 
@@ -131,7 +131,7 @@ public class LedControl extends SubsystemBase
     for (var i = 0; i < m_ledBuffer.getLength(); i++) 
     {
       // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setRGB(i, 148, 211, 0);
+      m_ledBuffer.setRGB(i, 128, 128, 0);
     }
    m_led.setData(m_ledBuffer);
   

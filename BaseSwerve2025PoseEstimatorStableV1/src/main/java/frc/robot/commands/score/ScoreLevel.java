@@ -4,6 +4,7 @@
 
 package frc.robot.commands.score;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 //WPI Imports
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -43,6 +44,7 @@ public class ScoreLevel extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands
     (
+        new InstantCommand(() -> coralSubsystem.runMotor(coralSubsystem.getPosition())),
         liftCmd,
         //new WaitCommand(3.0),
         articulador1Cmd
