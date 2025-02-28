@@ -40,7 +40,6 @@ import frc.robot.commands.AutonomousCmd.LiftAutoCmd;
 import frc.robot.commands.AutonomousCmd.ShootCoralAutoCmd;
 import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
-import frc.robot.commands.ScoreAuto.ScoreAutoCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.coral.AcoralManualCmd;
 

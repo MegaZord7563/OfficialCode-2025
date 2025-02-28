@@ -172,7 +172,8 @@ public class EscaladorSubsystem extends SubsystemBase
 
     /* And initialize encoder position to 0 */
     escaladorMotor.getConfigurator().setPosition(0);
-
+    
+    escaladorMotor.getConfigurator().apply(globalConfig);
 
   }
 

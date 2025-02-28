@@ -151,7 +151,7 @@ public class CoralSubsystem extends SubsystemBase
 
     /* And initialize encoder position to 0 */
     resetEncoder();
-    
+    coralMotor.getConfigurator().apply(globalConfig);
   }
 
   /*// 
