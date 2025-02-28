@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.controls.NeutralOut;
 //CTRE Imports
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -377,7 +378,8 @@ import edu.wpi.first.math.util.Units;
       public static final double kWheelDiameter = 0.0313;//
       
 
-      public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // TalonFx
+      public static final NeutralModeValue kNeutralMode = NeutralModeValue.Brake; // 
+     
 
       
       public static final double KS = 0.1;//<-MNL 11/11/2024 0.1; //0.32;  // Add 0.1 V output to overcome static friction
@@ -641,7 +643,7 @@ import edu.wpi.first.math.util.Units;
 
     //public static final double escaladorVelocity= 0.8;
 
-    public static final double escaladorClimbPosition= 1.13;
+    public static final double escaladorClimbPosition= 1.18;
 
     public static final double escaladorBackPosition= 0;
       

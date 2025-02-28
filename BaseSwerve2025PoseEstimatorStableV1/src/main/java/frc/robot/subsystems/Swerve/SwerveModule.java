@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Local imports
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
 import frc.robot.Utils.Conversions;
 
 
@@ -311,10 +312,12 @@ public class SwerveModule extends SubsystemBase
     currentLimitConfigs.StatorCurrentLimit = ModuleConstants.driveCurrentThreshold;
     currentLimitConfigs.StatorCurrentLimitEnable = ModuleConstants.driveEnableCurrentLimit; 
     
+    
     /*MNL 10/28/2024 precisa testar as 3 configs */
     /* Gear Ratio Config */
     toConfigure.Feedback.SensorToMechanismRatio=1/ModuleConstants.kDriveMotorGearRatio;
-    toConfigure.ClosedLoopGeneral.ContinuousWrap = true;
+    toConfigure.ClosedLoopGeneral.ContinuousWrap = false;
+    toConfigure.MotorOutput.NeutralMode = ModuleConstants.driveNeutralMode;
     /* Closed Loop Ramping */
     toConfigure.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ModuleConstants.kDriveClosedLoopRamp;
     //MNL 01/28/2025

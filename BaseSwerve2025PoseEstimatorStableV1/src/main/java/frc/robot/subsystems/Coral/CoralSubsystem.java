@@ -28,6 +28,7 @@ import frc.robot.Constants.SubsystemsConstants.CoralIntakeConstants;
 
 
 
+
 /** Add your docs here. */
 public class CoralSubsystem extends SubsystemBase 
 {
@@ -101,7 +102,7 @@ public class CoralSubsystem extends SubsystemBase
     //Factory Default
     coralMotor.getConfigurator().apply(new TalonFXConfiguration());      
     
-    coralMotor.setNeutralMode(CoralIntakeConstants.kNeutralMode);
+    
    
     
     /* Configure a stator limit of 20 amps */
@@ -119,6 +120,7 @@ public class CoralSubsystem extends SubsystemBase
     
     /* User can optionally change the configs or leave it alone to perform a factory default */
     globalConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    globalConfig.MotorOutput.NeutralMode = CoralIntakeConstants.kNeutralMode;
     
                
     // Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
@@ -128,7 +130,7 @@ public class CoralSubsystem extends SubsystemBase
     globalConfig.Slot0.kI = CoralIntakeConstants.kI; //0; // no output for integrated error
     globalConfig.Slot0.kD = CoralIntakeConstants.kD; //0; // no output for error derivative
     // Peak output of 10 volts
-    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(2.5))
+    globalConfig.Voltage.withPeakForwardVoltage(Volts.of(2.5  ))
                         .withPeakReverseVoltage(Volts.of(-2.5));
 
     
@@ -150,8 +152,10 @@ public class CoralSubsystem extends SubsystemBase
     //escaladorLeaderMotor.setSafetyEnabled(true);
 
     /* And initialize encoder position to 0 */
-    resetEncoder();
+   
     coralMotor.getConfigurator().apply(globalConfig);
+    resetEncoder();
+    //coralMotor.setNeutralMode(CoralIntakeConstants.kNeutralMode);
   }
 
   /*// 

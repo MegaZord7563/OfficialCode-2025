@@ -304,6 +304,7 @@ public class RobotContainer
     // Build an auto chooser. This will use Commands.none() as the default option.
     chooserAuto = AutoBuilder.buildAutoChooser();
     
+    
     //Instantiate PathPlannerAuto
     PathPlannerAuto autoPath = new PathPlannerAuto("FirstPathAutoNovo");
     PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
@@ -417,6 +418,7 @@ public class RobotContainer
     driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
 
     driverJoystick.b().whileTrue(pathCoralStationCmd);
+    
     driverJoystick.b().whileFalse(new InstantCommand (()->pathCoralStationCmd.endCommand()));
 
     driverJoystick.povDown().whileTrue(leaveCmd);
@@ -457,6 +459,8 @@ public class RobotContainer
     Trigger afterClimb = new Trigger(()-> escaladorSubsystem.getPosition() >= EscaladorConstants.escaladorClimbPosition);
     afterClimb.onTrue(new InstantCommand(()-> escaladorSubsystem.stopMotors()));
  */
+
+ 
     JoystickButton climbReverse = new JoystickButton (mesinhaJoy2, operatorHub.kEleven);
     climbReverse.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorBackPosition))
             .onlyIf(()->escaladorSubsystem.getPosition() <= 0.95));

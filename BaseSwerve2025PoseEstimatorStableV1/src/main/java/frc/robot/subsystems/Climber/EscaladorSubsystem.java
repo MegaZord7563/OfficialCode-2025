@@ -31,6 +31,7 @@ import com.revrobotics.Rev2mDistanceSensor.Unit;
 
 //Robot imports
 import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
+import static edu.wpi.first.units.Units.*;
 
 
 public class EscaladorSubsystem extends SubsystemBase 
@@ -52,7 +53,7 @@ public class EscaladorSubsystem extends SubsystemBase
   private final NeutralOut m_brake = new NeutralOut();
   
   //Global config
-  private TalonFXConfiguration globalConfig = new TalonFXConfiguration();
+
 
 
   /* Keep a brake request so we can disable the motor */
@@ -124,11 +125,12 @@ public class EscaladorSubsystem extends SubsystemBase
    */
   public void initializeMotors()
   {
+    TalonFXConfiguration globalConfig = new TalonFXConfiguration();
     escaladorMotor.clearStickyFaults();
     //Factory Default
     escaladorMotor.getConfigurator().apply(new TalonFXConfiguration());      
     
-    escaladorMotor.setNeutralMode(EscaladorConstants.kNeutralMode);
+    //escaladorMotor.setNeutralMode(EscaladorConstants.kNeutralMode);
 
 
    
@@ -141,6 +143,7 @@ public class EscaladorSubsystem extends SubsystemBase
     
     /* Gear Ratio Config */
     globalConfig.Feedback.SensorToMechanismRatio= 1/EscaladorConstants.kPositionConversionFactor;
+    globalConfig.MotorOutput.NeutralMode = EscaladorConstants.kNeutralMode;
     //globalConfig.ClosedLoopGeneral.ContinuousWrap = false;
     /* Closed Loop Ramping */
     globalConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = EscaladorConstants.kClosedLoopRamp;
@@ -173,7 +176,7 @@ public class EscaladorSubsystem extends SubsystemBase
     /* And initialize encoder position to 0 */
     escaladorMotor.getConfigurator().setPosition(0);
     
-    escaladorMotor.getConfigurator().apply(globalConfig);
+    
 
   }
 

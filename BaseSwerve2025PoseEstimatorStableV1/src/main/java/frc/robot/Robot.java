@@ -5,6 +5,9 @@
 package frc.robot;
 
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathfindingCommand;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -13,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.commands.pathPlanner.PathFindingCommand;
 
 
 
@@ -52,8 +56,10 @@ public class Robot extends TimedRobot
 
     m_robotContainer = new RobotContainer();
 
-    // instantiate the command used for the autonomous period
-    
+    //This command will not control your robot, it will simply run through 
+    //a full path following command to warm up the library.
+    FollowPathCommand.warmupCommand().schedule();
+    PathfindingCommand.warmupCommand().schedule();
     //Reset all encoders
     RobotContainer.liftSubsystem.resetEncoder();
     RobotContainer.articuladorCoralSubsystem.resetEncoder();

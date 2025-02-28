@@ -22,6 +22,7 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.function.Supplier;
 
+import frc.robot.Constants.SubsystemsConstants.EscaladorConstants;
 //Robot Imports
 import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 
@@ -107,11 +108,12 @@ public class LiftSubsystem extends SubsystemBase
     //Factory Default
     liftMotor.getConfigurator().apply(new TalonFXConfiguration());      
     
-    liftMotor.setNeutralMode(LiftConstants.kNeutralMode);
+    
    
     TalonFXConfiguration globalConfig = new TalonFXConfiguration();
     /* Configure a stator limit of 20 amps */
    
+    
     CurrentLimitsConfigs currentLimitConfigs = globalConfig.CurrentLimits;
     currentLimitConfigs.StatorCurrentLimit = LiftConstants.kCurrentThreshold;
     currentLimitConfigs.StatorCurrentLimitEnable = LiftConstants.kEnableCurrentLimit; 
@@ -137,6 +139,7 @@ public class LiftSubsystem extends SubsystemBase
     
     /* User can optionally change the configs or leave it alone to perform a factory default */
     globalConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+     globalConfig.MotorOutput.NeutralMode = LiftConstants.kNeutralMode;
     
     // Voltage-based VELOCITY requires a velocity feed forward to account for the back-emf of the motor 
     globalConfig.Slot0.kS = LiftConstants.KS; //0.1; // Add 0.1 V output to overcome static friction
@@ -177,6 +180,8 @@ public class LiftSubsystem extends SubsystemBase
     {
       System.out.println("Could not apply escalador configs, error code: " + status.toString());
     }
+
+    liftMotor.setNeutralMode(LiftConstants.kNeutralMode);
      
 
     //Enable safety
@@ -184,7 +189,6 @@ public class LiftSubsystem extends SubsystemBase
 
     /* And initialize encoder position to 0 */
 
-    liftMotor.getConfigurator().apply(globalConfig);
   }
 
   

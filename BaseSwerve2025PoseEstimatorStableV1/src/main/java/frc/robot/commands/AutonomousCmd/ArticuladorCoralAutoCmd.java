@@ -30,7 +30,7 @@ public class ArticuladorCoralAutoCmd extends Command
     private double l1Setpoint = 55.0;
     private double l2Setpoint = 67.0;
     private double l3Setpoint = 67.0;
-    private double l4Setpoint = 62.0;
+    private double l4Setpoint = 58.0;
 
 
     // Create the subsystem
