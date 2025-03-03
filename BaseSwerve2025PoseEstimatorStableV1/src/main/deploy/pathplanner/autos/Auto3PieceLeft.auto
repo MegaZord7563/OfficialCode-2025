@@ -5,9 +5,15 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "liftL3"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "GoToI"
+            "pathName": "GoToJ"
           }
         },
         {

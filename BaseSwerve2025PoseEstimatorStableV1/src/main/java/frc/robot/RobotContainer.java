@@ -168,8 +168,8 @@ public class RobotContainer
   public static SensorAlignRightCmd sensorAlignRight = new SensorAlignRightCmd(swerveDrive);
   
   //PathFindingCommand
-  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(3);
-  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(3);
+  public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(2);//3
+  public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(2);//3
   public static PathClimb pathClimb = new PathClimb(swerveDrive, 1, "ClimPath");
 
   //public static PathCoralStationCmd pathCoralStationAuto = new PathCoralStationCmd(1.5);
@@ -203,7 +203,7 @@ public class RobotContainer
 
   
   // Creates UsbCamera 
-  UsbCamera usbCamera;
+  //UsbCamera usbCamera;
   
   
   /**
@@ -218,18 +218,18 @@ public class RobotContainer
   {
    //Configure camera 
   
-    usbCamera = CameraServer.startAutomaticCapture();
+    //usbCamera = CameraServer.startAutomaticCapture();
     // Set the resolution
-    usbCamera.setResolution(640, 480);
+    //usbCamera.setResolution(640, 480);
     // Set the frames per second  
-    usbCamera.setFPS(30);
+    //usbCamera.setFPS(30);
     // Set the pixel format
     //usbCamera.setPixelFormat(PixelFormat.kMJPEG);
     
     //usbCamera.setExposureAuto();
-    usbCamera.setBrightness(10);
-    usbCamera.setExposureManual(50);
-    usbCamera.setWhiteBalanceAuto();
+    //usbCamera.setBrightness(10);
+    //usbCamera.setExposureManual(50);
+    //usbCamera.setWhiteBalanceAuto();
     
     
     //liftCmd = new LiftCommand();
@@ -483,7 +483,7 @@ public class RobotContainer
     prepareClimb.onFalse(new InstantCommand(ledControl::setRedLed));
     prepareClimb.onFalse(new InstantCommand(() -> driverJoystick.setRumble(RumbleType.kBothRumble, 0)));
 
-    
+
     Trigger climb5Sec = new Trigger(() -> Timer.getMatchTime() <= 5);
     climb5Sec.onTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))//EscaladorConstants.escaladorClimbPosition))
     .onlyIf(()->rampSubsystem.isHomedBoolean() && escaladorSubsystem.isDistanceValid() && 

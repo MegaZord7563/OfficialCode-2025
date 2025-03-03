@@ -442,8 +442,10 @@ public class SwerveSubsystem extends SubsystemBase
       SmartDashboard.putBoolean("UpdatePose", update);
       SmartDashboard.putNumber("Pose mt1/X", mt1.pose.getX());
       SmartDashboard.putNumber("Pose mt1/Y", mt1.pose.getY());
+
       
       
+
       
     }
     else if (useMegaTag2 == true)
@@ -473,6 +475,7 @@ public class SwerveSubsystem extends SubsystemBase
       }
       if(!doRejectUpdate)
       {
+        /** 
           //The best measurement is selected based on the tag count from each camera.
           if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0) 
           {
@@ -487,10 +490,34 @@ public class SwerveSubsystem extends SubsystemBase
           {
               bestMeasurement = rearLimelight;
           }
+              */
+
+             
+     //The best measurement is selected based on the tag count from each camera.
+     if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0) 
+     {
+       // Both cameras have valid measurements, choose the one with the higher tag count
+       bestMeasurement = (frontLimelight.avgTagArea >= rearLimelight.avgTagArea) ? frontLimelight : rearLimelight;
+     
+     } else if (frontLimelight.tagCount > 0) 
+     {
+         bestMeasurement = frontLimelight;
+     } else if (rearLimelight.tagCount > 0) 
+     {
+         bestMeasurement = rearLimelight;
+     }
+              
         //The selected measurement is then used to update the robot's pose estimation, provided the angular velocity condition is met.
         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
       }
+
+      //SmartDashboard.putNumber("TagCountFront", frontLimelight.tagCount);
+      //SmartDashboard.putNumber("TagCountBack", rearLimelight.tagCount);
+
+      
+      //SmartDashboard.putNumber("avgTagFront", frontLimelight.avgTagArea);
+      //SmartDashboard.putNumber("avgTagBack", rearLimelight.avgTagArea);
     }
   }
 

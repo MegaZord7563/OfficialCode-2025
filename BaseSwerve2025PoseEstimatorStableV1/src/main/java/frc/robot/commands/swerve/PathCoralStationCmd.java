@@ -148,7 +148,7 @@ public Pose2d targetPositionBlueLeft()
 {
     //Blue Coral Station 1
     System.out.println("Coral Station 1 selected !!");
-    return targetPosition = new Pose2d(1.12, 7.0, Rotation2d.fromDegrees(-60));
+    return targetPosition = new Pose2d(1.12, 7.0, Rotation2d.fromDegrees(-50));
 
 }
 

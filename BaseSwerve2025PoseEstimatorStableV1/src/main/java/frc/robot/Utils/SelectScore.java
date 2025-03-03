@@ -86,7 +86,7 @@ public class SelectScore
                 poseToScore = new Pose2d(5.90,4.19,Rotation2d.fromDegrees(180));
             }
             else if (touch.getButtonValue(VirtualButton.kI)){
-                poseToScore = new Pose2d(5.3,5.19,Rotation2d.fromDegrees(120));
+                poseToScore = new Pose2d(5.31,5.17,Rotation2d.fromDegrees(-115));
             }
             else if (touch.getButtonValue(VirtualButton.kJ)){
                 poseToScore = new Pose2d(5.02,5.35,Rotation2d.fromDegrees(-120));
