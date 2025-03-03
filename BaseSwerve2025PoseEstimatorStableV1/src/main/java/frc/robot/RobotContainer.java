@@ -15,6 +15,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 //WPILIB Imports
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,6 +54,7 @@ import frc.robot.commands.score.HomingPosition;
 import frc.robot.commands.score.ScoreLevel;
 import frc.robot.commands.swerve.AimAndRangeCmd;
 import frc.robot.commands.swerve.LeaveCmd;
+import frc.robot.commands.swerve.PathClimb;
 import frc.robot.commands.swerve.PathCoralStationCmd;
 import frc.robot.commands.swerve.PathProcessorCmd;
 import frc.robot.commands.swerve.PathScoreReefCmd;
@@ -167,6 +170,7 @@ public class RobotContainer
   //PathFindingCommand
   public static PathCoralStationCmd pathCoralStationCmd = new PathCoralStationCmd(3);
   public static PathScoreReefCmd pathScoreReefCmd = new PathScoreReefCmd(3);
+  public static PathClimb pathClimb = new PathClimb(swerveDrive, 1, "ClimPath");
 
   //public static PathCoralStationCmd pathCoralStationAuto = new PathCoralStationCmd(1.5);
   //public static PathScoreReefCmd pathScoreReefAuto = new PathScoreReefCmd(1.5);
@@ -312,15 +316,23 @@ public class RobotContainer
     PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
 
     PathPlannerAuto auto1Piece = new PathPlannerAuto("Auto1Piece"); 
+
+    PathPlannerAuto autoCenter = new PathPlannerAuto("AutoCenter"); 
     
-    PathPlannerAuto auto2Piece = new PathPlannerAuto("Auto2Piece"); 
+    PathPlannerAuto auto2PieceRight = new PathPlannerAuto("Auto2PieceRight"); 
+
+    PathPlannerAuto auto2PieceLeft = new PathPlannerAuto("Auto2PieceLeft"); 
    
     //Add options to the chooser
     chooserAuto.addOption("NovoAuto", autoPath);
 
     chooserAuto.addOption("Auto1Piece", auto1Piece);
 
-    chooserAuto.addOption("Auto2Piece", auto2Piece);
+    chooserAuto.addOption("Auto2PieceRight", auto2PieceRight);
+
+    chooserAuto.addOption("Auto2PieceLeft", auto2PieceLeft);
+
+    chooserAuto.addOption("autoCenter", autoCenter);
 
     chooserAuto.addOption("AutoTest", autoTest);
 
@@ -467,7 +479,15 @@ public class RobotContainer
 
     Trigger prepareClimb = new Trigger(()->(escaladorSubsystem.isDistanceValid() && !escaladorSubsystem.getSensorClimber()));
     prepareClimb.onTrue(new InstantCommand(ledControl::setGreenLed));
+    prepareClimb.onTrue(new InstantCommand(() -> driverJoystick.setRumble(RumbleType.kBothRumble, 0.75)));
     prepareClimb.onFalse(new InstantCommand(ledControl::setRedLed));
+    prepareClimb.onFalse(new InstantCommand(() -> driverJoystick.setRumble(RumbleType.kBothRumble, 0)));
+
+    
+    Trigger climb5Sec = new Trigger(() -> Timer.getMatchTime() <= 5);
+    climb5Sec.onTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))//EscaladorConstants.escaladorClimbPosition))
+    .onlyIf(()->rampSubsystem.isHomedBoolean() && escaladorSubsystem.isDistanceValid() && 
+    !escaladorSubsystem.getSensorClimber()));
 
      //Initialize Ramp
     //OperatorHub 2 Button 1

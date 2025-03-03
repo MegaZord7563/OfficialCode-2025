@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 // WPI imports
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.Utils.OperatorHub;
 // Robot imports
 import frc.robot.RobotContainer;
 
@@ -29,6 +30,8 @@ public class PathCoralStationCmd extends Command
   
   
     public Command pathCoralStationCmd = RobotContainer.pathCoralStationCmd;
+
+    public OperatorHub operatorHub = RobotContainer.operatorHub;
   
     // Variables
     //private final double kX, kY, kRot; // Replace with the correct class ID for the game piece
@@ -79,9 +82,14 @@ public class PathCoralStationCmd extends Command
         endCommand();
     }
     // Select the target position whether it is Coral Station 1 or Coral Station 2
-    targetPosition = swerveDrive.getBlueAlliance() ? targetPosition1() : targetPosition2();
+    if (swerveDrive.getBlueAlliance()) {
+        targetPosition = operatorHub.getSelectTwo() ? targetPositionBlueRight() : targetPositionBlueLeft();
+    } else {
+        targetPosition = operatorHub.getSelectTwo() ? targetPositionRedRight() : targetPositionRedLeft();
+    }
         
-  
+    
+
 
     //kBButton =RobotContainer.driverJoystick.getHID().getBButton();
 
@@ -120,19 +128,36 @@ public class PathCoralStationCmd extends Command
 
   }
 //Helper method  select the target position
-public Pose2d targetPosition1()
+public Pose2d targetPositionBlueRight()
 {
     //Blue Coral Station 1
     System.out.println("Coral Station 1 selected !!");
     return targetPosition = new Pose2d(1.18, 1.0, Rotation2d.fromDegrees(55));
+
 }
 
-public Pose2d targetPosition2()
+public Pose2d targetPositionRedRight()
 {
     //Blue Coral Station 2
     System.out.println("Coral Station 2 selected !!");
     //return targetPosition = new Pose2d(16.1, 7, Rotation2d.fromDegrees(-126));
     return targetPosition = new Pose2d(16.48, 6.83, Rotation2d.fromDegrees(-124));
+}
+
+public Pose2d targetPositionBlueLeft()
+{
+    //Blue Coral Station 1
+    System.out.println("Coral Station 1 selected !!");
+    return targetPosition = new Pose2d(1.12, 7.0, Rotation2d.fromDegrees(-60));
+
+}
+
+public Pose2d targetPositionRedLeft()
+{
+    //Blue Coral Station 2
+    System.out.println("Coral Station 2 selected !!");
+    //return targetPosition = new Pose2d(16.1, 7, Rotation2d.fromDegrees(-126));
+    return targetPosition = new Pose2d(16.40, 1.05, Rotation2d.fromDegrees(120));
 }
 
 // End path command

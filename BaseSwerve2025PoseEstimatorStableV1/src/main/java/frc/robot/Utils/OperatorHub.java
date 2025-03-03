@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants.MesinhaJoy1Constants;
 import frc.robot.Constants.OIConstants.MesinhaJoy2Constants;
 
+
 public class OperatorHub {
     private final Joystick mesinha1;
     private final Joystick mesinha2;
@@ -13,14 +14,14 @@ public class OperatorHub {
  **************************************************************/
     //Botões mesinha1
 
-    public int kOne = MesinhaJoy1Constants.kOne;
-    public int kTwo = MesinhaJoy1Constants.kTwo;
-    public int kThree = MesinhaJoy1Constants.kThree;
-    public int kFour = MesinhaJoy1Constants.kFour;
-    public int kEight = MesinhaJoy1Constants.kEight;
+    public int kOne = MesinhaJoy1Constants.kNine;
+    public int kTwo = MesinhaJoy1Constants.kTen;
+    public int kThree = MesinhaJoy1Constants.kTwelve;
+    public int kFour = MesinhaJoy1Constants.kEleven;
+    public int kEight = MesinhaJoy1Constants.kOne;
 
-    public int kSelectOne = MesinhaJoy1Constants.kFive;
-    public int kSelectTwo = MesinhaJoy1Constants.kSix;
+    public int kSelectOne = MesinhaJoy1Constants.kSix;
+    public int kSelectTwo = MesinhaJoy1Constants.kEight;
     public int kSelectThree = MesinhaJoy1Constants.kSeven;
 
     public int kBlackAxisUp = MesinhaJoy1Constants.kBlackAxisUp;
@@ -33,13 +34,13 @@ public class OperatorHub {
 
     //Positions
 
-    public int kFive = MesinhaJoy2Constants.kOne;
+    public int kFive = MesinhaJoy2Constants.kThree;
     public int kSix = MesinhaJoy2Constants.kTwo;
-    public int kSeven = MesinhaJoy2Constants.kThree;
-    public int kNine = MesinhaJoy2Constants.kFour;
+    public int kSeven = MesinhaJoy2Constants.kOne;
+    public int kNine = MesinhaJoy2Constants.kSix;
 
-    public int kTen = MesinhaJoy2Constants.kseven;
-    public int kEleven = MesinhaJoy2Constants.keight;
+    public int kTen = MesinhaJoy2Constants.kSeven;
+    public int kEleven = MesinhaJoy2Constants.kEight;
 
 
     public int kRedAxisUp = MesinhaJoy2Constants.kRedAxisUp;

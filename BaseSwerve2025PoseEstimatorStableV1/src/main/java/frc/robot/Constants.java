@@ -734,34 +734,38 @@ import edu.wpi.first.math.util.Units;
         public static final int kRightStick = 12;
       }*/
 
+
+
       public static final class MesinhaJoy1Constants {
         //First part of operator Hub
         public static final int kJoy1Port = 1;
         public static final double kOperatorDeathBand = 0.05;
-        public static final int kOne = 9;      //ok
-        public static final int kTwo = 10;        //ok
-        public static final int kThree = 12;         //ok
-        public static final int kFour = 11;       //ok   
-        public static final int kFive = 6;       //ok  
-        public static final int kSix = 8;         //ok
+        public static final int kNine = 9;      //ok
+        public static final int kTen = 10;        //ok
+        public static final int kTwelve = 12;         //ok
+        public static final int kEleven = 11;       //ok   
+        public static final int kSix = 6;       //ok  
+        public static final int kEight = 8;         //ok
         public static final int kSeven = 7;      //ok 
-        public static final int kEight = 1; 
+        public static final int kOne = 1; 
 
         public static final int kBlackAxisUp = 0;     //ok
         public static final int kBlackAxisSides = 1;  //ok 
       }
 
+
+
       public static final class MesinhaJoy2Constants {
         //Second part of operator Hub
         public static final int kJoy2Port = 2;
         public static final double kOperatorDeathBand = 0.05;
-        public static final int kOne = 3;      //ok
+        public static final int kThree = 3;      //ok
         public static final int kTwo = 2;      //ok
-        public static final int kThree = 1; 
-        public static final int kFour = 6;      //ok 
+        public static final int kOne = 1; 
+        public static final int kSix = 6;      //ok 
         
-        public static final int kseven = 7;      //ok 
-        public static final int keight = 8;    
+        public static final int kSeven = 7;      //ok 
+        public static final int kEight = 8;    
         
         public static final int kRedAxisUp = 0;     //ok
         public static final int kRedAxisSides = 1;  //ok
