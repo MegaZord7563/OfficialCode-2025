@@ -103,7 +103,7 @@ public class LiftAutoCmd extends Command
       if (l3Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l3Setpoint * (1+tolerance)) finish=true;
       
     }
-    if (l4)
+    if (l4 && artCoralSubsystem.sensorCoral())
     {
       if(!artCoralSubsystem.sensorCoral())ledControl.setRedLed();
       System.out.println("L4 SELECTED");

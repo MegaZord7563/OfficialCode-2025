@@ -13,49 +13,93 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GoToJ"
+            "pathName": "GoToJ3Pieces"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootCoral"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CoralStationLeft3Pieces"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "homingPosition"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CoralStationLeft"
+            "pathName": "GoToL3Pieces"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootCoral"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SecondCoralStationLeft3Pc"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "coralStationNoSensor"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "GoToL"
+            "pathName": "GoToK3Pieces"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.1
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SecondCoralStationLeft"
+            "name": "shootCoral"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "GoToK"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "name": "homingPosition"
           }
         }
       ]

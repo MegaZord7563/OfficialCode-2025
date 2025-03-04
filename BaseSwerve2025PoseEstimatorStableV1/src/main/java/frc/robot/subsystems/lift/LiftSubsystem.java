@@ -46,6 +46,8 @@ public class LiftSubsystem extends SubsystemBase
 
   /* Keep a brake request so we can disable the motor */
   private final NeutralOut m_brake = new NeutralOut();
+
+
   
   
   //private final SparkMax liftFollowerMotor;
@@ -168,7 +170,6 @@ public class LiftSubsystem extends SubsystemBase
       .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(500/10));// Target jerk of 1600 rps/s/s (0.1 seconds)*/
 
   
-     
     /* Retry config apply up to 5 times, report if failure */
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) 
@@ -321,6 +322,8 @@ public class LiftSubsystem extends SubsystemBase
     liftMotor.setControl( m_brake);
     
   }
+
+
    /**
    * Hold lift on position
    * @
