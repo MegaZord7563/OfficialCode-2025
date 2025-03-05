@@ -6,7 +6,10 @@ package frc.robot.commands.coral;
 
 
 
+import com.google.flatbuffers.Constants;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
 import frc.robot.RobotContainer;
 
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
@@ -19,10 +22,11 @@ public class CoralStationCmd extends Command
 
   private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
   private final CoralSubsystem coralSubsystem = RobotContainer.coralSubsystem;
+  
 
   // Declare the double variables
   private double encoderPosition = 0;
-  private double setPoint = 60;//em graus
+  private double setPoint = 60 + ArticuladorCoralConstants.kCoralOffSet;//em graus
   private double tolerance = 0.05;//5%
 
   //declare boolean variables

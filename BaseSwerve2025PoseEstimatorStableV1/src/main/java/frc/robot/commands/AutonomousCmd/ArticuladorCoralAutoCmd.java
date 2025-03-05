@@ -4,7 +4,7 @@ package frc.robot.commands.AutonomousCmd;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //WPI Imports
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
 //Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
@@ -27,10 +27,10 @@ public class ArticuladorCoralAutoCmd extends Command
 
     //setpoint in grades
    
-    private double l1Setpoint = 55.0;
-    private double l2Setpoint = 57.0;
-    private double l3Setpoint = 57.0;
-    private double l4Setpoint = 54.0;
+    private double l1Setpoint = 55.0 + ArticuladorCoralConstants.kCoralOffSet;
+    private double l2Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet ;
+    private double l3Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet;
+    private double l4Setpoint = 54.0 + ArticuladorCoralConstants.kCoralOffSet;
 
 
     // Create the subsystem

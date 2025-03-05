@@ -508,6 +508,8 @@ import edu.wpi.first.math.util.Units;
       public static final double kGearRatio = (1.0/3.0)*(20.0/68.0); // 
       public static final double kPulleyRatio = 20.0/42.0;
       public static final double kWheelDiameter = 0.013; //meters
+
+      public static final double kCoralOffSet = 5; //meters
       
 
       //ArticuladorCoral SparkMax

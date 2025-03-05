@@ -394,7 +394,7 @@ public class LiftSubsystem extends SubsystemBase
 
   public Supplier<Boolean> isInPosition(double position)
   {
-    if (liftMotor.getPosition().getValueAsDouble() < position)
+    if (liftMotor.getPosition().getValueAsDouble() > position)
     {
       return ()->true;
     }

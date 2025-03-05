@@ -193,7 +193,7 @@ public class SwerveSubsystem extends SubsystemBase
                     },
                     new Pose2d(),
                     VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-                    VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(9999)));
+                    VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
     
     //camera pose set up - to initialize cameras according to its assembling on the robot
     //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,-0.13,0,0.685,0,0,0);

@@ -133,7 +133,7 @@ public class LiftCommand extends Command
     
     
     if(!l1 && !l2 && !l3 && !l4)finish=true;
-    if(RobotContainer.driverJoystick.start().getAsBoolean())finish=true;
+    //if(RobotContainer.driverJoystick.start().getAsBoolean())finish=true;
 
   }    
 

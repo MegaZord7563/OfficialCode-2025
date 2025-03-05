@@ -22,7 +22,7 @@ public class FreeAlgaeReefCmd extends SequentialCommandGroup
 
   private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
   private final LiftSubsystem liftSubsystem = RobotContainer.liftSubsystem;
-  private final CoralSubsystem coralSubsystem = RobotContainer.coralSubsystem;
+
 
   /** Creates a new FreeAlgaeReffCmd. */
   public FreeAlgaeReefCmd(double angle , double position) 
@@ -33,15 +33,11 @@ public class FreeAlgaeReefCmd extends SequentialCommandGroup
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
   
-    new RunCommand(() -> liftSubsystem.runMotor(position, false)).until(()-> liftSubsystem.getPositionAsBoolean(position)),
+    new RunCommand(() -> liftSubsystem.runMotor(position, false))
+    .until( () ->liftSubsystem.isInPosition(position -0.04 ).get()),
 
-    new ParallelCommandGroup(
-      new InstantCommand(() -> coralSubsystem.setVelocity(0.5)),
-      new RunCommand(() ->aCoralSubsystem.runMotor(angle)).until(() ->aCoralSubsystem.getAngle(angle))
-    )
-      //new InstantCommand(() -> coralSubsystem.setVelocity(0.0))
-      //new InstantCommand(()-> coralSubsystem.resetEncoder()),
-      //new InstantCommand(()-> coralSubsystem.runMotor(0.0))
+    new RunCommand(() ->aCoralSubsystem.runMotor(angle)).until(() ->aCoralSubsystem.isOnPositionAlgae(angle - 3).get())
+   
 
     );
   }

@@ -232,6 +232,17 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     }
   }
 
+  public Supplier<Boolean> isOnPositionAlgae(double position)
+  {
+    if (coralEncoder.getPosition() > position)
+    {
+      return ()->true;
+    }else 
+    {
+      return ()->false;
+    }
+  }
+
   public boolean getAngle(double angle)
   {
     if (coralEncoder.getPosition() >= angle)

@@ -153,8 +153,8 @@ public class RobotContainer
   public static InitializeRamp initializeRamp = new InitializeRamp(); 
   public static HomingEndGame homingEndGame = new HomingEndGame();
   //public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
-  public static FreeAlgaeReefCmd  freeAlgaeReefHighCmd = new FreeAlgaeReefCmd(72,0.65);
-  public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(72,0.35);
+  public static FreeAlgaeReefCmd  freeAlgaeReefHighCmd = new FreeAlgaeReefCmd(57,0.75);
+  public static FreeAlgaeReefCmd  freeAlgaeReefLowCmd = new FreeAlgaeReefCmd(57,0.35);
 
   //public static ScoreAutoCmd  scoreAutoCmd = new ScoreAutoCmd();
   
@@ -448,8 +448,9 @@ public class RobotContainer
     driverJoystick.x().whileFalse(new InstantCommand (()->pathScoreReefCmd.endCommand()).onlyIf(()->pathScoreReefCmd.getRunPath()));
 
     driverJoystick.b().whileTrue(pathCoralStationCmd);
-    
     driverJoystick.b().whileFalse(new InstantCommand (()->pathCoralStationCmd.endCommand()));
+
+    driverJoystick.b().onTrue(coralStationCmd);
 
     driverJoystick.povDown().whileTrue(leaveCmd);
 
@@ -466,20 +467,16 @@ public class RobotContainer
      //Align robot to score Left
      driverJoystick.povLeft().whileTrue(sensorAlignLeft);
 
-     driverJoystick.povUp().whileTrue(freeAlgaeReefLowCmd);
-     driverJoystick.povUp().whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
-     
-
-
+   
      /**
       * OPERATOR CONTROLS
       */
 
-    JoystickButton leaveAlgaeReef = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
-    leaveAlgaeReef.whileTrue(freeAlgaeReefHighCmd);
-    leaveAlgaeReef.whileFalse(new InstantCommand(() -> coralSubsystem.setVelocity(0.0)));
+    JoystickButton leaveAlgaeReefHigh = new JoystickButton (mesinhaJoy2, operatorHub.kEleven);
+    leaveAlgaeReefHigh.whileTrue(freeAlgaeReefHighCmd);
 
-    
+    JoystickButton leaveAlgaeReefLow = new JoystickButton (mesinhaJoy2, operatorHub.kSix);
+    leaveAlgaeReefLow.whileTrue(freeAlgaeReefLowCmd);
 
     //Set command to climber
     JoystickButton climb = new JoystickButton (mesinhaJoy2, operatorHub.kFive);
@@ -509,9 +506,10 @@ public class RobotContainer
 
      //Initialize Ramp
     //OperatorHub 2 Button 1
+    /* 
     JoystickButton coralStation = new JoystickButton(mesinhaJoy1, operatorHub.kEight);
     coralStation.onTrue(coralStationCmd);
-
+*/
     //Pick Position L1
     //OperatorHub 2 Button 6
     JoystickButton homeEndGame = new JoystickButton(mesinhaJoy2, operatorHub.kNine);

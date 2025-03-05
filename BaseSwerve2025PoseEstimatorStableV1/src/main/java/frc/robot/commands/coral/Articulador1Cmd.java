@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 //Robot imports
 import frc.robot.RobotContainer;
+import frc.robot.Constants.SubsystemsConstants.ArticuladorCoralConstants;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
 
@@ -37,11 +38,12 @@ public class Articulador1Cmd extends Command
     private double l3Setpoint = 57.0;
     private double l4Setpoint = 58.0;
 */
-    private double l1Setpoint = 55.0;
-    private double l2Setpoint = 43.0; //57
-    private double l3Setpoint = 43.0; //57
-    private double l4Setpoint = 38.0; //57
 
+  private double l1Setpoint;
+  private double l2Setpoint;
+  private double l3Setpoint;
+  private double l4Setpoint;
+    
 
     // Create the subsystem
     private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
@@ -75,6 +77,20 @@ public class Articulador1Cmd extends Command
   @Override
   public void execute() 
   {
+
+    if(RobotContainer.operatorHub.getEight()){
+
+      l1Setpoint = 55.0;
+      l2Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l3Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l4Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet; 
+    
+    } else if(!RobotContainer.operatorHub.getEight()){
+      l1Setpoint = 55.0;
+      l2Setpoint = 49.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l3Setpoint = 39.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l4Setpoint = 38.0 + ArticuladorCoralConstants.kCoralOffSet; 
+    }
 
     encoderPosition = aCoralSubsystem.getPosition();
     // Get the button values
@@ -125,8 +141,6 @@ public class Articulador1Cmd extends Command
      if(!l1 && !l2 && !l3 && !l4 )finish=true;
      if(RobotContainer.driverJoystick.start().getAsBoolean())finish=true;
 
-
-    
   }   
 
   // Called once the command ends or is interrupted.

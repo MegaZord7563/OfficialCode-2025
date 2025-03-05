@@ -316,7 +316,7 @@ public class SwerveModule extends SubsystemBase
     /*MNL 10/28/2024 precisa testar as 3 configs */
     /* Gear Ratio Config */
     toConfigure.Feedback.SensorToMechanismRatio=1/ModuleConstants.kDriveMotorGearRatio;
-    toConfigure.ClosedLoopGeneral.ContinuousWrap = false;
+    toConfigure.ClosedLoopGeneral.ContinuousWrap = true;
     toConfigure.MotorOutput.NeutralMode = ModuleConstants.driveNeutralMode;
     /* Closed Loop Ramping */
     toConfigure.ClosedLoopRamps.VoltageClosedLoopRampPeriod = ModuleConstants.kDriveClosedLoopRamp;
