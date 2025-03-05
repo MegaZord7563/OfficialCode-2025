@@ -273,7 +273,7 @@ import edu.wpi.first.math.util.Units;
   {
     public static final double kPTranslationPath = 10;//Anterior 0.125,
     public static final double kITranslationPath = 0.08;
-      public static final double kPRotationPath = 3.0; //3.0; 1.6
+      public static final double kPRotationPath = 3.0;//3.0; //3.0; 1.6
 
       public static final PPHolonomicDriveController AutoConfig = new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
         new PIDConstants(kPTranslationPath, kITranslationPath, 0), // Translation PID constants

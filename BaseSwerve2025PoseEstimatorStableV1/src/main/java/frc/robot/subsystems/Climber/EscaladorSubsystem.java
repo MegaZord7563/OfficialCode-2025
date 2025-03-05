@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.Climber;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.DigitalInput;
 //WPILib imports
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -83,6 +86,8 @@ public class EscaladorSubsystem extends SubsystemBase
    */
   private Rev2mDistanceSensor distOnboard = new Rev2mDistanceSensor(Port.kMXP);
 
+  UsbCamera usbCamera;
+
   /** Creates a new EscaladorSubsystem. */
   public EscaladorSubsystem() 
   {
@@ -90,8 +95,20 @@ public class EscaladorSubsystem extends SubsystemBase
     //escaladorMotor = new SparkMax (EscaladorConstants.kMotor1Id, MotorType.kBrushless);
     escaladorMotor = new TalonFX(EscaladorConstants.kMotor1Id, "rio");
 
-    //Create PID controller
-    //escaladorPidController = escaladorMotor.getClosedLoopController();
+
+    usbCamera = CameraServer.startAutomaticCapture();
+     //Set the resolution
+    usbCamera.setResolution(640, 480);
+     //Set the frames per second  
+    usbCamera.setFPS(30);
+     //Set the pixel format
+    usbCamera.setPixelFormat(PixelFormat.kMJPEG);
+
+    usbCamera.setExposureAuto();
+    usbCamera.setBrightness(10);
+    usbCamera.setExposureManual(50);
+    usbCamera.setWhiteBalanceAuto();
+
     
 
     // Create the coral encoder

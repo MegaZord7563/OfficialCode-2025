@@ -5,21 +5,53 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "liftL3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "GoToJ3Pieces"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "GoToJ3Pieces"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.7
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "liftL3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "liftL4"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "aCoral4"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
+            "waitTime": 0.7
           }
         },
         {
@@ -43,14 +75,77 @@
                 "data": {
                   "name": "homingPosition"
                 }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "coralStationNoSensor"
+                      }
+                    }
+                  ]
+                }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "GoToL3Pieces"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "GoToL3Pieces"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.1
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "aCoral0"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "liftL4"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "aCoral4"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
@@ -64,30 +159,87 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "homingPosition"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "SecondCoralStationLeft3Pc"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "coralStationNoSensor"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.75
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "coralStationNoSensor"
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "GoToK3Pieces"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "GoToK3Pieces"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.1
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "aCoral0"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "liftL4"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "aCoral4"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.1
+            "waitTime": 0.2
           }
         },
         {

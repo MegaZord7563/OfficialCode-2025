@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 
 //WPI Imports
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 //Robot imports
 import frc.robot.RobotContainer;
 import frc.robot.commands.swerve.LeaveCmd;
@@ -57,10 +57,10 @@ public class HomingPosition extends SequentialCommandGroup
                                         //.onlyIf(() -> !aCoralSubsystem.isHomed().get())
                                         .until(() -> aCoralSubsystem.isHomed().get()).alongWith(
      
-      new RunCommand(()->liftSubsystem.runMotor(0.1, false))
-                                      //.onlyIf(() -> aCoralSubsystem.isHomed().get())
-                                      .until(()->liftSubsystem.isHomed().get()))
-                                      
+      new RunCommand(()->liftSubsystem.runMotor(0.0, false))
+      //.onlyIf(() -> aCoralSubsystem.isHomed().get())
+      .until(()->liftSubsystem.isHomed().get()) )
+                         
     );
     System.out.println("Homing Done!!!");
 

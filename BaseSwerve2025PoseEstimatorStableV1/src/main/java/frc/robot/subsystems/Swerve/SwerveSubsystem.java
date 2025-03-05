@@ -193,7 +193,7 @@ public class SwerveSubsystem extends SubsystemBase
                     },
                     new Pose2d(),
                     VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-                    VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+                    VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(9999)));
     
     //camera pose set up - to initialize cameras according to its assembling on the robot
     //LimelightHelpers.setCameraPose_RobotSpace(DriveConstants.limelightFront,-0.13,0,0.685,0,0,0);
@@ -494,26 +494,31 @@ public class SwerveSubsystem extends SubsystemBase
 
              
      //The best measurement is selected based on the tag count from each camera.
-     if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0) 
+     if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0  && rearLimelight.avgTagDist <3 && frontLimelight.avgTagDist <3 ) 
      {
        // Both cameras have valid measurements, choose the one with the higher tag count
        bestMeasurement = (frontLimelight.avgTagArea >= rearLimelight.avgTagArea) ? frontLimelight : rearLimelight;
+       m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+       m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
      
-     } else if (frontLimelight.tagCount > 0) 
+     } else if (frontLimelight.tagCount > 0  &&  frontLimelight.avgTagDist <3) 
      {
          bestMeasurement = frontLimelight;
-     } else if (rearLimelight.tagCount > 0) 
+         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+         m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
+     } else if (rearLimelight.tagCount > 0 && rearLimelight.avgTagDist < 3 ) 
      {
          bestMeasurement = rearLimelight;
+         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+         m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
      }
-              
+      
         //The selected measurement is then used to update the robot's pose estimation, provided the angular velocity condition is met.
-        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
+
       }
 
-      //SmartDashboard.putNumber("TagCountFront", frontLimelight.tagCount);
-      //SmartDashboard.putNumber("TagCountBack", rearLimelight.tagCount);
+     // SmartDashboard.putNumber("TagDistanceFront", frontLimelight.avgTagDist);
+      //SmartDashboard.putNumber("TagDistanceBack", rearLimelight.avgTagDist);
 
       
       //SmartDashboard.putNumber("avgTagFront", frontLimelight.avgTagArea);

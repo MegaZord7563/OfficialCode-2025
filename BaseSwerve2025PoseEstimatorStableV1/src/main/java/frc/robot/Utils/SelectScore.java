@@ -26,22 +26,22 @@ public class SelectScore
                 poseToScore = new Pose2d(14.47,4.190,Rotation2d.fromDegrees(180));
             }
             else if (touch.getButtonValue(VirtualButton.kC)){
-                poseToScore = new Pose2d(13.98,5.13,Rotation2d.fromDegrees(-126));
+                poseToScore = new Pose2d(13.89,5.18,Rotation2d.fromDegrees(-120));
             }
             else if (touch.getButtonValue(VirtualButton.kD)){
-                poseToScore = new Pose2d(13.44,5.30,Rotation2d.fromDegrees(-108));
+                poseToScore = new Pose2d(13.65,5.31,Rotation2d.fromDegrees(-120));
             }
             else if (touch.getButtonValue(VirtualButton.kE)){
-                poseToScore = new Pose2d(12.53,5.36,Rotation2d.fromDegrees(-57));
+                poseToScore = new Pose2d(12.50,5.35,Rotation2d.fromDegrees(-60));
             }
             else if (touch.getButtonValue(VirtualButton.kF)){
-                poseToScore = new Pose2d(12.20,5.11,Rotation2d.fromDegrees(-58));
+                poseToScore = new Pose2d(12.11,5.43,Rotation2d.fromDegrees(-60));
             }
             else if (touch.getButtonValue(VirtualButton.kG)){
                 poseToScore = new Pose2d(11.62,4.190,Rotation2d.fromDegrees(0));
             }
             else if (touch.getButtonValue(VirtualButton.kH)){
-                poseToScore = new Pose2d(11.062,3.861,Rotation2d.fromDegrees(0));
+                poseToScore = new Pose2d(11.62,3.861,Rotation2d.fromDegrees(0));
             }//testar com um metro a mais no x
             else if (touch.getButtonValue(VirtualButton.kI)){
                 poseToScore = new Pose2d(12.22,2.86,Rotation2d.fromDegrees(60));

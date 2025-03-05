@@ -106,18 +106,8 @@ public class PathScoreReefCmd extends Command
     kK = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kK);
     kL = RobotContainer.touchScreenInterface.getButtonValue(VirtualButton.kL);
     
-    kCoralStaton1 = RobotContainer.operatorHub.getSelectTwo();
 
-    //kBButton =RobotContainer.driverJoystick.getHID().getBButton();
-
-    // Get raw AprilTag/Fiducial data
-    if (kCoralStaton1) 
-    {
-        System.out.println("Coral Station 1 selected !!");
-        targetPosition = new Pose2d(1.05, 0.86, Rotation2d.fromDegrees(54));
-        runPath = true;
-    }
-    else if (kA)
+    if (kA)
     {
         targetPosition =SelectScore.poseToScore(RobotContainer.touchScreenInterface);
         System.out.println("Position A selected !!");

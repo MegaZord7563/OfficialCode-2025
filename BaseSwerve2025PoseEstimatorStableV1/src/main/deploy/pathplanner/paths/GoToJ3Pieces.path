@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.11,
-        "y": 5.3
+        "x": 7.16,
+        "y": 5.27
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.909737618738267,
-        "y": 5.4496495193823895
+        "x": 6.9597376187382665,
+        "y": 5.419649519382389
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.1,
-        "y": 5.29
+        "x": 5.122,
+        "y": 5.45
       },
       "prevControl": {
-        "x": 4.863004991016051,
-        "y": 5.205072261504634
+        "x": 4.885004991016051,
+        "y": 5.3650722615046345
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,20 +36,7 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "liftL4",
-      "waypointRelativePos": 0.5,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "aCoral4",
-      "waypointRelativePos": 0.8,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.5,
     "maxAcceleration": 1.0,
@@ -63,7 +50,7 @@
     "rotation": -123.51800864525188
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto3PiecesLeft",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

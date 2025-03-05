@@ -38,6 +38,7 @@ import frc.robot.Utils.TouchScreenInterface;
 import frc.robot.commands.Algae.AlgaeManualCmd;
 import frc.robot.commands.Algae.FreeAlgaeReefCmd;
 import frc.robot.commands.AutonomousCmd.ArticuladorCoralAutoCmd;
+import frc.robot.commands.AutonomousCmd.HomingPositionAuto;
 import frc.robot.commands.AutonomousCmd.LiftAutoCmd;
 import frc.robot.commands.AutonomousCmd.ShootCoralAutoCmd;
 import frc.robot.commands.Ramp.HomingEndGame;
@@ -148,6 +149,7 @@ public class RobotContainer
    */
   public static ScoreLevel scoreLevel = new ScoreLevel();
   public static HomingPosition homingPosition = new HomingPosition();
+  public static HomingPositionAuto homingPositionAuto = new HomingPositionAuto();
   public static InitializeRamp initializeRamp = new InitializeRamp(); 
   public static HomingEndGame homingEndGame = new HomingEndGame();
   //public static PickL1Cmd pickL1Cmd = new PickL1Cmd();
@@ -256,8 +258,12 @@ public class RobotContainer
                               .alongWith(new InstantCommand(() ->coralSubsystem.runMotor(coralSubsystem.getPosition()))));
     NamedCommands.registerCommand("seguraCoral", new InstantCommand(() ->coralSubsystem.runMotor(coralSubsystem.getPosition())));
   
+
+    NamedCommands.registerCommand("aCoral0", new InstantCommand(() ->articuladorCoralSubsystem.runMotor(0)));
+
+
     NamedCommands.registerCommand("shootCoral", shootCoralAuto);
-    NamedCommands.registerCommand("homingPosition", homingPosition);
+    NamedCommands.registerCommand("homingPosition", homingPositionAuto);
     // Add commands to the subsystem
     
 
@@ -275,6 +281,7 @@ public class RobotContainer
 
     homingPosition.addRequirements(liftSubsystem,articuladorCoralSubsystem);
     
+    homingPositionAuto.addRequirements(liftSubsystem,articuladorCoralSubsystem);
     //liftAuto.addRequirements(liftSubsystem);
     
     liftManualCmd.addRequirements(liftSubsystem);
@@ -322,15 +329,26 @@ public class RobotContainer
     PathPlannerAuto auto2PieceRight = new PathPlannerAuto("Auto2PieceRight"); 
 
     PathPlannerAuto auto2PieceLeft = new PathPlannerAuto("Auto2PieceLeft"); 
+
+    PathPlannerAuto auto3PieceRight = new PathPlannerAuto("Auto3PieceRight"); 
+
+    PathPlannerAuto auto3PieceLeft = new PathPlannerAuto("Auto3PieceLeft"); 
    
     //Add options to the chooser
     chooserAuto.addOption("NovoAuto", autoPath);
 
     chooserAuto.addOption("Auto1Piece", auto1Piece);
 
-    chooserAuto.addOption("Auto2PieceRight", auto2PieceRight);
+    chooserAuto.addOption("Auto1Piece", auto1Piece);
+
+    chooserAuto.addOption("Auto3PieceLeft", auto3PieceLeft);
+
+    chooserAuto.addOption("Auto3PieceRight", auto3PieceRight);
 
     chooserAuto.addOption("Auto2PieceLeft", auto2PieceLeft);
+
+    
+    chooserAuto.addOption("Auto2PieceRight", auto2PieceRight);
 
     chooserAuto.addOption("autoCenter", autoCenter);
 
@@ -473,7 +491,7 @@ public class RobotContainer
  */
 
  
-    JoystickButton climbReverse = new JoystickButton (mesinhaJoy2, operatorHub.kEleven);
+    JoystickButton climbReverse = new JoystickButton (mesinhaJoy2, operatorHub.kTen);
     climbReverse.whileTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorBackPosition))
             .onlyIf(()->escaladorSubsystem.getPosition() <= 0.95));
 
