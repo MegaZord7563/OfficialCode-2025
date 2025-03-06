@@ -631,7 +631,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kVelocityConversionFactor = kPositionConversionFactor/60.0; //rotation to m/s
 
       //Climber PID 
-      public static final double kP = 50;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kP = 100;//ANTERIOR 0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kI= 0;
       public static final double kD = 0;
       public static final double kFF = 0; // = input = 0 to position control and 1.0/473.0 to velocity control

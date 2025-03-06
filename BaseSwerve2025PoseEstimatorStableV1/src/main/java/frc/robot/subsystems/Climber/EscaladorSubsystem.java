@@ -15,8 +15,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -45,7 +46,7 @@ public class EscaladorSubsystem extends SubsystemBase
   private final TalonFX escaladorMotor;
 
   /* Start at motion 0, use slot 2 */
-   //private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(2);
+   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0).withSlot(1);
 
   //private final VelocityVoltage m_velocityVoltage = new VelocityVoltage(0).withSlot(1);
 
@@ -173,10 +174,20 @@ public class EscaladorSubsystem extends SubsystemBase
     globalConfig.Slot0.kI = EscaladorConstants.kI; //0; // no output for integrated error
     globalConfig.Slot0.kD = EscaladorConstants.kD; //0; // no output for error derivative
     
+    /* Configure Motion Magic */
+    MotionMagicConfigs mm = globalConfig.MotionMagic;
+    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(4.0)) // 5 (mechanism) rotations per second cruise
+      .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(1.5)) // Take approximately 0.5 seconds to reach max vel
+      // Take approximately 0.1 seconds to reach max accel 
+      .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(25));
     //globalConfig.Voltage.withPeakForwardVoltage(Volts.of(10))
                         //.withPeakReverseVoltage(Volts.of(-10));
 
 
+    /* Apply the PID config */
+    globalConfig.Slot1.kP = EscaladorConstants.kP; //0.11; // An error of 1 rps results in 0.11 V output
+    globalConfig.Slot1.kI = EscaladorConstants.kI; //0; // no output for integrated error
+    globalConfig.Slot1.kD = EscaladorConstants.kD; //0; // no output for error derivative
     /* Retry config apply up to 5 times, report if failure */
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
@@ -278,9 +289,10 @@ public class EscaladorSubsystem extends SubsystemBase
   public void runMotors( double setPoint)
   {
     
+    //Motion Magic - Set position control is slot 1
+    escaladorMotor.setControl(m_mmReq.withPosition(setPoint).withSlot(1));
     
-    
-      escaladorMotor.setControl(m_positionVoltage.withPosition(setPoint));
+     // escaladorMotor.setControl(m_positionVoltage.withPosition(setPoint));
 
       System.out.println("Escaldor  Current Position: " + getPosition());
     

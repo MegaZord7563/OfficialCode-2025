@@ -498,12 +498,12 @@ public class RobotContainer
     prepareClimb.onFalse(new InstantCommand(ledControl::setRedLed));
     prepareClimb.onFalse(new InstantCommand(() -> driverJoystick.setRumble(RumbleType.kBothRumble, 0)));
 
-
+/* 
     Trigger climb5Sec = new Trigger(() -> Timer.getMatchTime() <= 5);
     climb5Sec.onTrue(new InstantCommand(() -> escaladorSubsystem.runMotors(EscaladorConstants.escaladorClimbPosition))//EscaladorConstants.escaladorClimbPosition))
     .onlyIf(()->rampSubsystem.isHomedBoolean() && escaladorSubsystem.isDistanceValid() && 
     !escaladorSubsystem.getSensorClimber()));
-
+*/
      //Initialize Ramp
     //OperatorHub 2 Button 1
     /* 
