@@ -45,7 +45,7 @@
     "rotation": -121.71718339439505
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto2PiecesLeft",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
