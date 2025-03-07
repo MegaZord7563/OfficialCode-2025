@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
-import frc.robot.subsystems.Swerve.SwerveSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;
 
 public class LiftAutoCmd extends Command

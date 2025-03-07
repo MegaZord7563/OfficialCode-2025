@@ -240,12 +240,11 @@ public class EscaladorSubsystem extends SubsystemBase
   {
     
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Escalador Velocity", getVelocity());
+
     SmartDashboard.putNumber("Escalador Position", getPosition());
 
     SmartDashboard.putNumber("EscalatorCurrent", escaladorMotor.getStatorCurrent().getValueAsDouble());
     SmartDashboard.putNumber("EscalatorVoltage", escaladorMotor.getMotorVoltage().getValueAsDouble());
-    SmartDashboard.putNumber("EscalatorTemperature",escaladorMotor.getDeviceTemp().getValueAsDouble());
     SmartDashboard.putBoolean("EscalatorSensor", sensorClimber.get());
 
     /**

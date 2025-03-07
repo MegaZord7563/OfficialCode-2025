@@ -187,10 +187,6 @@ public class AimAndRangeCmd extends Command
    if (!finish) 
    {
 
-
-    System.out.println("targetPosition.getX()" + targetPosition.getX());
-    System.out.println("targetPosition.getY()" + targetPosition.getY());
-    System.out.println("targetPosition.getRotation().getDegrees()" + targetPosition.getRotation().getDegrees());
     
     double steer_cmd = kMaxSpeed2Steer * pidSteer.calculate(robotPosition().getY(),targetPosition.getY());
     // try to drive forward until the target area reaches our desired area

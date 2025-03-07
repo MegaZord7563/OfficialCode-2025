@@ -121,7 +121,6 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
   {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Algae Position", getPosition());
-    SmartDashboard.putNumber("AlgaeCurrent",algaeMotor.getOutputCurrent());
   }
 
   /**
@@ -130,7 +129,6 @@ public class ArticuladorAlgaeSubsystem extends SubsystemBase
    */
   public void runMotor(double targetPosition)
   {
-      System.out.println("Algae Position Control Enabled");
       /*algaePidController.setReference(targetPosition, 
                                             ControlType.kPosition,
                                             ClosedLoopSlot.kSlot1);

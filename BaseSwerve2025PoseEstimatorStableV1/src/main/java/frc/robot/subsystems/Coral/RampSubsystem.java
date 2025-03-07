@@ -119,7 +119,6 @@ public class RampSubsystem extends SubsystemBase
   {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Ramp Position", getPosition());
-    SmartDashboard.putNumber("Ramp Current", rampMotor.getOutputCurrent());
   }
 
   /**
@@ -129,13 +128,11 @@ public class RampSubsystem extends SubsystemBase
   public void runMotor(double targetPosition)
   {
     
-      System.out.println("Ramp Position Control Enabled");
       /*rampPidController.setReference(targetPosition, 
                                             ControlType.kPosition,
                                             ClosedLoopSlot.kSlot1);
      */  
       rampPidController.setReference(targetPosition, ControlType.kMAXMotionPositionControl);
-      System.out.println("Ramp Current Position: " + rampEncoder.getPosition());
     
     
   }

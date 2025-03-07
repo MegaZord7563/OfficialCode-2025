@@ -7,11 +7,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 //Robot imports
 import frc.robot.RobotContainer;
-import frc.robot.Constants.SubsystemsConstants.LiftConstants;
 import frc.robot.Utils.TouchScreenInterface.VirtualButton;
 import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.Coral.ArticuladorCoralSubsystem;
-import frc.robot.subsystems.Coral.CoralSubsystem;
 import frc.robot.subsystems.Swerve.SwerveSubsystem;
 import frc.robot.subsystems.lift.LiftSubsystem;
 

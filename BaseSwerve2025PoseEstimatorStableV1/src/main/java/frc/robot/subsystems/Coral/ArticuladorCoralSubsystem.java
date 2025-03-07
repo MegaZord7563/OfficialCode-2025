@@ -140,8 +140,8 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     boolean sensorValue = sensor.get();
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Articulardor Coral Position", getPosition());
-    SmartDashboard.putNumber("Articulador Coral Velocity", coralEncoder.getVelocity());
-    SmartDashboard.putBoolean("Articulador Coral Homed", isHomed().get());
+
+
     
     if (sensorValue)
     {

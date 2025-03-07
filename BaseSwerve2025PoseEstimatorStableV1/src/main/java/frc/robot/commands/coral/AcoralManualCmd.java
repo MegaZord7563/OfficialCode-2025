@@ -47,7 +47,6 @@ public class AcoralManualCmd extends Command {
         {
           aCoralSubsystem.setVelocity(0.1);
           encoderPositionC = aCoralSubsystem.getPosition();
-          System.out.println("BlackAxisUp");
           travaC =true;
         }
         //Down
@@ -55,14 +54,12 @@ public class AcoralManualCmd extends Command {
         {
           aCoralSubsystem.setVelocity(-0.1);
           encoderPositionC = aCoralSubsystem.getPosition();
-          System.out.println("BlackAxisDown");
           travaC =true;
         }
         //Center Position
         else if(operatorHub.getBlackAxisUpDownHome()&&!aCoralSubsystem.isHomed().get()&&travaC)
         {
           aCoralSubsystem.runMotor(encoderPositionC);
-          System.out.println("BackAxisHome");
           travaC=false;
         }
 

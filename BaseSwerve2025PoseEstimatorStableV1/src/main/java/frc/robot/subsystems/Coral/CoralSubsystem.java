@@ -200,7 +200,6 @@ public class CoralSubsystem extends SubsystemBase
     SmartDashboard.putNumber("CoralPosition", getPosition());
 
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Coral Velocity m/s", getVelocity());
 
     
 

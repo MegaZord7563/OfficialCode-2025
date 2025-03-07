@@ -56,7 +56,6 @@ public class AlgaeManualCmd extends Command
         aAlgaeSubsystem.setVelocity(-0.1);
         encoderPosition = aAlgaeSubsystem.getPosition();
         trava =true;
-        System.out.println("BlackAxisUp");
       }
       //Algae Articulator Down
       else if(operatorHub.getBlackAxisDown(-0.75))
@@ -64,12 +63,10 @@ public class AlgaeManualCmd extends Command
         aAlgaeSubsystem.setVelocity(0.1);
         encoderPosition = aAlgaeSubsystem.getPosition();
         trava =true;
-        System.out.println("BlackAxisDown");
       }
       //Algae Articulator Center Position
       else if(operatorHub.getBlackAxisUpDownHome()&&!aAlgaeSubsystem.isHomed().get()&&trava)
       {
-        System.out.println("BlackAxisHome");
         aAlgaeSubsystem.runMotor(encoderPosition);
         trava=false;
       }

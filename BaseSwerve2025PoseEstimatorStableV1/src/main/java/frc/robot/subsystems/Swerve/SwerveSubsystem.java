@@ -282,10 +282,6 @@ public class SwerveSubsystem extends SubsystemBase
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
     SmartDashboard.putNumber("Pigeon", gyro.getYaw().getValueAsDouble());
-    SmartDashboard.putBoolean("First Gear", throttleSlow);
-    SmartDashboard.putBoolean("Second Gear", throttleFast);
-    SmartDashboard.putBoolean("Third Gear", throttleMax);
-    SmartDashboard.putBoolean("ThrottleLift", throttleLift);
     
     
     SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());

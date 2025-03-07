@@ -85,7 +85,7 @@ public class LiftSubsystem extends SubsystemBase
     
     
     // Configure the lift motor
-    SmartDashboard.putBoolean("Homing Position", false);
+
 
     resetEncoder();
 

@@ -6,15 +6,13 @@ package frc.robot.commands.ScoreAuto;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.coral.CoralStationCmd;
 import frc.robot.commands.lift.LiftCommand;
 import frc.robot.commands.score.HomingPosition;
-import frc.robot.commands.swerve.PathCoralStationCmd;
-import frc.robot.commands.swerve.PathScoreReefCmd;
+
 
 import frc.robot.subsystems.Coral.CoralSubsystem;
 
