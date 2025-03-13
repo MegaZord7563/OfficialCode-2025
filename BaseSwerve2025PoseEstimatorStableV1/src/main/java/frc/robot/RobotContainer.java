@@ -254,13 +254,11 @@ public class RobotContainer
     NamedCommands.registerCommand("homeEndGame", homingEndGame);
     NamedCommands.registerCommand("coralStationCmd", coralStationCmd);
 
-    NamedCommands.registerCommand("coralStationNoSensor", new InstantCommand(() ->articuladorCoralSubsystem.runMotor(70))
+    NamedCommands.registerCommand("coralStationNoSensor", new InstantCommand(() ->articuladorCoralSubsystem.runMotor(67))
                               .alongWith(new InstantCommand(() ->coralSubsystem.runMotor(coralSubsystem.getPosition()))));
     NamedCommands.registerCommand("seguraCoral", new InstantCommand(() ->coralSubsystem.runMotor(coralSubsystem.getPosition())));
   
-
     NamedCommands.registerCommand("aCoral0", new InstantCommand(() ->articuladorCoralSubsystem.runMotor(0)));
-
 
     NamedCommands.registerCommand("shootCoral", shootCoralAuto);
     NamedCommands.registerCommand("homingPosition", homingPositionAuto);

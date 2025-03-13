@@ -300,16 +300,19 @@ public class SwerveSubsystem extends SubsystemBase
 
     // Publish the pose to NetworkTables
     publisher.set(getPoseEstimator());
-/* 
+
 
     for (int i = 0; i < modules.length; i++) 
     {
       SmartDashboard.putNumber("Module " + i + " /Drive Motor Current (Amp)", modules[i].getDriveCurrent());
-      SmartDashboard.putNumber("Module " + i + " /Drive Motor Temperature (℃)", modules[i].getDriveTemperature());
-      SmartDashboard.putNumber("Module " + i + " /Turning Motor Heading (Degrees)", modules[i].getTurningHeadingDegrees());
-      SmartDashboard.putNumber("Module " + i + " /CanCoder Heading (rad)", modules[i].canCoderRad());
-      SmartDashboard.putNumber("Module " + i + " /CanCoder Heading (Degrees)", modules[i].canCoderDegrees());
-      SmartDashboard.putNumber("Module " + i + " /CanCoder Angle value (rad)", modules[i].getTurningPosition());
+    //  SmartDashboard.putNumber("Module " + i + " /Drive Motor Temperature (℃)", modules[i].getDriveTemperature());
+      SmartDashboard.putNumber("Module " + i + " /Turn Motor Current (Amp)", modules[i].getTurnCurrent());
+
+   //   SmartDashboard.putNumber("Module " + i + " /Drive Motor Temperature (℃)", modules[i].getDriveTemperature());
+   //   SmartDashboard.putNumber("Module " + i + " /Turning Motor Heading (Degrees)", modules[i].getTurningHeadingDegrees());
+  //    SmartDashboard.putNumber("Module " + i + " /CanCoder Heading (rad)", modules[i].canCoderRad());
+  //    SmartDashboard.putNumber("Module " + i + " /CanCoder Heading (Degrees)", modules[i].canCoderDegrees());
+  //    SmartDashboard.putNumber("Module " + i + " /CanCoder Angle value (rad)", modules[i].getTurningPosition());
       
   
        if (!modules[i].getCanCoderIsValid())
@@ -318,7 +321,7 @@ public class SwerveSubsystem extends SubsystemBase
 
        }
 
-    }*/
+    }
     
 
     //Output Module States to SmartDashboard

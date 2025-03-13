@@ -38,6 +38,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 //Local imports
@@ -509,7 +510,9 @@ public class SwerveModule extends SubsystemBase
   {
     // This method will be called once per scheduler run
     // Monitor absolute encoder health
-        
+
+
+    
   }
 
 
@@ -542,6 +545,10 @@ public class SwerveModule extends SubsystemBase
     return driveMotor.getStatorCurrent().getValueAsDouble();
   }
 
+  public double getTurnCurrent()
+  {
+    return turningMotor.getOutputCurrent();
+  }
   public double getDriveTemperature()
   {
     return driveMotor.getDeviceTemp().getValueAsDouble();
