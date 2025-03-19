@@ -546,7 +546,7 @@ public class RobotContainer
     JoystickButton easyShoot = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
    // scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
 
-    easyShoot.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+7.0))
+    easyShoot.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+0.4))
     .onlyIf(()->operatorHub.getSelectOne())); 
         
     //Pick Coral
@@ -562,7 +562,7 @@ public class RobotContainer
                                             .onlyIf(()->(operatorHub.getSelectOne() && operatorHub.getOne()))); 
     
     JoystickButton backCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
-    backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-20))
+    backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-0.7))
                                             .onlyIf(()->operatorHub.getSelectOne()));  
     
 
