@@ -13,7 +13,7 @@ import frc.robot.subsystems.Swerve.SwerveSubsystem;
 public class SensorAlignLeftCmd extends Command {
   private final SwerveSubsystem swerveDrive;
   private boolean finish = false;
-  private final double speed = -0.05; 
+  private final double speed = -0.1; 
   //private PIDController pidSteer = new PIDController(0.1,0,0);
 
   double steerPosition;

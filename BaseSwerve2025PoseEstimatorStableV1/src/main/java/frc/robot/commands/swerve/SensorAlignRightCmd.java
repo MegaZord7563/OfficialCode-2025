@@ -30,7 +30,7 @@ public class SensorAlignRightCmd extends Command {
   public void execute() {
     if (!swerveDrive.getSensorLeft() && !swerveDrive.getSensorRight()) 
     {
-        swerveDrive.driveToTarget(() -> 0.0, () -> 0.05, () -> 0.0, () -> false);
+        swerveDrive.driveToTarget(() -> 0.0, () -> 0.1, () -> 0.0, () -> false);
       }
       else if(!swerveDrive.getSensorLeft() && swerveDrive.getSensorRight())
       {

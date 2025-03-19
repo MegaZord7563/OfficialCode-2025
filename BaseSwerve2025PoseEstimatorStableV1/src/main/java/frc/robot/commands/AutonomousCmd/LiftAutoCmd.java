@@ -109,10 +109,10 @@ public class LiftAutoCmd extends Command
       liftSubsystem.runMotor(l4Setpoint , false);
       if (l4Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l4Setpoint * (1+tolerance)) finish=true;
       
-    } else if (l4 && artCoralSubsystem.sensorCoral()){
+    }/*  else if (l4 && artCoralSubsystem.sensorCoral()){
       finish = true;
     }
-
+    */
     if(!l1 && !l2 && !l3 && !l4)finish=true;
     if(RobotContainer.driverJoystick.start().getAsBoolean())finish=true;
 

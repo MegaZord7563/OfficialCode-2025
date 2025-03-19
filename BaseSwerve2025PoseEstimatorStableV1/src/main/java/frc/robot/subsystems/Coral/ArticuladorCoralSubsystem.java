@@ -142,7 +142,8 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     SmartDashboard.putNumber("Articulardor Coral Position", getPosition());
 
 
-    
+    SmartDashboard.putBoolean("Sensor value", sensorValue);
+    /* 
     if (sensorValue)
     {
       SmartDashboard.putBoolean("Sensor value", sensorValue);
@@ -151,6 +152,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     {
       SmartDashboard.putBoolean("Sensor value", sensorValue);
     }
+      */
   }
 
   /**
