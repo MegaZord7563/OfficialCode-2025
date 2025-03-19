@@ -263,6 +263,10 @@ public class RobotContainer
     NamedCommands.registerCommand("shootCoral", shootCoralAuto);
     NamedCommands.registerCommand("homingPosition", homingPositionAuto);
 
+    NamedCommands.registerCommand("sensorAlignLeft", sensorAlignLeft);
+
+    NamedCommands.registerCommand("sensorAlignRight", sensorAlignRight);
+
     SmartDashboard.putData("Set L1", new ArticuladorCoralAutoCmd(true,false,false,false));
     SmartDashboard.putData("Set L2",  new ArticuladorCoralAutoCmd(false,true,false,false));
     SmartDashboard.putData("Set L3",  new ArticuladorCoralAutoCmd(false,false,true,false));
@@ -530,9 +534,11 @@ public class RobotContainer
     pickAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(85)));
     
     //Score Algae - testado
-    JoystickButton scoreAlgae = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
-    scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
+    JoystickButton easyShoot = new JoystickButton(mesinhaJoy1, operatorHub.kFour);
+   // scoreAlgae.whileTrue(new InstantCommand(()-> articuladorAlgaeSubsystem.runMotor(8)));
 
+    easyShoot.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+7.0))
+    .onlyIf(()->operatorHub.getSelectOne())); 
         
     //Pick Coral
     JoystickButton resetEncoderCoral = new JoystickButton(mesinhaJoy1, operatorHub.kSelectThree);
@@ -541,7 +547,7 @@ public class RobotContainer
 
     JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
     shootCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+20.0))
-    .onlyIf(()->operatorHub.getSelectOne()));  
+    .onlyIf(()->operatorHub.getSelectOne())); 
 
     shootCoral.whileFalse(new InstantCommand(()-> coralSubsystem.stopMotor())
                                             .onlyIf(()->(operatorHub.getSelectOne() && operatorHub.getOne()))); 
