@@ -400,7 +400,7 @@ public class SwerveSubsystem extends SubsystemBase
     {
       
       m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));//set the standard deviation of the vision measurements
-      m_poseEstimator.addVisionMeasurement(getPoseEstimator(),0.0 ); //add a dummy measurement to update the timestamp
+      m_poseEstimator.addVisionMeasurement(getPoseEstimator(),Timer.getFPGATimestamp() ); //add a dummy measurement to update the timestamp
       //m_poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(0.0, 0.0), new Rotation2d()), 0.0); //add a dummy measurement to update the timestamp
     }
 
