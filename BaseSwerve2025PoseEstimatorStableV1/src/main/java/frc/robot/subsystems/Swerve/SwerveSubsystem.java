@@ -22,6 +22,7 @@ import com.pathplanner.lib.config.RobotConfig;
 //WPI Imports
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
@@ -398,8 +399,9 @@ public class SwerveSubsystem extends SubsystemBase
     if (bestMeasurement == null) 
     {
       
-      m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
-      m_poseEstimator.addVisionMeasurement(getPoseEstimator(),0.0 );
+      m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));//set the standard deviation of the vision measurements
+      m_poseEstimator.addVisionMeasurement(getPoseEstimator(),0.0 ); //add a dummy measurement to update the timestamp
+      //m_poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(0.0, 0.0), new Rotation2d()), 0.0); //add a dummy measurement to update the timestamp
     }
 
 
