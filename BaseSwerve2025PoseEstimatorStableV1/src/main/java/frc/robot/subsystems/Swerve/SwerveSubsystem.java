@@ -5,6 +5,7 @@
 package frc.robot.subsystems.Swerve;
 
 
+import java.security.Timestamp;
 //JAVA Imports
 import java.util.function.Supplier;
 
@@ -45,6 +46,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import frc.robot.Constants;
 import frc.robot.Constants.PathPlannerConstants;
 import frc.robot.Limelight.LimelightHelpers;
+import frc.robot.Limelight.LimelightHelpers.PoseEstimate;
 import frc.robot.subsystems.LedControl;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -279,7 +281,7 @@ public class SwerveSubsystem extends SubsystemBase
     // Output  to SmartDashboard
     SmartDashboard.putNumber("PoseEstimator /Pose X (meters)", this.getPoseEstimator().getX());
     SmartDashboard.putNumber("PoseEstimator /rPose Y (meters)", this.getPoseEstimator().getY());
-    SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
+    //SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
     SmartDashboard.putNumber("Pigeon", gyro.getYaw().getValueAsDouble());
@@ -387,24 +389,19 @@ public class SwerveSubsystem extends SubsystemBase
     
     boolean update=false;//set to true to update pose estimator
 
-    boolean useMegaTag2 = true; //set to false to use MegaTag1
+   
 
     boolean doRejectUpdate = false;//set to true to reject update
 
     LimelightHelpers.PoseEstimate mt1;
 
     // Determine which measurement to use based on tag count or other criteria
-    LimelightHelpers.PoseEstimate bestMeasurement = null;
+    //LimelightHelpers.PoseEstimate bestMeasurement = null;
+    LimelightHelpers.PoseEstimate bestMeasurement=null;//=new LimelightHelpers.PoseEstimate();//initialize best measurement
 
-    if (bestMeasurement == null) 
-    {
-      
-      m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));//set the standard deviation of the vision measurements
-      m_poseEstimator.addVisionMeasurement(getPoseEstimator(),Timer.getFPGATimestamp() ); //add a dummy measurement to update the timestamp
-      //m_poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(0.0, 0.0), new Rotation2d()), 0.0); //add a dummy measurement to update the timestamp
-    }
+    boolean useMegaTag2 = true; //set to false to use MegaTag1
 
-
+   
     
     if(useMegaTag2 == false)
     {
@@ -465,6 +462,9 @@ public class SwerveSubsystem extends SubsystemBase
       LimelightHelpers.PoseEstimate frontLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightFront);
       
       LimelightHelpers.PoseEstimate rearLimelight = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(DriveConstants.limelightBack);
+
+     // if (frontLimelight==null){doRejectUpdate=true;}
+      //if (rearLimelight==null){doRejectUpdate=true;}
       
       if(Math.abs(gyro.getAngularVelocityZDevice().refresh().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
@@ -474,61 +474,82 @@ public class SwerveSubsystem extends SubsystemBase
        * The tagCount variable represents the number of vision tags (fiducial markers) 
        * detected by the Limelight camera.
        * */ 
-      
-      if(frontLimelight.tagCount == 0  && rearLimelight.tagCount == 0)
+      //checks if both limelight are disconnected
+      if(frontLimelight != null && rearLimelight != null)
       {
-        doRejectUpdate = true;
-      }
-      if(!doRejectUpdate)
-      {
-        /** 
-          //The best measurement is selected based on the tag count from each camera.
-          if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0) 
-          {
-            // Both cameras have valid measurements, choose the one with the higher tag count
-            bestMeasurement = (frontLimelight.tagCount >= rearLimelight.tagCount) ? frontLimelight : rearLimelight;
-          
-          } else if (frontLimelight.tagCount > 0) 
-          {
-              bestMeasurement = frontLimelight;
 
-          } else if (rearLimelight.tagCount > 0) 
+          if(frontLimelight.tagCount == 0  && rearLimelight.tagCount == 0 )
           {
-              bestMeasurement = rearLimelight;
+            doRejectUpdate = true;
           }
-              */
-
-             
-          //The best measurement is selected based on the tag count from each camera.
-          if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0  && rearLimelight.avgTagDist <3 && frontLimelight.avgTagDist <3 ) 
+          //
+          if(!doRejectUpdate)
           {
-            // Both cameras have valid measurements, choose the one with the higher tag count
-            bestMeasurement = (frontLimelight.avgTagArea >= rearLimelight.avgTagArea) ? frontLimelight : rearLimelight;
-            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-            m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
-          
-          } else if (frontLimelight.tagCount > 0  &&  frontLimelight.avgTagDist <3) 
+                        
+              //The best measurement is selected based on the tag count from each camera.
+              if (frontLimelight.tagCount > 0 && rearLimelight.tagCount > 0  && rearLimelight.avgTagDist <3 && frontLimelight.avgTagDist <3 ) 
+              {
+                // Both cameras have valid measurements, choose the one with the higher tag count
+                bestMeasurement = (frontLimelight.avgTagArea >= rearLimelight.avgTagArea) ? frontLimelight : rearLimelight;
+                m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+                m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
+              
+              } else if (frontLimelight.tagCount > 0  &&  frontLimelight.avgTagDist <3) 
+              {
+                  bestMeasurement = frontLimelight;
+                  m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+                  m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
+              } else if (rearLimelight.tagCount > 0 && rearLimelight.avgTagDist < 3 ) 
+              {
+                  bestMeasurement = rearLimelight;
+                  m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+                  m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
+              } 
+              
+
+            }
+      }
+
+      //checks if only front limelight is connected
+      if( rearLimelight == null && frontLimelight != null)
+      {
+
+        if(frontLimelight.tagCount == 0 )
+        {
+          doRejectUpdate = true;
+        }
+
+        if(!doRejectUpdate ){
+        if (frontLimelight.tagCount > 0  &&  frontLimelight.avgTagDist <3) 
           {
               bestMeasurement = frontLimelight;
               m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
               m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
-          } else if (rearLimelight.tagCount > 0 && rearLimelight.avgTagDist < 3 ) 
+          }
+        }
+      }
+
+      //checks if only rear limelight is connected
+
+      if( rearLimelight != null && frontLimelight == null)
+      {
+
+        if(rearLimelight.tagCount == 0 )
+        {
+          doRejectUpdate = true;
+        }
+
+        if(!doRejectUpdate ){
+        if (rearLimelight.tagCount > 0  &&  rearLimelight.avgTagDist <3) 
           {
               bestMeasurement = rearLimelight;
               m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
               m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
           }
-            
-              //The selected measurement is then used to update the robot's pose estimation, provided the angular velocity condition is met.
-
+        }
       }
 
-     // SmartDashboard.putNumber("TagDistanceFront", frontLimelight.avgTagDist);
-      //SmartDashboard.putNumber("TagDistanceBack", rearLimelight.avgTagDist);
-
-      
-      //SmartDashboard.putNumber("avgTagFront", frontLimelight.avgTagArea);
-      //SmartDashboard.putNumber("avgTagBack", rearLimelight.avgTagArea);
+     
     }
   }
 

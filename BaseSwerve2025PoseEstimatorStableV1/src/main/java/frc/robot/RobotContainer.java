@@ -318,7 +318,7 @@ public class RobotContainer
     PathPlannerAuto autoPath = new PathPlannerAuto("FirstPathAutoNovo");
     PathPlannerAuto autoTest = new PathPlannerAuto("AutoTest");
     PathPlannerAuto autoField = new PathPlannerAuto("NewFieldAuto");
-    PathPlannerAuto autoLift = new PathPlannerAuto("AutoLift"); 
+
 
     PathPlannerAuto auto1Piece = new PathPlannerAuto("Auto1Piece"); 
 
@@ -354,7 +354,6 @@ public class RobotContainer
 
     chooserAuto.addOption("NewFieldAuto", autoField);
 
-    chooserAuto.addOption("AutoLift", autoLift);
 
     //Instantiate subsystems
     //swerveDrive 

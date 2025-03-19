@@ -55,6 +55,7 @@ public class Robot extends TimedRobot
     }*/
 
     m_robotContainer = new RobotContainer();
+    
 
     //This command will not control your robot, it will simply run through 
     //a full path following command to warm up the library.
@@ -83,8 +84,9 @@ public class Robot extends TimedRobot
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
+    
 
+    CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Match time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Batery Voltage", RobotController.getBatteryVoltage());
     SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
@@ -104,8 +106,8 @@ public class Robot extends TimedRobot
   {
     //01/25/2025 MNL
     //This is a test to see if we can get the limelight values when the robot is disabled
-    LimelightHelpers.getLatestResults(DriveConstants.limelightFront);
-    LimelightHelpers.getLatestResults(DriveConstants.limelightBack);
+   // LimelightHelpers.getLatestResults(DriveConstants.limelightFront);
+    //LimelightHelpers.getLatestResults(DriveConstants.limelightBack);
     
 
   }
