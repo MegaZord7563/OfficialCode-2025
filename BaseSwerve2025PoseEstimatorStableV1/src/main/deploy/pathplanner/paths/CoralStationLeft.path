@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.33,
-        "y": 5.2
+        "x": 5.38,
+        "y": 5.23
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.123484506344385,
-        "y": 5.340894822048851
+        "x": 5.173484506344384,
+        "y": 5.370894822048851
       },
       "isLocked": false,
       "linkedName": null
@@ -75,7 +75,7 @@
   "folder": "Auto2PiecesLeft",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -114.46091162886601
+    "rotation": -122.90647766598956
   },
   "useDefaultConstraints": false
 }

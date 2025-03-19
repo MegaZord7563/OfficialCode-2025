@@ -262,6 +262,13 @@ public class RobotContainer
 
     NamedCommands.registerCommand("shootCoral", shootCoralAuto);
     NamedCommands.registerCommand("homingPosition", homingPositionAuto);
+
+    SmartDashboard.putData("Set L1", new ArticuladorCoralAutoCmd(true,false,false,false));
+    SmartDashboard.putData("Set L2",  new ArticuladorCoralAutoCmd(false,true,false,false));
+    SmartDashboard.putData("Set L3",  new ArticuladorCoralAutoCmd(false,false,true,false));
+    SmartDashboard.putData("Set L4",  new ArticuladorCoralAutoCmd(false,false,false,true));
+    
+
     // Add commands to the subsystem
     
 
