@@ -192,10 +192,15 @@ public class RobotContainer
   public  static LiftAutoCmd liftAutoL4 = new LiftAutoCmd(false,false,false,true);
 
   //ArtiCoralCommandsAuto
-  public  static ArticuladorCoralAutoCmd aCoralL1 = new ArticuladorCoralAutoCmd(true,false,false,false);
-  public  static ArticuladorCoralAutoCmd aCoralL2 = new ArticuladorCoralAutoCmd(false,true,false,false);
-  public  static ArticuladorCoralAutoCmd aCoralL3 = new ArticuladorCoralAutoCmd(false,false,true,false);
-  public  static ArticuladorCoralAutoCmd aCoralL4 = new ArticuladorCoralAutoCmd(false,false,false,true);
+  public  static ArticuladorCoralAutoCmd aCoralL1 = new ArticuladorCoralAutoCmd(true,false,false,false, false);
+  public  static ArticuladorCoralAutoCmd aCoralL2 = new ArticuladorCoralAutoCmd(false,true,false,false, false);
+  public  static ArticuladorCoralAutoCmd aCoralL3 = new ArticuladorCoralAutoCmd(false,false,true,false, false);
+  public  static ArticuladorCoralAutoCmd aCoralL4 = new ArticuladorCoralAutoCmd(false,false,false,true, false);
+
+  public  static ArticuladorCoralAutoCmd aCoralL1Pov = new ArticuladorCoralAutoCmd(true,false,false,false, true);
+  public  static ArticuladorCoralAutoCmd aCoralL2Pov = new ArticuladorCoralAutoCmd(false,true,false,false, true);
+  public  static ArticuladorCoralAutoCmd aCoralL3Pov = new ArticuladorCoralAutoCmd(false,false,true,false, true);
+  public  static ArticuladorCoralAutoCmd aCoralL4Pov = new ArticuladorCoralAutoCmd(false,false,false,true, true);
 
   public static ShootCoralAutoCmd shootCoralAuto = new ShootCoralAutoCmd();
 
@@ -251,6 +256,11 @@ public class RobotContainer
     NamedCommands.registerCommand("aCoral3", aCoralL3);
     NamedCommands.registerCommand("aCoral4", aCoralL4);
 
+    NamedCommands.registerCommand("aCoral1Pov", aCoralL1Pov);
+    NamedCommands.registerCommand("aCoral2Pov", aCoralL2Pov);
+    NamedCommands.registerCommand("aCoral3Pov", aCoralL3Pov);
+    NamedCommands.registerCommand("aCoral4Pov", aCoralL4Pov);
+
     NamedCommands.registerCommand("homeEndGame", homingEndGame);
     NamedCommands.registerCommand("coralStationCmd", coralStationCmd);
 
@@ -267,10 +277,10 @@ public class RobotContainer
 
     NamedCommands.registerCommand("sensorAlignRight", sensorAlignRight);
 
-    SmartDashboard.putData("Set L1", new ArticuladorCoralAutoCmd(true,false,false,false));
-    SmartDashboard.putData("Set L2",  new ArticuladorCoralAutoCmd(false,true,false,false));
-    SmartDashboard.putData("Set L3",  new ArticuladorCoralAutoCmd(false,false,true,false));
-    SmartDashboard.putData("Set L4",  new ArticuladorCoralAutoCmd(false,false,false,true));
+    SmartDashboard.putData("Set L1", new ArticuladorCoralAutoCmd(true,false,false,false,false));
+    SmartDashboard.putData("Set L2",  new ArticuladorCoralAutoCmd(false,true,false,false, false));
+    SmartDashboard.putData("Set L3",  new ArticuladorCoralAutoCmd(false,false,true,false, false));
+    SmartDashboard.putData("Set L4",  new ArticuladorCoralAutoCmd(false,false,false,true, false));
     
 
     // Add commands to the subsystem

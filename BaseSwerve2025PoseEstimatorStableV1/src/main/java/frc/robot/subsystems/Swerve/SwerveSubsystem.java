@@ -398,7 +398,7 @@ public class SwerveSubsystem extends SubsystemBase
 
     if (bestMeasurement == null) 
     {
-      
+
       m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));//set the standard deviation of the vision measurements
       m_poseEstimator.addVisionMeasurement(getPoseEstimator(),Timer.getFPGATimestamp() ); //add a dummy measurement to update the timestamp
       //m_poseEstimator.addVisionMeasurement(new Pose2d(new Translation2d(0.0, 0.0), new Rotation2d()), 0.0); //add a dummy measurement to update the timestamp
@@ -517,7 +517,12 @@ public class SwerveSubsystem extends SubsystemBase
               bestMeasurement = rearLimelight;
               m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
               m_poseEstimator.addVisionMeasurement(bestMeasurement.pose,bestMeasurement.timestampSeconds);
+          } 
+          else if( bestMeasurement == null){
+            Pose2d zero = new Pose2d(0,0,Rotation2d.fromDegrees(0));
+            m_poseEstimator.addVisionMeasurement(zero,0.0);
           }
+          
             
               //The selected measurement is then used to update the robot's pose estimation, provided the angular velocity condition is met.
 
@@ -791,7 +796,7 @@ public void stopModules ()
     }
     else if (throttleMax) 
     { 
-      throttle = 0.9;
+      throttle = 0.95;
       
     }
     else if (throttleLift){

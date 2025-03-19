@@ -18,6 +18,7 @@ public class ArticuladorCoralAutoCmd extends Command
     private boolean l2 = false;
     private boolean l3 = false;
     private boolean l4 = false;
+    private boolean pov = false;
 
     private boolean finish = false;
     
@@ -27,22 +28,23 @@ public class ArticuladorCoralAutoCmd extends Command
 
     //setpoint in grades
    
-    private double l1Setpoint = 55.0 + ArticuladorCoralConstants.kCoralOffSet;
-    private double l2Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet ;
-    private double l3Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet;
-    private double l4Setpoint = 54.0 + ArticuladorCoralConstants.kCoralOffSet;
+    private double l1Setpoint ;
+    private double l2Setpoint ;
+    private double l3Setpoint ;
+    private double l4Setpoint ;
 
 
     // Create the subsystem
     private final ArticuladorCoralSubsystem aCoralSubsystem = RobotContainer.articuladorCoralSubsystem;
 
   /** Creates a new AngleCmd. */
-  public ArticuladorCoralAutoCmd(boolean l1, boolean l2, boolean l3, boolean l4) 
+  public ArticuladorCoralAutoCmd(boolean l1, boolean l2, boolean l3, boolean l4, boolean pov) 
   {
     this.l1 = l1;
     this.l2 = l2;
     this.l3 = l3;
     this.l4 = l4;
+    this.pov = pov;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(aCoralSubsystem);
   }
@@ -64,6 +66,20 @@ public class ArticuladorCoralAutoCmd extends Command
   @Override
   public void execute() 
   {
+
+    if(!pov){
+
+      l1Setpoint = 55.0;
+      l2Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l3Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l4Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet; 
+    
+    } else if(pov){
+      l1Setpoint = 55.0;
+      l2Setpoint = 49.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l3Setpoint = 39.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l4Setpoint = 38.0 + ArticuladorCoralConstants.kCoralOffSet; 
+    }
 
     encoderPosition = aCoralSubsystem.getPosition();
     
