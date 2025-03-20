@@ -19,6 +19,12 @@
         {
           "type": "named",
           "data": {
+            "name": "leaveCmd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "sensorAlignLeft"
           }
         },
@@ -51,6 +57,24 @@
           "type": "named",
           "data": {
             "name": "shootCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "leaveCmd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "leaveCmd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "leaveCmd"
           }
         },
         {

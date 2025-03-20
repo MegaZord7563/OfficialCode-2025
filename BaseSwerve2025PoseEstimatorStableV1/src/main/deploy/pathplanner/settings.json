@@ -8,8 +8,9 @@
     "Auto3PiecesLeft",
     "Auto3PiecesRight",
     "AutoCenter",
-    "POVAutoCenter",
-    "POV2Pieces"
+    "Auto2PiecesSPLeft",
+    "POV2Pieces",
+    "POVAutoCenter"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,

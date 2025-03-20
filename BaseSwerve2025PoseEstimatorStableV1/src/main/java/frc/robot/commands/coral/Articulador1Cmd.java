@@ -87,7 +87,7 @@ public class Articulador1Cmd extends Command
     
     } else if(!RobotContainer.operatorHub.getEight()){
       l1Setpoint = 55.0;
-      l2Setpoint = 49.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l2Setpoint = 41.0 + ArticuladorCoralConstants.kCoralOffSet; 
       l3Setpoint = 39.0 + ArticuladorCoralConstants.kCoralOffSet; 
       l4Setpoint = 38.0 + ArticuladorCoralConstants.kCoralOffSet; 
     }

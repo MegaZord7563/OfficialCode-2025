@@ -74,7 +74,7 @@ import edu.wpi.first.math.util.Units;
        **************************************/
 
       //14,285%
-      public static final double kPTurning = 4;//ANTERIOR 0,5 //0,25 ; 0.2142875; 0.175; 0.125; 0.23
+      public static final double kPTurning = 2.85;//ANTERIOR 0,5 //0,25 ; 0.2142875; 0.175; 0.125; 0.23
       public static final double kITurning = 0;
       public static final double kDTurning = 0;
 

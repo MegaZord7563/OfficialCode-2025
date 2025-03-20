@@ -445,10 +445,6 @@ public class SwerveSubsystem extends SubsystemBase
       SmartDashboard.putBoolean("UpdatePose", update);
       SmartDashboard.putNumber("Pose mt1/X", mt1.pose.getX());
       SmartDashboard.putNumber("Pose mt1/Y", mt1.pose.getY());
-
-      
-      
-
       
     }
     else if (useMegaTag2 == true)

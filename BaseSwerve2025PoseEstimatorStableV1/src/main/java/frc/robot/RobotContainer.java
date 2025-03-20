@@ -261,6 +261,8 @@ public class RobotContainer
     NamedCommands.registerCommand("aCoral3Pov", aCoralL3Pov);
     NamedCommands.registerCommand("aCoral4Pov", aCoralL4Pov);
 
+    NamedCommands.registerCommand("leaveCmd", leaveCmd);
+
     NamedCommands.registerCommand("homeEndGame", homingEndGame);
     NamedCommands.registerCommand("coralStationCmd", coralStationCmd);
 
@@ -553,7 +555,6 @@ public class RobotContainer
     JoystickButton resetEncoderCoral = new JoystickButton(mesinhaJoy1, operatorHub.kSelectThree);
     resetEncoderCoral.whileTrue(new InstantCommand(()-> articuladorCoralSubsystem.resetEncoder()));
                             
-
     JoystickButton shootCoral = new JoystickButton(mesinhaJoy1, operatorHub.kTwo);
     shootCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()+20.0))
     .onlyIf(()->operatorHub.getSelectOne())); 
@@ -562,7 +563,7 @@ public class RobotContainer
                                             .onlyIf(()->(operatorHub.getSelectOne() && operatorHub.getOne()))); 
     
     JoystickButton backCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
-    backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-0.7))
+    backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-0.4))
                                             .onlyIf(()->operatorHub.getSelectOne()));  
     
 

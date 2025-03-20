@@ -78,7 +78,7 @@ public class ArticuladorCoralAutoCmd extends Command
       l1Setpoint = 55.0;
       l2Setpoint = 49.0 + ArticuladorCoralConstants.kCoralOffSet; 
       l3Setpoint = 39.0 + ArticuladorCoralConstants.kCoralOffSet; 
-      l4Setpoint = 38.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l4Setpoint = 57;// + ArticuladorCoralConstants.kCoralOffSet; 
     }
 
     encoderPosition = aCoralSubsystem.getPosition();
