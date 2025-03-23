@@ -72,7 +72,7 @@ public class ArticuladorCoralAutoCmd extends Command
       l1Setpoint = 55.0;
       l2Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet; 
       l3Setpoint = 57.0 + ArticuladorCoralConstants.kCoralOffSet; 
-      l4Setpoint = 46.0 + ArticuladorCoralConstants.kCoralOffSet; 
+      l4Setpoint = 47.0 + ArticuladorCoralConstants.kCoralOffSet; 
     
     } else if(pov){ 
       l1Setpoint = 55.0;
