@@ -284,7 +284,9 @@ public class SwerveSubsystem extends SubsystemBase
     //SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
-    SmartDashboard.putNumber("Pigeon", gyro.getYaw().getValueAsDouble());
+    SmartDashboard.putNumber("Pigeon", gyro.getRotation2d().getDegrees());
+
+    
     
     
     SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());

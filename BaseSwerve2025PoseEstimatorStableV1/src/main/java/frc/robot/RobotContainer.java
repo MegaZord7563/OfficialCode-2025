@@ -563,7 +563,7 @@ public class RobotContainer
                                             .onlyIf(()->(operatorHub.getSelectOne() && operatorHub.getOne()))); 
     
     JoystickButton backCoral = new JoystickButton(mesinhaJoy1, operatorHub.kOne);
-    backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-0.4))
+    backCoral.whileTrue(new InstantCommand(()-> coralSubsystem.runMotor(coralSubsystem.getPosition()-0.7))
                                             .onlyIf(()->operatorHub.getSelectOne()));  
     
 

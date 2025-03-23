@@ -52,8 +52,6 @@ public class LiftManualCmd extends Command
   @Override
   public void execute() 
   {
-     
-
     if(operatorHub.getRedAxisUp(0.75))
     {
       liftSubsystem.setSpeed(0.3);

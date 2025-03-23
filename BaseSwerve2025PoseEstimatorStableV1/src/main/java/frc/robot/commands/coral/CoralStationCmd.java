@@ -26,7 +26,7 @@ public class CoralStationCmd extends Command
 
   // Declare the double variables
   private double encoderPosition = 0;
-  private double setPoint = 60 + ArticuladorCoralConstants.kCoralOffSet;//em graus
+  private double setPoint = 62 + ArticuladorCoralConstants.kCoralOffSet;//em graus
   private double tolerance = 0.05;//5%
 
   //declare boolean variables

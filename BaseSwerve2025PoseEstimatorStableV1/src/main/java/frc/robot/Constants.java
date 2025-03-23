@@ -125,7 +125,7 @@ import edu.wpi.first.math.util.Units;
       public static final double kTurningEncoderPositionPIDMaxInput= 2 * Math.PI;
 
       /* Neutral Modes */
-      public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake; // template was coast SparkMax
+      public static final IdleMode kTurningMotorIdleMode = IdleMode.kCoast; // template was coast SparkMax
       public static final NeutralModeValue driveNeutralMode = NeutralModeValue.Brake; // TalonFx
 
       
