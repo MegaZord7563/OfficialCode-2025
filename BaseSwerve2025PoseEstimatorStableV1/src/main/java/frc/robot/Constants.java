@@ -137,7 +137,7 @@ import edu.wpi.first.math.util.Units;
   public static final class DriveConstants 
   {
 
-      public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
+      //public static final boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
       
         /**************************************
          * Specify the kinematics of our robot*
@@ -199,7 +199,7 @@ import edu.wpi.first.math.util.Units;
       public static final int kFrontRightDriveAbsoluteEncoderPort = 7;
       public static final int kBackRightDriveAbsoluteEncoderPort = 6;
       public static final int kPigeonPort = 30;
-
+      public static final int kPigeonPort2 = 31;
      
       
         

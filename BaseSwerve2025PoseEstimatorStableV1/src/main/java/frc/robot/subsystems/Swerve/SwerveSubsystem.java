@@ -9,10 +9,15 @@ import java.security.Timestamp;
 //JAVA Imports
 import java.util.function.Supplier;
 
-
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.MountPoseConfigs;
 //CTRE imports
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Pigeon2Configurator;
+import com.ctre.phoenix6.configs.Pigeon2FeaturesConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 
@@ -107,6 +112,7 @@ public class SwerveSubsystem extends SubsystemBase
 
   //Create Pigeon2 gyro
   Pigeon2 gyro = new Pigeon2(DriveConstants.kPigeonPort, "rio");
+  Pigeon2 gyro2 = new Pigeon2(DriveConstants.kPigeonPort2, "rio");
        
   // Create a slew rate limiter to limit the rate of change of the commanded robot velocity
   private final SlewRateLimiter xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -159,6 +165,8 @@ public class SwerveSubsystem extends SubsystemBase
   public SwerveSubsystem() 
   {
 
+    initializePigeon2();
+    initializePigeon2Backup();
     //field2d = new Field2d();
     //SmartDashboard.putData("Field", field2d);
 
@@ -217,7 +225,7 @@ public class SwerveSubsystem extends SubsystemBase
                     	}).start();
 //*/
     //initialize Pigeon2 gyro
-    initializePigeon2(gyro.getConfigurator());
+    //initializePigeon2();
          //gyro.setAngleAdjustment(180);  
          
 //*/
@@ -284,9 +292,8 @@ public class SwerveSubsystem extends SubsystemBase
     //SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
-    SmartDashboard.putNumber("Pigeon", gyro.getRotation2d().getDegrees());
-
-    
+    SmartDashboard.putNumber("Pigeon", gyro.getYaw().getValueAsDouble());
+    SmartDashboard.putNumber("Pigeon2", gyro2.getYaw().getValueAsDouble());
     
     
     SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());
@@ -447,6 +454,10 @@ public class SwerveSubsystem extends SubsystemBase
       SmartDashboard.putBoolean("UpdatePose", update);
       SmartDashboard.putNumber("Pose mt1/X", mt1.pose.getX());
       SmartDashboard.putNumber("Pose mt1/Y", mt1.pose.getY());
+
+      
+      
+
       
     }
     else if (useMegaTag2 == true)
@@ -810,7 +821,7 @@ public void stopModules ()
     }
     else if (throttleMax) 
     { 
-      throttle = 0.95;
+      throttle = 0.9;
       
     }
     else if (throttleLift){
@@ -854,21 +865,95 @@ public void stopModules ()
      * 
      * @param cfg Configurator of the Pigeon2 device
      */
-  private void initializePigeon2(Pigeon2Configurator cfg)
+  private void initializePigeon2()
   {
-    var toApply = new Pigeon2Configuration();
+    // Create a new Pigeon2Configurator object
+    Pigeon2Configuration toApply = new Pigeon2Configuration();
+    // Clear the sticky faults
+    gyro.clearStickyFaults();
+    // Set the yaw to 0 
+    //gyro.setYaw(0, 0);  
+
+    // Apply the configuration to the Pigeon2 device
+    gyro.getConfigurator().apply(new Pigeon2Configuration()); 
+    // Set the yaw to 0
+    gyro.getConfigurator().setYaw(0, 0);  
+    
+   
+    Pigeon2FeaturesConfigs features = new Pigeon2FeaturesConfigs();
+    features.DisableNoMotionCalibration = false;
+    features.DisableTemperatureCompensation = false;
+    
+   
+    
+    toApply.withPigeon2Features(features);
+    // Removed invalid method call. Ensure proper configuration if needed.
     /*
     * User can change configs if they want, or leave this blank for factory-default
     */
-    cfg.apply(toApply);
-    
+  
+    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) {
+      status = gyro.getConfigurator().apply(toApply);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) {
+      System.out.println("Could not apply gyro configs, error code: " + status.toString());
+    }
    
     /* And initialize yaw to 0 */
     //MUST NOT TOUCH
-    cfg.setYaw(0); 
-    
+
+     /* Speed up signals to an appropriate rate */
+     BaseStatusSignal.setUpdateFrequencyForAll(100, gyro.getYaw(), gyro.getGravityVectorZ());
+     
+   
   }
 
+  private void initializePigeon2Backup()
+  {
+    // Create a new Pigeon2Configurator object
+    Pigeon2Configuration toApply = new Pigeon2Configuration();
+    // Clear the sticky faults
+    gyro2.clearStickyFaults();
+    // Set the yaw to 0 
+    //gyro.setYaw(0, 0);  
+
+    // Apply the configuration to the Pigeon2 device
+    gyro2.getConfigurator().apply(new Pigeon2Configuration()); 
+    // Set the yaw to 0
+    gyro2.getConfigurator().setYaw(0, 0);  
+    
+   
+    Pigeon2FeaturesConfigs features = new Pigeon2FeaturesConfigs();
+    features.DisableNoMotionCalibration = false;
+    features.DisableTemperatureCompensation = false;
+    
+   
+    
+    toApply.withPigeon2Features(features);
+    // Removed invalid method call. Ensure proper configuration if needed.
+    /*
+    * User can change configs if they want, or leave this blank for factory-default
+    */
+  
+    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) {
+      status = gyro2.getConfigurator().apply(toApply);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) {
+      System.out.println("Could not apply gyro2 configs, error code: " + status.toString());
+    }
+   
+    /* And initialize yaw to 0 */
+    //MUST NOT TOUCH
+
+     /* Speed up signals to an appropriate rate */
+     BaseStatusSignal.setUpdateFrequencyForAll(100, gyro2.getYaw(), gyro2.getGravityVectorZ());
+     
+   
+  }
 
 
   /**
