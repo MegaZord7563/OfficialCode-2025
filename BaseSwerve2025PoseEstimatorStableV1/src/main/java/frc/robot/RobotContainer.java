@@ -452,6 +452,7 @@ public class RobotContainer
                                                                       ledControl.setYellowLed();
                                                                       })); 
 
+     driverJoystick.start().onTrue(new InstantCommand(swerveDrive::zeroHeading));
 
 
      driverJoystick.leftBumper().and(driverJoystick.rightBumper())  

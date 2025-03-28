@@ -198,8 +198,8 @@ import edu.wpi.first.math.util.Units;
       public static final int kBackLeftDriveAbsoluteEncoderPort = 4;
       public static final int kFrontRightDriveAbsoluteEncoderPort = 7;
       public static final int kBackRightDriveAbsoluteEncoderPort = 6;
-      public static final int kPigeonPort = 30;
-      public static final int kPigeonPort2 = 31;
+      public static final int kPigeonPort = 30;//7563
+      public static final int kPigeonPort2 = 31;//9085
      
       
         

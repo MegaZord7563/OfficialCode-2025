@@ -292,9 +292,11 @@ public class SwerveSubsystem extends SubsystemBase
     //SmartDashboard.putNumber("PoseEstimator /BotPose (degrees)", LimelightHelpers.getBotPose(DriveConstants.limelightFront)[5]);
     SmartDashboard.putNumber("PoseEstimator /Rotation (degrees)", this.getPoseEstimator().getRotation().getDegrees());
     SmartDashboard.putBoolean("True Blue", isBlue);
-    SmartDashboard.putNumber("Pigeon", gyro.getYaw().getValueAsDouble());
-    SmartDashboard.putNumber("Pigeon2", gyro2.getYaw().getValueAsDouble());
-    
+    SmartDashboard.putNumber("Pigeon 7563", gyro.getYaw().getValueAsDouble());
+    SmartDashboard.putNumber("Pigeon 9085", gyro2.getYaw().getValueAsDouble());
+
+    SmartDashboard.putNumber("Pigeon 7563 No motion", gyro.getNoMotionCount().getValueAsDouble());
+    SmartDashboard.putNumber("Pigeon 9085 No Motion", gyro2.getNoMotionCount().getValueAsDouble());
     
     SmartDashboard.putBoolean("Sensor Left value", getSensorLeft());
     SmartDashboard.putBoolean("Sensor Right value", getSensorRight());
@@ -868,7 +870,7 @@ public void stopModules ()
   private void initializePigeon2()
   {
     // Create a new Pigeon2Configurator object
-    Pigeon2Configuration toApply = new Pigeon2Configuration();
+    Pigeon2Configuration configs = new Pigeon2Configuration();
     // Clear the sticky faults
     gyro.clearStickyFaults();
     // Set the yaw to 0 
@@ -877,16 +879,19 @@ public void stopModules ()
     // Apply the configuration to the Pigeon2 device
     gyro.getConfigurator().apply(new Pigeon2Configuration()); 
     // Set the yaw to 0
-    gyro.getConfigurator().setYaw(0, 0);  
+    //gyro.getConfigurator().setYaw(0, 0);  
     
-   
-    Pigeon2FeaturesConfigs features = new Pigeon2FeaturesConfigs();
+   // We want the thermal comp and no-motion cal enabled, with the compass disabled for best behavior
+    configs .Pigeon2Features.DisableNoMotionCalibration = false;
+    configs .Pigeon2Features.DisableTemperatureCompensation = false;
+    configs .Pigeon2Features.EnableCompass = false;
+    /*Pigeon2FeaturesConfigs features = new Pigeon2FeaturesConfigs();
     features.DisableNoMotionCalibration = false;
     features.DisableTemperatureCompensation = false;
     
    
     
-    toApply.withPigeon2Features(features);
+    toApply.withPigeon2Features(features);*/
     // Removed invalid method call. Ensure proper configuration if needed.
     /*
     * User can change configs if they want, or leave this blank for factory-default
@@ -894,7 +899,7 @@ public void stopModules ()
   
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
-      status = gyro.getConfigurator().apply(toApply);
+      status = gyro.getConfigurator().apply(configs);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
@@ -906,14 +911,15 @@ public void stopModules ()
 
      /* Speed up signals to an appropriate rate */
      BaseStatusSignal.setUpdateFrequencyForAll(100, gyro.getYaw(), gyro.getGravityVectorZ());
-     
+   
+     gyro.setYaw(0, 0);
    
   }
 
   private void initializePigeon2Backup()
   {
     // Create a new Pigeon2Configurator object
-    Pigeon2Configuration toApply = new Pigeon2Configuration();
+    Pigeon2Configuration configs = new Pigeon2Configuration();
     // Clear the sticky faults
     gyro2.clearStickyFaults();
     // Set the yaw to 0 
@@ -922,16 +928,20 @@ public void stopModules ()
     // Apply the configuration to the Pigeon2 device
     gyro2.getConfigurator().apply(new Pigeon2Configuration()); 
     // Set the yaw to 0
-    gyro2.getConfigurator().setYaw(0, 0);  
+    //gyro2.getConfigurator().setYaw(0, 0);  
     
+    // We want the thermal comp and no-motion cal enabled, with the compass disabled for best behavior
+    configs .Pigeon2Features.DisableNoMotionCalibration = false;
+    configs .Pigeon2Features.DisableTemperatureCompensation = false;
+    configs .Pigeon2Features.EnableCompass = false;
    
-    Pigeon2FeaturesConfigs features = new Pigeon2FeaturesConfigs();
+    /*Pigeon2FeaturesConfigs features = new Pigeon2FeaturesConfigs();
     features.DisableNoMotionCalibration = false;
-    features.DisableTemperatureCompensation = false;
+    features.DisableTemperatureCompensation = false;*/
     
    
     
-    toApply.withPigeon2Features(features);
+    //toApply.withPigeon2Features(features);
     // Removed invalid method call. Ensure proper configuration if needed.
     /*
     * User can change configs if they want, or leave this blank for factory-default
@@ -939,7 +949,7 @@ public void stopModules ()
   
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
-      status = gyro2.getConfigurator().apply(toApply);
+      status = gyro2.getConfigurator().apply(configs);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
@@ -951,7 +961,7 @@ public void stopModules ()
 
      /* Speed up signals to an appropriate rate */
      BaseStatusSignal.setUpdateFrequencyForAll(100, gyro2.getYaw(), gyro2.getGravityVectorZ());
-     
+     gyro2.setYaw(0, 0);
    
   }
 
