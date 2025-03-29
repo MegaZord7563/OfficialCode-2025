@@ -43,6 +43,7 @@ import frc.robot.commands.AutonomousCmd.LiftAutoCmd;
 import frc.robot.commands.AutonomousCmd.ShootCoralAutoCmd;
 import frc.robot.commands.Ramp.HomingEndGame;
 import frc.robot.commands.Ramp.InitializeRamp;
+import frc.robot.commands.Ramp.RampManualCmd;
 import frc.robot.commands.coral.Articulador1Cmd;
 import frc.robot.commands.coral.AcoralManualCmd;
 
@@ -138,6 +139,8 @@ public class RobotContainer
   public static CoralStationCmd coralStationCmd = new CoralStationCmd();  
   
   public static AcoralManualCmd aCoralManualCmd = new AcoralManualCmd(operatorHub);
+
+  public static RampManualCmd rampManualCmd = new RampManualCmd(operatorHub);
  
   //Algae Coral Command
   //
@@ -312,9 +315,14 @@ public class RobotContainer
     articuladorAlgaeSubsystem.setDefaultCommand(algaeManual);
   
     aCoralManualCmd.addRequirements(articuladorCoralSubsystem);
+
+    rampManualCmd.addRequirements(rampSubsystem);
+
     coralStationCmd.addRequirements(articuladorCoralSubsystem);
 
     articuladorCoralSubsystem.setDefaultCommand(aCoralManualCmd);
+
+    rampSubsystem.setDefaultCommand(rampManualCmd);
 
     //pickL1Cmd.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);
     homingEndGame.addRequirements(rampSubsystem,articuladorAlgaeSubsystem);

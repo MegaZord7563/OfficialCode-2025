@@ -35,15 +35,15 @@ public class HomingEndGame extends SequentialCommandGroup
     (
       //Move the Algae to the 45 degrees position
       new RunCommand(()->aAlgaeSubsystem.runMotor(45))
-                                        .onlyIf(() -> !rampSubsystem.isHomed().get())
+                                        //.onlyIf(() -> !rampSubsystem.isHomed().get())
                                         .until(() -> aAlgaeSubsystem.inPosition(45).get()),
       //Move the Ramp to the 0 degrees position
       new RunCommand(()->rampSubsystem.runMotor(0))
-                                      .onlyIf(() -> aAlgaeSubsystem.inPosition(45).get())
+                                      //.onlyIf(() -> aAlgaeSubsystem.inPosition(45).get())
                                       .until(()->rampSubsystem.isHomed().get()),
       //Move the Algae to the 0 degrees position                         
       new RunCommand(()->aAlgaeSubsystem.runMotor(0))
-                                      .onlyIf(()->rampSubsystem.isHomed().get())
+                                      //.onlyIf(()->rampSubsystem.isHomed().get())
                                       .until(() -> aAlgaeSubsystem.isHomed().get()),
       new InstantCommand(ledControl::setBlackLed)
 

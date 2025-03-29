@@ -79,9 +79,9 @@ public class RampSubsystem extends SubsystemBase
 
     config.softLimit
     .forwardSoftLimit(RampConstants.kSoftLimitMax)
-    .forwardSoftLimitEnabled(true)
+    .forwardSoftLimitEnabled(false)
     .reverseSoftLimit(RampConstants.kSoftLimitMin)
-    .reverseSoftLimitEnabled(true);
+    .reverseSoftLimitEnabled(false);
 
 
     config.closedLoop
@@ -145,6 +145,12 @@ public class RampSubsystem extends SubsystemBase
   {
     rampPidController.setReference(0, ControlType.kMAXMotionPositionControl);
     
+  }
+
+
+  public void setVelocity(double speed)
+  {
+    rampMotor.set(speed);
   }
 
   /**

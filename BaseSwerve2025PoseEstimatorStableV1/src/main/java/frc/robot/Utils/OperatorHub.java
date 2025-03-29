@@ -25,7 +25,9 @@ public class OperatorHub {
     public int kSelectThree = MesinhaJoy1Constants.kSeven;
 
     public int kBlackAxisUp = MesinhaJoy1Constants.kBlackAxisUp;
+
     public int kBlackAxisSides = MesinhaJoy1Constants.kBlackAxisSides;
+
 
 /**************************************************************
  *                         Mesinha2                           *
@@ -60,15 +62,23 @@ public class OperatorHub {
         return mesinha1.getRawAxis(kBlackAxisUp) > percent;
     }
 
+    public boolean getBlackAxisRight(double percent)
+    {
+        return mesinha1.getRawAxis(1) > percent;
+    }
+
+    public boolean getBlackAxisLeft(double percent)
+    {
+        return mesinha1.getRawAxis(1) < percent;
+    }
+
     public boolean getBlackAxisDown(double percent)
     {
         return mesinha1.getRawAxis(kBlackAxisUp) < percent;
     }
 
     //Mesinha2
-    public boolean getBlackAxisSides(double percent){
-        return mesinha1.getRawAxis(kBlackAxisUp) < percent;
-    }
+
 
     public boolean getRedAxisUp(double percent)
     {
@@ -131,6 +141,16 @@ public class OperatorHub {
     public boolean getBlackAxisUpDownHome( )
     {
         if ( mesinha1.getRawAxis(kBlackAxisUp) < 0.3 && mesinha1.getRawAxis(kBlackAxisUp)>-0.3)
+        {
+            return true;
+        }
+        
+       return false;
+    }
+
+    public boolean getBlackAxisLeftRightHome( )
+    {
+        if ( mesinha1.getRawAxis(1) < 0.3 && mesinha1.getRawAxis(1)>-0.3)
         {
             return true;
         }
