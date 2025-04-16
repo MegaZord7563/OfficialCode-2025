@@ -119,7 +119,7 @@ public class ArticuladorCoralSubsystem extends SubsystemBase
     // In this case, we are setting the parameters for slot 2.
     .maxVelocity(100000, ClosedLoopSlot.kSlot1)
     .maxAcceleration(80000, ClosedLoopSlot.kSlot1)
-    .allowedClosedLoopError(3, ClosedLoopSlot.kSlot1)
+    .allowedClosedLoopError(4, ClosedLoopSlot.kSlot1)
     
     // Set MAXMotion parameters for velocity control in slot 2
     .maxAcceleration(500, ClosedLoopSlot.kSlot2)
