@@ -361,6 +361,8 @@ public class RobotContainer
 
     PathPlannerAuto auto3PieceRight = new PathPlannerAuto("Auto3PieceRight"); 
 
+    PathPlannerAuto auto3PieceRightRed = new PathPlannerAuto("Auto3PieceRightRed"); 
+
     PathPlannerAuto auto3PieceLeft = new PathPlannerAuto("Auto3PieceLeft"); 
    
     //Add options to the chooser
@@ -373,6 +375,8 @@ public class RobotContainer
     chooserAuto.addOption("Auto3PieceLeft", auto3PieceLeft);
 
     chooserAuto.addOption("Auto3PieceRight", auto3PieceRight);
+
+    chooserAuto.addOption("Auto3PieceRightRed", auto3PieceRightRed);
 
     chooserAuto.addOption("Auto2PieceLeft", auto2PieceLeft);
 

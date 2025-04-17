@@ -55,6 +55,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -146,6 +152,12 @@
           "type": "named",
           "data": {
             "name": "shootCoral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
           }
         },
         {

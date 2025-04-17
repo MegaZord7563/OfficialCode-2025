@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.489,
-        "y": 0.919
+        "x": 1.6,
+        "y": 1.05
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2882500000000006,
-        "y": 2.1304999999999996
+        "x": 2.3991703510841864,
+        "y": 2.2610853603061916
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.5,
-        "y": 2.79
+        "x": 3.66,
+        "y": 2.92
       },
       "prevControl": {
-        "x": 2.2715,
-        "y": 2.282999999999999
+        "x": 2.4315000000000007,
+        "y": 2.412999999999999
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": -50.0
+      "rotationDegrees": 50.0
     }
   ],
   "constraintZones": [],
@@ -39,7 +39,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 1.25,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -50,7 +50,7 @@
     "rotation": 58.298570330494265
   },
   "reversed": false,
-  "folder": "Auto3PiecesRight",
+  "folder": "Auto3PiecesRightRed",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 54.919648878005

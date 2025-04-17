@@ -5,10 +5,11 @@
   "pathFolders": [
     "Auto2PiecesLeft",
     "Auto2PiecesRight",
+    "Auto2PiecesSPLeft",
     "Auto3PiecesLeft",
     "Auto3PiecesRight",
     "AutoCenter",
-    "Auto2PiecesSPLeft",
+    "Auto3PiecesRightRed",
     "POV2Pieces",
     "POVAutoCenter"
   ],
