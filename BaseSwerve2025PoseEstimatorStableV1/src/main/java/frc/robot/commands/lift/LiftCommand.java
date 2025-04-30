@@ -32,7 +32,7 @@ public class LiftCommand extends Command
 
     
 
-    private double l1Setpoint = 0.00; //l1SetpointClear/LiftConstants.kLiftGearRatio;
+    private double l1Setpoint = 0.20; //l1SetpointClear/LiftConstants.kLiftGearRatio;
     private double l2Setpoint = 0.45; //l2SetpointClear/LiftConstants.kLiftGearRatio;
     private double l3Setpoint = 0.85; //l3SetpointClear/LiftConstants.kLiftGearRatio;
     private double l4Setpoint = 1.48;//1.45 //l4SetpointClear/LiftConstants.kLiftGearRatio;
@@ -89,12 +89,13 @@ public class LiftCommand extends Command
     if (l1)
     {
       System.out.println("L1 SELECTED");
-      //liftSubsystem.runMotor(l1Setpoint, false);
-      
-      //if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
-      
-      finish =true;
       if(!artCoralSubsystem.sensorCoral())ledControl.setWhiteLed();
+      swerveDrive.robotLiftVelocity();
+      liftSubsystem.runMotor(l1Setpoint, false);
+      
+      if (l1Setpoint * (1-tolerance) < encoderPosition && encoderPosition < l1Setpoint * (1+tolerance)) finish=true;
+     
+
     }
     if (l2)
     {
