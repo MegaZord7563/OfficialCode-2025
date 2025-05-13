@@ -176,9 +176,54 @@ This code cancels the ongoing **Pathfinding** command and stops the robot's move
   
 ![image](https://github.com/user-attachments/assets/8c6ba979-9238-4f27-8062-51a56439d05c)
 
-![image](https://github.com/user-attachments/assets/5ef79b7e-9267-4369-b656-033e9ef1160d)
+private void initializePigeon2()
+  {
+    // Create a new Pigeon2Configurator object
+    Pigeon2Configuration configs = new Pigeon2Configuration();
+    // Clear the sticky faults
+    gyro.clearStickyFaults();
+    // Set the yaw to 0 
+    //gyro.setYaw(0, 0);  
 
-![image](https://github.com/user-attachments/assets/1261a926-eb9f-4209-a8c2-a31d47fdb9ec)
+    // Apply the configuration to the Pigeon2 device
+    gyro.getConfigurator().apply(new Pigeon2Configuration()); 
+    // Set the yaw to 0
+    //gyro.getConfigurator().setYaw(0, 0);  
+    
+   // We want the thermal comp and no-motion cal enabled, with the compass disabled for best behavior
+    configs .Pigeon2Features.DisableNoMotionCalibration = false;
+    configs .Pigeon2Features.DisableTemperatureCompensation = false;
+    configs .Pigeon2Features.EnableCompass = false;
+    /*Pigeon2FeaturesConfigs features = new Pigeon2FeaturesConfigs();
+    features.DisableNoMotionCalibration = false;
+    features.DisableTemperatureCompensation = false;
+    
+   
+    
+    toApply.withPigeon2Features(features);*/
+    // Removed invalid method call. Ensure proper configuration if needed.
+    /*
+    * User can change configs if they want, or leave this blank for factory-default
+    */
+  
+    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) {
+      status = gyro.getConfigurator().apply(configs);
+      if (status.isOK()) break;
+    }
+    if (!status.isOK()) {
+      System.out.println("Could not apply gyro configs, error code: " + status.toString());
+    }
+   
+    /* And initialize yaw to 0 */
+    //MUST NOT TOUCH
+
+     /* Speed up signals to an appropriate rate */
+     BaseStatusSignal.setUpdateFrequencyForAll(100, gyro.getYaw(), gyro.getGravityVectorZ());
+   
+     gyro.setYaw(0, 0);
+   
+  }
 
 
 
