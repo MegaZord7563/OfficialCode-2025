@@ -166,5 +166,15 @@ This code cancels the ongoing **Pathfinding** command and stops the robot's move
 
 ![Pick Algae (1)](https://github.com/user-attachments/assets/c1a7aae4-188c-498a-b89d-b4371795b587)
 
+### Manufacturer's recommendations
+
+- Check if Pigeon is capable of performing a no-motion calibration at some point when you turn on the robot. 
+- If the Pigeon is on an unstable platform, such as a thin sheet of polycarbonate, or on a platform that normally vibrates, and is unable to perform its calibration without movement.
+- This can also happen if the DisableNoMotionCalibration setting is set to true.
+- If the Pigeon is unable to perform a non-motion calibration, it will result in a larger deviation than typical.
+- Verify that it is performing non-motion calibration by plotting the NoMotionCount signal and verifying that it is changing.
+  
+![image](https://github.com/user-attachments/assets/8c6ba979-9238-4f27-8062-51a56439d05c)
+
 
 
