@@ -176,5 +176,11 @@ This code cancels the ongoing **Pathfinding** command and stops the robot's move
   
 ![image](https://github.com/user-attachments/assets/8c6ba979-9238-4f27-8062-51a56439d05c)
 
+![image](https://github.com/user-attachments/assets/5ef79b7e-9267-4369-b656-033e9ef1160d)
+
+![image](https://github.com/user-attachments/assets/1261a926-eb9f-4209-a8c2-a31d47fdb9ec)
+
+
+
 
 
