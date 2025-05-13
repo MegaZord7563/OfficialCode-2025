@@ -174,7 +174,6 @@ This code cancels the ongoing **Pathfinding** command and stops the robot's move
 - If the Pigeon is unable to perform a non-motion calibration, it will result in a larger deviation than typical.
 - Verify that it is performing non-motion calibration by plotting the NoMotionCount signal and verifying that it is changing.
   
-![image](https://github.com/user-attachments/assets/8c6ba979-9238-4f27-8062-51a56439d05c)
 ```java
 private void initializePigeon2()
   {
