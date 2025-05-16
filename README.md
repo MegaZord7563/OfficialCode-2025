@@ -164,7 +164,7 @@ This code cancels the ongoing **Pathfinding** command and stops the robot's move
 
 ### Pigeon Orientation
 
-![Pick Algae (1)](https://github.com/user-attachments/assets/c1a7aae4-188c-498a-b89d-b4371795b587)
+![Screenshot 2025-05-16 092005](https://github.com/user-attachments/assets/5c0c7fc1-6ed2-4670-97f1-076b9ad18795)
 
 
 
